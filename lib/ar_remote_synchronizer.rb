@@ -1,5 +1,10 @@
+require 'active_support/configurable'
+
 require 'ar_remote_synchronizer/version'
+require 'ar_remote_synchronizer/models/import'
 
 module ArRemoteSynchronizer
-  # Your code goes here...
+  include ActiveSupport::Configurable
+
+  config_accessor :models
 end

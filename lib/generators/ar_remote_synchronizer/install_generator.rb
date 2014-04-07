@@ -10,7 +10,11 @@ module ArRemoteSynchronizer
     desc 'Generates (but does not run) a migration to add an imports table.'
 
     def create_migration_file
-      migration_template 'create_imports.rb', 'db/migrate/create_imports.rb'
+      migration_template 'create_imports_migration.rb', 'db/migrate/create_imports.rb'
+    end
+
+    def create_initializer_file
+      copy_file 'initializer.rb', 'config/initializers/ar_remote_synchronizer.rb'
     end
 
     def self.next_migration_number(dirname)

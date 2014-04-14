@@ -1,0 +1,8 @@
+---
+ru:
+  errors:
+    missed_remote_id: В хэше не указан remote id %{remote_id}
+    import_error: >
+      Ошибка при импорте %{model_klass}: %{error_message}.
+      запись: %{record}; атрибуты: %{mapped_attrs};
+      оригинальные атрибуты: %{attrs}

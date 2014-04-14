@@ -1,4 +1,4 @@
-# ArRemoteSynchronizer
+# Synchronizable
 
 Provides base fuctionality (models, DSL) for AR synchronization with external resources (apis, services etc)
 
@@ -6,7 +6,7 @@ Provides base fuctionality (models, DSL) for AR synchronization with external re
 
 Add this line to your application's Gemfile:
 
-    gem 'ar_remote_synchronizer'
+    gem 'synchronizable'
 
 And then execute:
 
@@ -14,16 +14,9 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install ar_remote_synchronizer
+    $ gem install synchronizable
 
 ## Usage
 
-TODO: Write usage instructions here
+{render:Synchronizable::ErrorHandler#handle}
 
-## Contributing
-
-1. Fork it ( http://github.com/<my-github-username>/ar_remote_synchronizer/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request

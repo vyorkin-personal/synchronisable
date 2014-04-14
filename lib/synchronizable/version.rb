@@ -1,4 +1,4 @@
-module ArRemoteSynchronizer
+module Synchronizable
   module VERSION
     MAJOR = 0
     MINOR = 0

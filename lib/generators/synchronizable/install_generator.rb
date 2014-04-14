@@ -2,7 +2,7 @@ require 'rails/generators'
 require 'rails/generators/migration'
 require 'rails/generators/active_record'
 
-module ArRemoteSynchronizer
+module Synchronizable
   class InstallGenerator < Rails::Generators::Base
     include Rails::Generators::Migration
 
@@ -14,7 +14,7 @@ module ArRemoteSynchronizer
     end
 
     def create_initializer_file
-      copy_file 'initializer.rb', 'config/initializers/ar_remote_synchronizer.rb'
+      copy_file 'initializer.rb', 'config/initializers/synchronizable.rb'
     end
 
     def self.next_migration_number(dirname)

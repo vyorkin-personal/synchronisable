@@ -56,7 +56,7 @@ module Synchronizable
         set_default_options!(options)
 
         synchronizer_class(args, options)
-          .new(self.name, options)
+          .new(self, options)
       end
 
       def set_default_options!(options)

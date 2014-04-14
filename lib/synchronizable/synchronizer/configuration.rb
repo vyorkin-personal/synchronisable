@@ -28,7 +28,7 @@ module Synchronizable
         #   end
         def configure(remote_id = :id, mappings = {})
           self.remote_id = remote_id
-          self.mappings  = mappings
+          self.mappings  = mappings.with_indifferent_access
         end
       end
     end

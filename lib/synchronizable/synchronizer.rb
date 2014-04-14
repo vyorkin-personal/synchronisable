@@ -27,7 +27,7 @@ module Synchronizable
           ensure_remote_id(remote_id)
 
           import_record = Import.find_by(
-            self.class.remote_id => remote_id,
+            :remote_id => remote_id,
             :synchronizable_type => @model_klass
           )
 
@@ -39,9 +39,9 @@ module Synchronizable
             local_record = @model_klass.create!(attrs)
             import_record = Import.create!(
               :synchronizable_id    => local_record.id,
-              :synchronizable_type  => @model_klass,
+              :synchronizable_type  => @model_klass.to_s,
               :remote_id            => remote_id,
-              :attrs                => attrs.to_json
+              :attrs                => attrs
             )
           end
           return true

@@ -1,10 +1,10 @@
 class CreateImports < ActiveRecord::Migration
   def self.up
     create_table :imports do |t|
-      t.string :synchronizable_type, null: false
+      t.string  :synchronizable_type, null: false
       t.integer :synchronizable_id, null: false
-      t.text :attrs
-      t.string :remote_id, null: false
+      t.text    :attrs
+      t.string  :remote_id, null: false
 
       t.timestamps
     end

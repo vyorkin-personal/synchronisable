@@ -19,8 +19,8 @@ module Synchronizable
       #     synchronization configuration
       # @overload synchronizable
       #
-      # @see {Synchronizable::Synchronizer::Base}
-      # @see {Synchronizable::Model::Methods}
+      # @see Synchronizable::Synchronizer::Base
+      # @see Synchronizable::Model::Methods
       #
       # @example Common usage
       #   class FooModel < ActiveRecord::Base

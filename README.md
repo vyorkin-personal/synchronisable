@@ -18,5 +18,3 @@ Or install it yourself as:
 
 ## Usage
 
-{render:Synchronizable::ErrorHandler#handle}
-

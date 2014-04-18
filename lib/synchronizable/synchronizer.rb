@@ -4,7 +4,7 @@ require 'synchronizable/exceptions'
 module Synchronizable
   module Synchronizer
     # @abstract Subclass to setup synchronization options.
-    # @see {Synchronizable::DSL::Option}
+    # @see Synchronizable::DSL::Option
     class Base
       include Synchronizable::DSL::Option
 
@@ -38,8 +38,8 @@ module Synchronizable
         # @param attrs [Hash] hash of remote attributes
         # @return remote id value
         #
-        # @raise [MissedRemoteId] raised when data doesn't contain remote id
-        # @see {#ensure_remote_id}
+        # @raise [MissedRemoteIdError] raised when data doesn't contain remote id
+        # @see #ensure_remote_id
         #
         # @api private
         def extract_remote_id(attrs)
@@ -61,11 +61,11 @@ module Synchronizable
 
         private
 
-        # Throws the `MissedRemoteIdError' if given id isn't present.
+        # Throws the {Synchronizable::MissedRemoteIdError} if given id isn't present.
         #
         # @param id id to check
         #
-        # @raise [MissedRemoteId] raised when data doesn't contain remote id
+        # @raise [MissedRemoteIdError] raised when data doesn't contain remote id
         def ensure_remote_id(id)
           unless id.present?
             raise MissedRemoteIdError, I18n.t(

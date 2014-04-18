@@ -64,10 +64,10 @@ module Synchronizable
     # @return [Boolean] `true` if synchronization was completed
     #   without errors, `false` otherwise
     #
-    # @raise [MissedRemoteId] raised when data doesn't contain `remote_id`
+    # @raise [MissedRemoteIdError] raised when data doesn't contain `remote_id`
     #
-    # @see {Synchronizable::Context}
-    # @see {Synchronizable::ErrorHandler}
+    # @see Synchronizable::Context
+    # @see Synchronizable::ErrorHandler
     #
     # @api private
     def sync_record(context, remote_attrs)

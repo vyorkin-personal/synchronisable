@@ -6,16 +6,16 @@ module Synchronizable
     # to be used in target class/module.
     #
     # @example Common use cases
-    # class Foo
-    #   include Synchronizable::DSL::Option
+    #   class Foo
+    #     include Synchronizable::DSL::Option
     #
-    #   option :bar, default: 1
-    #   option :x, :y, :z
-    #   option :f, -> {
-    #     ...
-    #   }
-    #   option :w, converter: ->(h) { x.with_indifferent_access }
-    # end
+    #     option :bar, default: 1
+    #     option :x, :y, :z
+    #     option :f, -> {
+    #       ...
+    #     }
+    #     option :w, converter: ->(h) { x.with_indifferent_access }
+    #   end
     #
     # @api private
     module Option
@@ -38,7 +38,7 @@ module Synchronizable
         #      to the desired type
         # @overload option(attrs)
         #
-        # @see {Synchronizable::Synchronizer::Base}
+        # @see Synchronizable::Synchronizer::Base
         #
         # @api private
         def option(*args)

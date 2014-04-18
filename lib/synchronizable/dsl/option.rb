@@ -1,3 +1,5 @@
+require 'pry-byebug'
+
 module Synchronizable
   module DSL
     # Allows to define DSL-like attributes (options)
@@ -12,6 +14,7 @@ module Synchronizable
     #   option :f, -> {
     #     ...
     #   }
+    #   option :w, converter: ->(h) { x.with_indifferent_access }
     # end
     #
     # @api private
@@ -30,6 +33,9 @@ module Synchronizable
         #  @param attrs [Array] attributes
         #  @param options [Hash] options
         #    @option options :default default value
+        #    @option options [Lambda] :converter method that
+        #      will be applied to the source value in order to convert it
+        #      to the desired type
         # @overload option(attrs)
         #
         # @see {Synchronizable::Synchronizer::Base}
@@ -52,9 +58,13 @@ module Synchronizable
         end
 
         def prepare(value, opts)
+          evaluated = eval_if_proc(value)
+          try_convert(evaluated, opts)
+        end
+
+        def try_convert(value, opts)
           converter = opts[:converter]
-          value = converter.call(value) if converter
-          eval_if_proc(value)
+          converter ? converter.call(value) : value
         end
 
         def eval_if_proc(value)

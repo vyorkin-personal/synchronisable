@@ -3,9 +3,7 @@ require 'spec_helper'
 describe Synchronizable::DSL::Option do
   subject { HasOptions }
 
-  before do
-    subject.xyz 7
-  end
+  before { subject.xyz 7 }
 
   it { respond_to? :foo }
   it { respond_to? :bar }

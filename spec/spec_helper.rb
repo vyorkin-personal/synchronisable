@@ -4,6 +4,9 @@ require 'database_cleaner'
 require 'factory_girl'
 require 'factory_girl_sequences'
 require 'spork'
+require 'simplecov'
+
+SimpleCov.start
 
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 

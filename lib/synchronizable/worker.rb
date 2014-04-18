@@ -85,7 +85,9 @@ module Synchronizable
         )
 
         if import_record.present? && import_record.synchronizable.present?
+
           @logger.info { "updating #{@model}: #{import_record.synchronizable.id}" }
+
           import_record.synchronizable.update_attributes!(local_attrs)
         else
           local_record = @model.create!(local_attrs)
@@ -95,6 +97,7 @@ module Synchronizable
             :remote_id            => remote_id,
             :attrs                => local_attrs
           )
+
           @logger.info { "#{@model}: #{local_record.id} was created" }
           @logger.info { "#{import_record.class}: #{import_record.id} was created" }
         end

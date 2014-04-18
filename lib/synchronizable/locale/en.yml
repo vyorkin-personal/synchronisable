@@ -2,7 +2,9 @@
 en:
   errors:
     missed_remote_id: Couldn't find remote id %{remote_id} in given data hash
-    import_error: >
-      %{model_klass} import error: %{error_message}.
-      record: %{record}; attributes: %{mapped_attrs};
-      original attriutes: %{attrs}
+    import_error: '%{model} import error: %{error}'
+  messages:
+    result: >
+      %{model} synchronization.
+      Record count before / after: %{before} / %{after},
+      deleted record count: %{deleted}, error count: %{errors}

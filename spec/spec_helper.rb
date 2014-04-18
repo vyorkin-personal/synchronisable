@@ -41,7 +41,7 @@ Spork.prefork do
 
   ActiveRecord::Base.establish_connection adapter: 'sqlite3', database: ':memory:'
 
-  %w(schema synchronizers factories models).each do |file|
+  %w(schema synchronizers factories models dummies).each do |file|
     path = File.join(File.dirname(__FILE__), 'synchronizable', 'support', file)
     require path
   end

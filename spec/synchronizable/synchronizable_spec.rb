@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Synchronizable::DSL do
+describe Synchronizable do
   let!(:remote_attrs) do
     [{
       :di     => 'xxx',
@@ -9,7 +9,7 @@ describe Synchronizable::DSL do
       :thgiew => 44
     },
     {
-      :di     => 'xxx',
+      :di     => 'yyy',
       :eman   => 'Leonard',
       :ega    => 4,
       :thgiew => 37
@@ -17,16 +17,16 @@ describe Synchronizable::DSL do
   end
 
   context 'when local record does not exist' do
-    subject { -> { Deer.sync(remote_attrs.first) } }
+    subject { -> { Deer.sync(remote_attrs) } }
 
-    it { should change { Deer.count }.by(1) }
-    it { should change { Synchronizable::Import.count }.by(1) }
+    it { should change { Deer.count }.by(2) }
+    it { should change { Synchronizable::Import.count }.by(2) }
   end
 
   context 'with existing local record' do
     let!(:import) do
       create(:import,
-        :remote_id => 'xxx',
+        :remote_id => 'yyy',
         :synchronizable => Deer.create!(
           :name   => 'Konstantin',
           :age    => 6,
@@ -38,10 +38,13 @@ describe Synchronizable::DSL do
 
     subject do
       -> {
-        Deer.sync(remote_attrs.second)
+        Deer.sync(remote_attrs)
         leonard.reload
       }
     end
+
+    it { should change { Deer.count }.by(1) }
+    it { should change { Synchronizable::Import.count }.by(1) }
 
     it { should change { leonard.name   }.from('Konstantin').to('Leonard') }
     it { should change { leonard.age    }.from(6).to(4) }

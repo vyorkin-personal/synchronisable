@@ -1,74 +1,78 @@
-require 'synchronizable/synchronizer/configuration'
+require 'synchronizable/dsl/option'
+require 'synchronizable/exceptions'
 
 module Synchronizable
   module Synchronizer
-    # @abstract Subclass for remote id & mappings configuration.
-    # @see Synchronizable::Synchronizer::Configuration
+    # @abstract Subclass to setup synchronization options.
+    # @see {Synchronizable::DSL::Option}
     class Base
-      include Synchronizable::Synchronizer::Configuration
+      include Synchronizable::DSL::Option
 
-      def initialize(model_klass, options)
-        @model_klass, @options = model_klass, options
-      end
+      # The name of remote `id` attribute.
+      option :remote_id, default: :id
+      # Mapping configuration between local model attributes and
+      # its remote counterpart (including id attribute).
+      option :mappings, converter: ->(source) { source.with_indifferent_access }
+      # If set to `true` than all local records that
+      # don't have corresponding remote counterpart will be destroyed.
+      option :destroy_missed, default: false
+      # Attributes that will be ignored.
+      option :except
+      # The only attributes that will be used.
+      option :only
+      # Lambda that allow to specify if synchronization should occur.
+      option :if
+      # The opposite of `if`.
+      option :unless
+      # Logger that will be used during synchronization
+      # of this particular model.
+      # Fallbacks to `Rails.logger` if available, otherwise
+      # `STDOUT` will be used for output.
+      option :logger, default: -> {
+        defined?(Rails) ? Rails.logger : Logger.new(STDOUT)
+      }
 
-      # Method called by {Synchronizable::DSL::ClassMethods#sync}
-      # for each remote model attribute hash
-      #
-      # @param data [Hash] hash with remote attributes
-      #
-      # @return [Boolean] `true` if syncronization was completed
-      #   without errors, `false` otherwise
-      #
-      # @api private
-      def sync(data, errors)
-        ActiveRecord::Base.transaction do
-          data = data.with_indifferent_access
-          remote_id = data.delete(self.class.remote_id)
-          ensure_remote_id(remote_id)
+      class << self
+        # Extracts the remote id from given attribute hash.
+        #
+        # @param attrs [Hash] hash of remote attributes
+        # @return remote id value
+        #
+        # @raise [MissedRemoteId] raised when data doesn't contain remote id
+        # @see {#ensure_remote_id}
+        #
+        # @api private
+        def extract_remote_id(attrs)
+          id = attrs.delete(remote_id)
+          ensure_remote_id(id)
+          id
+        end
 
-          import_record = Import.find_by(
-            :remote_id => remote_id,
-            :synchronizable_type => @model_klass
-          )
+        # Maps the remote attributes to local model attributes.
+        #
+        # @param attrs [Hash] remote attributes
+        # @return [Hash] local mapped attributes
+        #
+        # @api private
+        def map_attributes(attrs)
+          return attrs unless mappings.present?
+          attrs.transform_keys { |key| mappings[key] }
+        end
 
-          attrs = map_attributes(data)
+        private
 
-          if import_record.present? && import_record.synchronizable.present?
-            import_record.synchronizable.update_attributes!(attrs)
-          else
-            local_record = @model_klass.create!(attrs)
-            import_record = Import.create!(
-              :synchronizable_id    => local_record.id,
-              :synchronizable_type  => @model_klass.to_s,
-              :remote_id            => remote_id,
-              :attrs                => attrs
+        # Throws the `MissedRemoteIdError' if given id isn't present.
+        #
+        # @param id id to check
+        #
+        # @raise [MissedRemoteId] raised when data doesn't contain remote id
+        def ensure_remote_id(id)
+          unless id.present?
+            raise MissedRemoteIdError, I18n.t(
+              'errors.missed_remote_id',
+              remote_id: remote_id
             )
           end
-          return true
-        end
-        rescue Exception => e
-          errors << e
-          log_error(e)
-          return false
-      end
-
-      private
-
-      def map_attributes(data)
-        return data unless self.class.mappings.present?
-        data.transform_keys { |key| self.class.mappings[key] }
-      end
-
-      def log_error(e)
-        # TODO
-      end
-
-      def ensure_remote_id(id)
-        unless id.present?
-          raise MissedRemoteIdError, I18n.l(
-            'errors.missed_remote_id',
-            remote_id: self.class.remote_id
-          )
         end
       end
     end

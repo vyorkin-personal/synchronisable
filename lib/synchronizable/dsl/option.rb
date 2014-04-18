@@ -32,10 +32,10 @@ module Synchronizable
         # @overload option(attrs, options)
         #  @param attrs [Array] attributes
         #  @param options [Hash] options
-        #    @option options :default default value
-        #    @option options [Lambda] :converter method that
-        #      will be applied to the source value in order to convert it
-        #      to the desired type
+        #  @option options :default default value
+        #  @option options [Lambda] :converter method that
+        #    will be applied to the source value in order to convert it
+        #    to the desired type
         # @overload option(attrs)
         #
         # @see Synchronizable::Synchronizer::Base

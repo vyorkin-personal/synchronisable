@@ -12,8 +12,6 @@ module Synchronizable
       #
       # @param model [Class] model class to be synchronized
       # @param data [Array<Hash>] array of hashes with remote attributes
-      #
-      # @return [Hash] summary info about synchronization result
       def run(model, data)
         new(model).run(data)
       end

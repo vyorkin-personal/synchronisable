@@ -9,6 +9,8 @@ module Synchronizable
       # for this particular model.
       #
       # @param data [Array<Hash>] array of hashes with remote attriutes
+      #
+      # @see Synchronizable::Worker
       def sync(data)
         Worker.run(self, data)
       end

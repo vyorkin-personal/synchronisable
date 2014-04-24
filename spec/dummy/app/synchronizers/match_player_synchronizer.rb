@@ -1,5 +1,5 @@
 class MatchPlayerSynchronizer < Synchronizable::Synchronizer::Base
-  destroy_missed false
+  destroy_missed true
   mappings(
     :ref       => :ref_type,
     :formation => :formation_index,

@@ -29,16 +29,16 @@ module Synchronizable
       module ClassMethods
         # Defines a new option.
         #
-        # @overload option(attrs, options)
+        # @overload option(*attrs, opts)
         #  @param attrs [Array] attributes
-        #  @param options [Hash] options
+        #  @param opts [Hash] options
         #  @option options :default default value
         #  @option options [Lambda] :converter method that
         #    will be applied to the source value in order to convert it
         #    to the desired type
-        # @overload option(attrs)
+        # @overload option(*attrs)
         #
-        # @see Synchronizable::Synchronizer::Base
+        # @see Synchronizable::Synchronizer
         #
         # @api private
         def option(*args)
@@ -51,13 +51,14 @@ module Synchronizable
         def define_option(name, opts)
           options[name] = eval_if_proc(opts[:default])
 
-          define_singleton_method(name) do |value = nil|
-            options[name] = prepare(value, opts) if value.present?
+          define_singleton_method(name) do |*args|
+            options[name] = prepare(args, opts) if args.present?
             options[name]
           end
         end
 
-        def prepare(value, opts)
+        def prepare(args, opts)
+          value = args.count > 1 ? args : args.first
           evaluated = eval_if_proc(value)
           try_convert(evaluated, opts)
         end

@@ -2,10 +2,15 @@ require 'synchronizable/dsl/option'
 require 'synchronizable/exceptions'
 
 module Synchronizable
+  # @abstract Include to your model specific synchronizer class to
+  # setup synchronization options and behavior.
+  #
+  # @see Synchronizable::DSL::Option
+  # @see Synchronizable::SynchronizerDefault
   module Synchronizer
-    # @abstract Subclass to setup synchronization options.
-    # @see Synchronizable::DSL::Option
-    class Base
+    extend ActiveSupport::Concern
+
+    included do
       include Synchronizable::DSL::Option
 
       # The name of remote `id` attribute.
@@ -31,48 +36,51 @@ module Synchronizable
       option :logger, default: -> {
         defined?(Rails) ? Rails.logger : Logger.new(STDOUT)
       }
+    end
 
-      class << self
-        # Extracts the remote id from given attribute hash.
-        #
-        # @param attrs [Hash] hash of remote attributes
-        # @return remote id value
-        #
-        # @raise [MissedRemoteIdError] raised when data doesn't contain remote id
-        # @see #ensure_remote_id
-        #
-        # @api private
-        def extract_remote_id(attrs)
-          id = attrs.delete(remote_id)
-          ensure_remote_id(id)
-          id
-        end
+    module ClassMethods
+      # Extracts the remote id from given attribute hash.
+      #
+      # @param attrs [Hash] hash of remote attributes
+      # @return remote id value
+      #
+      # @raise [MissedRemoteIdError] raised when data doesn't contain remote id
+      # @see #ensure_remote_id
+      #
+      # @api private
+      def extract_remote_id(attrs)
+        id = attrs.delete(remote_id)
+        ensure_remote_id(id)
+        id
+      end
 
-        # Maps the remote attributes to local model attributes.
-        #
-        # @param attrs [Hash] remote attributes
-        # @return [Hash] local mapped attributes
-        #
-        # @api private
-        def map_attributes(attrs)
-          return attrs unless mappings.present?
-          attrs.transform_keys { |key| mappings[key] }
-        end
+      # Maps the remote attributes to local model attributes.
+      #
+      # @param attrs [Hash] remote attributes
+      # @return [Hash] local mapped attributes
+      #
+      # @api private
+      def map_attributes(attrs)
+        return attrs unless mappings.present?
 
-        private
+        attrs
+          .transform_keys { |key| mappings[key] }
+          .reject         { |key| key.nil? }
+      end
 
-        # Throws the {Synchronizable::MissedRemoteIdError} if given id isn't present.
-        #
-        # @param id id to check
-        #
-        # @raise [MissedRemoteIdError] raised when data doesn't contain remote id
-        def ensure_remote_id(id)
-          unless id.present?
-            raise MissedRemoteIdError, I18n.t(
-              'errors.missed_remote_id',
-              remote_id: remote_id
-            )
-          end
+      private
+
+      # Throws the {Synchronizable::MissedRemoteIdError} if given id isn't present.
+      #
+      # @param id id to check
+      #
+      # @raise [MissedRemoteIdError] raised when data doesn't contain remote id
+      def ensure_remote_id(id)
+        unless id.present?
+          raise MissedRemoteIdError, I18n.t(
+            'errors.missed_remote_id',
+            remote_id: remote_id
+          )
         end
       end
     end

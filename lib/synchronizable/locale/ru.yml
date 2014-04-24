@@ -1,7 +1,7 @@
 ---
 ru:
   errors:
-    missed_remote_id: В хэше не указан remote id %{remote_id}
+    missed_remote_id: В хэше не указан remote id '%{remote_id}'
     import_error: 'Ошибка при импорте %{model}: %{error}'
   messages:
     result: >

@@ -1,4 +1,5 @@
 require 'synchronizable/model/methods'
+require 'synchronizable/synchronizers/synchronizer_default'
 
 module Synchronizable
   module Model
@@ -8,7 +9,8 @@ module Synchronizable
       SYNCHRONIZER_SUFFIX = 'Synchronizer'
 
       # Declare this on your model class to make it synchronizable.
-      # After that you can call {Synchronizable::Model::Methods#sync} start model synchronization.
+      # After that you can call {Synchronizable::Model::Methods#sync} to
+      # start model synchronization.
       #
       # @overload synchronizable(klass, options)
       #   @param klass [Class] synchronizer class to be used
@@ -19,7 +21,7 @@ module Synchronizable
       #     synchronization configuration
       # @overload synchronizable
       #
-      # @see Synchronizable::Synchronizer::Base
+      # @see Synchronizable::Synchronizer
       # @see Synchronizable::Model::Methods
       #
       # @example Common usage
@@ -40,12 +42,17 @@ module Synchronizable
       def set_defaults(args)
         options = args.extract_options!
 
-        self.synchronizer = args.first.present? ||
+        self.synchronizer = args.first ||
           options[:synchronizer] || default_synchronizer
       end
 
       def default_synchronizer
-        "#{self.name.demodulize}#{SYNCHRONIZER_SUFFIX}".constantize
+        # TODO: Find a better way to do this without rescuing an exception
+        begin
+          "#{self.name.demodulize}#{SYNCHRONIZER_SUFFIX}".constantize
+        rescue NameError
+          SynchronizerDefault.instance
+        end
       end
     end
   end

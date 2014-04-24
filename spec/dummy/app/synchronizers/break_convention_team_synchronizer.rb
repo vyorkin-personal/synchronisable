@@ -1,4 +1,8 @@
-class BreakConventionTeamSynchronizer < Synchronizable::Synchronizer::Base
+require 'pry-byebug'
+
+class BreakConventionTeamSynchronizer
+  include Synchronizable::Synchronizer
+
   remote_id :maet_id
   mappings(
     :eman    => :name,

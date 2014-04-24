@@ -1,5 +1,5 @@
-require 'rspec'
-require 'active_record'
+ENV['RAILS_ENV'] ||= 'test'
+
 require 'database_cleaner'
 require 'factory_girl'
 require 'factory_girl_sequences'
@@ -12,11 +12,22 @@ $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 
 require 'synchronizable'
 
+require File.expand_path('../dummy/config/environment', __FILE__)
+require 'rspec/rails'
+
+support_pattern   = File.join(File.dirname(__FILE__), 'synchronizable', 'support', '**', '*.rb')
+factories_pattern = File.join(File.dirname(__FILE__), 'factories', '**', '*.rb')
+
+Dir[factories_pattern].each { |file| require file }
+Dir[support_pattern].each   { |file| require file }
+
+ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
+
 Spork.prefork do
   RSpec.configure do |config|
     config.treat_symbols_as_metadata_keys_with_true_values = true
     config.run_all_when_everything_filtered = true
-    config.filter_run :focus => true
+    config.filter_run focus: true
     config.order = 'random'
     config.include FactoryGirl::Syntax::Methods
 
@@ -38,15 +49,8 @@ Spork.prefork do
     config.after(:each)  { DatabaseCleaner.clean }
 
     if ENV['RUN_SLOW_TESTS'] != 'true'
-      config.filter_run_excluding :slow => true
+      config.filter_run_excluding slow: true
     end
-  end
-
-  ActiveRecord::Base.establish_connection adapter: 'sqlite3', database: ':memory:'
-
-  %w(schema synchronizers factories models dummies).each do |file|
-    path = File.join(File.dirname(__FILE__), 'synchronizable', 'support', file)
-    require path
   end
 end
 

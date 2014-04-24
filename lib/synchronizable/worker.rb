@@ -1,6 +1,7 @@
 require 'synchronizable/error_handler'
 require 'synchronizable/context'
 require 'synchronizable/models/import'
+require 'pry-byebug'
 
 module Synchronizable
   # Responsible for model synchronization.

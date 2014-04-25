@@ -25,10 +25,6 @@ module Synchronizable
       option :except
       # The only attributes that will be used.
       option :only
-      # Lambda that allow to specify if synchronization should occur.
-      option :if
-      # The opposite of `if`.
-      option :unless
       # Logger that will be used during synchronization
       # of this particular model.
       # Fallbacks to `Rails.logger` if available, otherwise
@@ -36,6 +32,10 @@ module Synchronizable
       option :logger, default: -> {
         defined?(Rails) ? Rails.logger : Logger.new(STDOUT)
       }
+
+      # proc or lambda, that
+      # returns a hash with remote attributes.
+      option :sync
     end
 
     module ClassMethods
@@ -63,9 +63,10 @@ module Synchronizable
       def map_attributes(attrs)
         return attrs unless mappings.present?
 
-        attrs
-          .transform_keys { |key| mappings[key] }
-          .reject         { |key| key.nil? }
+        attrs.transform_keys! { |key| mappings[key] }
+
+        attrs.keep_if { |key| only.include? key } if only.present?
+        attrs.delete_if { |key| key.nil? || except.include?(key) } if except.present?
       end
 
       private

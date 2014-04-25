@@ -1,7 +1,6 @@
 require 'synchronizable/error_handler'
 require 'synchronizable/context'
 require 'synchronizable/models/import'
-require 'pry-byebug'
 
 module Synchronizable
   # Responsible for model synchronization.
@@ -25,17 +24,22 @@ module Synchronizable
     # @api private
     def run(data)
       sync do |ctx|
+        ctx.result.before = @model.imports_count
+
         data.each do |attrs|
           sync_record(ctx, attrs.with_indifferent_access)
         end
+
+        ctx.result.after = @model.imports_count
       end
     end
 
     private
 
     def initialize(model)
-      @model  = model
-      @logger = model.synchronizer.logger
+      @model, @synchronizer = model, model.synchronizer
+
+      @logger = @synchronizer.logger
       @error_handler = ErrorHandler.new(@logger)
     end
 
@@ -44,15 +48,13 @@ module Synchronizable
       @logger.info { 'starting' }
 
       context = Context.new(@model)
-      context.result.before = @model.imports_count
-
       yield context
-
-      context.result.after = @model.imports_count
 
       @logger.info { 'done' }
       @logger.info { context.summary_message }
       @logger.progname = nil
+
+      context
     end
 
     # Method called by {#run} for each remote model attribute hash
@@ -71,12 +73,14 @@ module Synchronizable
     # @api private
     def sync_record(context, remote_attrs)
       @error_handler.handle(context) do
-        remote_id   = @model.synchronizer.extract_remote_id(remote_attrs)
-        local_attrs = @model.synchronizer.map_attributes(remote_attrs)
+        remote_id   = @synchronizer.extract_remote_id(remote_attrs)
+        local_attrs = @synchronizer.map_attributes(remote_attrs)
 
-        @logger.info { "remote id: #{remote_id}" }
-        @logger.info { "remote attributes: #{remote_attrs.inspect}" }
-        @logger.info { "local attributes: #{local_attrs.inspect}"   }
+        if verbose_logging?
+          @logger.info { "remote id: #{remote_id}" }
+          @logger.info { "remote attributes: #{remote_attrs.inspect}" }
+          @logger.info { "local attributes: #{local_attrs.inspect}"   }
+        end
 
         import_record = Import.find_by(
           :remote_id => remote_id,
@@ -84,23 +88,36 @@ module Synchronizable
         )
 
         if import_record.present? && import_record.synchronizable.present?
-
-          @logger.info { "updating #{@model}: #{import_record.synchronizable.id}" }
-
-          import_record.synchronizable.update_attributes!(local_attrs)
+          update_record(local_attrs, import_record.synchronizable)
         else
-          local_record = @model.create!(local_attrs)
-          import_record = Import.create!(
-            :synchronizable_id    => local_record.id,
-            :synchronizable_type  => @model.to_s,
-            :remote_id            => remote_id,
-            :attrs                => local_attrs
-          )
-
-          @logger.info { "#{@model}: #{local_record.id} was created" }
-          @logger.info { "#{import_record.class}: #{import_record.id} was created" }
+          create_record_pair(local_attrs, remote_id)
         end
       end
+    end
+
+    def update_record(attrs, record)
+      @logger.info { "updating #{@model}: #{record.id}" } if verbose_logging?
+
+      record.update_attributes!(attrs)
+    end
+
+    def create_record_pair(attrs, remote_id)
+      local_record = @model.create!(attrs)
+      import_record = Import.create!(
+        :synchronizable_id    => local_record.id,
+        :synchronizable_type  => @model.to_s,
+        :remote_id            => remote_id,
+        :attrs                => attrs
+      )
+
+      if verbose_logging?
+        @logger.info { "#{@model}: #{local_record.id} was created" }
+        @logger.info { "#{import_record.class}: #{import_record.id} was created" }
+      end
+    end
+
+    def verbose_logging?
+      Synchronizable.logging[:verbose]
     end
   end
 end

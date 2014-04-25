@@ -1,5 +1,6 @@
 module Synchronizable
   # Synchronization context.
+  #
   # @api private
   class Context
     Result = Struct.new(:before, :after, :deleted)

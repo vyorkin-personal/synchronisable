@@ -1,5 +1,3 @@
-require 'pry-byebug'
-
 module Synchronizable
   module DSL
     # Allows to define DSL-like attributes (options)

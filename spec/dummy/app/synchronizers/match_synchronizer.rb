@@ -1,4 +1,6 @@
-class MatchSynchronizer < Synchronizable::Synchronizer::Base
+class MatchSynchronizer
+  include Synchronizable::Synchronizer
+
   destroy_missed true
   remote_id :match_id
   mappings(

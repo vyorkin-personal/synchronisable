@@ -1,4 +1,5 @@
 require 'active_record'
+
 require 'active_support/core_ext/hash'
 require 'active_support/core_ext/class/attribute'
 require 'active_support/configurable'
@@ -23,6 +24,21 @@ I18n.available_locales = [:en, :ru]
 
 module Synchronizable
   include ActiveSupport::Configurable
+
+  config_accessor :models do
+    {}
+  end
+  config_accessor :logging do
+    {
+      :verbose  => true,
+      :colorize => true
+    }
+  end
+
+  def self.sync
+    # 1. Get all synchronizable active record models if config.models is not defined
+    # 2. Call sync for each of them
+  end
 end
 
 ActiveSupport.on_load(:active_record) do

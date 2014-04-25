@@ -47,12 +47,8 @@ module Synchronizable
       end
 
       def default_synchronizer
-        # TODO: Find a better way to do this without rescuing an exception
-        begin
-          "#{self.name.demodulize}#{SYNCHRONIZER_SUFFIX}".constantize
-        rescue NameError
-          SynchronizerDefault.instance
-        end
+        "#{self.name.demodulize}#{SYNCHRONIZER_SUFFIX}".safe_constantize ||
+        SynchronizerDefault.instance
       end
     end
   end

@@ -20,12 +20,16 @@ module Synchronizable
     # Initiates model synchronization.
     #
     # @param data [Array<Hash>] array of hashes with remote attriutes.
+    #   If not specified worker will try to get the data
+    #   using `sync` lambda/proc defined in corresponding synchronizer.
     #
     # @api private
-    def run(data)
+    def run(data = nil)
       sync do |ctx|
         ctx.result.before = @model.imports_count
 
+        # binding.pry if data.blank?
+        data = @synchronizer.fetch if data.blank?
         data.each do |attrs|
           sync_record(ctx, attrs.with_indifferent_access)
         end

@@ -27,6 +27,15 @@ describe Team do
       ]
     end
 
+    context 'using sync to get remote data' do
+      subject do
+        -> { Team.sync }
+      end
+
+      it { should change { Team.count }.by(1) }
+      it { should change { Synchronizable::Import.count }.by(1) }
+    end
+
     context 'when remote id is not specified' do
       subject { Team.sync([remote_attrs.last]) }
 

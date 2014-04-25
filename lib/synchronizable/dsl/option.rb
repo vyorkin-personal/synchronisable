@@ -49,8 +49,13 @@ module Synchronizable
         def define_option(name, opts)
           options[name] = eval_if_proc(opts[:default])
 
-          define_singleton_method(name) do |*args|
-            options[name] = prepare(args, opts) if args.present?
+          define_singleton_method(name) do |*args, &block|
+            if args.present?
+              options[name] = prepare(args, opts)
+            elsif block
+              options[name] = block
+            end
+
             options[name]
           end
         end

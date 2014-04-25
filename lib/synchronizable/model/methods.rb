@@ -8,10 +8,10 @@ module Synchronizable
       # Creates a new worker, that initiates synchronization
       # for this particular model.
       #
-      # @param data [Array<Hash>] array of hashes with remote attriutes
+      # @param data [Array<Hash>] array of hashes with remote attributes.
       #
       # @see Synchronizable::Worker
-      def sync(data)
+      def sync(data = nil)
         Worker.run(self, data)
       end
 

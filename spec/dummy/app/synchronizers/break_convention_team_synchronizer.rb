@@ -10,12 +10,12 @@ class BreakConventionTeamSynchronizer
   except :ignored_1, :ignored_2
 
   sync do
-    {
-      :maet_id   => 'team2',
+    [{
+      :maet_id   => 'team_0',
       :eman      => 'z',
       :yrtnuoc   => 'France',
       :ytic      => 'Paris',
       :ignored_2 => 'ignored'
-    }
+    }]
   end
 end

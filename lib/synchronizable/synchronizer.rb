@@ -1,4 +1,5 @@
 require 'synchronizable/dsl/option'
+require 'synchronizable/dsl/associations'
 require 'synchronizable/exceptions'
 
 module Synchronizable
@@ -12,6 +13,7 @@ module Synchronizable
 
     included do
       include Synchronizable::DSL::Option
+      include Synchronizable::DSL::Associations
 
       # The name of remote `id` attribute.
       option :remote_id, default: :id
@@ -34,11 +36,22 @@ module Synchronizable
       }
 
       # proc or lambda, that
-      # returns a hash with remote attributes.
+      # returns array of hashes with remote attributes.
       option :sync
+
     end
 
     module ClassMethods
+
+      # Calls {#sync} lambda/proc to fetch remote attributes if it is defined.
+      #
+      # @return [Hash] remote attributes or empty hash.
+      #
+      # @api private
+      def fetch
+        sync ? (sync.call || []) : []
+      end
+
       # Extracts the remote id from given attribute hash.
       #
       # @param attrs [Hash] hash of remote attributes

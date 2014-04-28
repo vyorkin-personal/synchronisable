@@ -1,32 +1,38 @@
-require 'synchronizable/dsl/option'
+require 'synchronizable/dsl/options'
 require 'synchronizable/dsl/associations'
 require 'synchronizable/exceptions'
+
+require 'pry-byebug'
 
 module Synchronizable
   # @abstract Include to your model specific synchronizer class to
   # setup synchronization options and behavior.
   #
-  # @see Synchronizable::DSL::Option
+  # @see Synchronizable::DSL::Options
   # @see Synchronizable::SynchronizerDefault
   module Synchronizer
     extend ActiveSupport::Concern
 
     included do
-      include Synchronizable::DSL::Option
+      include Synchronizable::DSL::Options
       include Synchronizable::DSL::Associations
+
+      symbol_array_converter = ->(source) { (source || []).map(&:to_s) }
 
       # The name of remote `id` attribute.
       option :remote_id, default: :id
       # Mapping configuration between local model attributes and
       # its remote counterpart (including id attribute).
-      option :mappings, converter: ->(source) { source.with_indifferent_access }
+      option :mappings, converter: ->(source) {
+        source ? source.with_indifferent_access : {}
+      }
+      # Attributes that will be ignored.
+      option :except, converter: symbol_array_converter
+      # The only attributes that will be used.
+      option :only, converter: symbol_array_converter
       # If set to `true` than all local records that
       # don't have corresponding remote counterpart will be destroyed.
       option :destroy_missed, default: false
-      # Attributes that will be ignored.
-      option :except
-      # The only attributes that will be used.
-      option :only
       # Logger that will be used during synchronization
       # of this particular model.
       # Fallbacks to `Rails.logger` if available, otherwise
@@ -35,23 +41,11 @@ module Synchronizable
         defined?(Rails) ? Rails.logger : Logger.new(STDOUT)
       }
 
-      # proc or lambda, that
-      # returns array of hashes with remote attributes.
-      option :sync
-
+      # lambda, that returns array of hashes with remote attributes.
+      option :fetch, default: ->(*args) { [] }
     end
 
     module ClassMethods
-
-      # Calls {#sync} lambda/proc to fetch remote attributes if it is defined.
-      #
-      # @return [Hash] remote attributes or empty hash.
-      #
-      # @api private
-      def fetch
-        sync ? (sync.call || []) : []
-      end
-
       # Extracts the remote id from given attribute hash.
       #
       # @param attrs [Hash] hash of remote attributes
@@ -74,12 +68,10 @@ module Synchronizable
       #
       # @api private
       def map_attributes(attrs)
-        return attrs unless mappings.present?
-
-        attrs.transform_keys! { |key| mappings[key] }
-
+        attrs.transform_keys! { |key| mappings[key] || key } if mappings.present?
         attrs.keep_if { |key| only.include? key } if only.present?
         attrs.delete_if { |key| key.nil? || except.include?(key) } if except.present?
+        attrs
       end
 
       private
@@ -90,7 +82,7 @@ module Synchronizable
       #
       # @raise [MissedRemoteIdError] raised when data doesn't contain remote id
       def ensure_remote_id(id)
-        unless id.present?
+        if id.blank?
           raise MissedRemoteIdError, I18n.t(
             'errors.missed_remote_id',
             remote_id: remote_id

@@ -2,6 +2,7 @@
 en:
   errors:
     missed_remote_id: Couldn't find remote id '%{remote_id}' in given data hash
+    missed_associations: Couldn't find associations %{keys} in %{attrs}
     import_error: '%{model} import error: %{error}'
   messages:
     result: >

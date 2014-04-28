@@ -25,16 +25,20 @@ module Synchronizable
     #
     # @api private
     def run(data = nil)
-      sync do |ctx|
-        ctx.result.before = @model.imports_count
+      sync do |context|
+        error_handler = ErrorHandler.new(@logger, context)
+        context.result.before = @model.imports_count
 
-        # binding.pry if data.blank?
         data = @synchronizer.fetch if data.blank?
         data.each do |attrs|
-          sync_record(ctx, attrs.with_indifferent_access)
+          attrs = attrs.with_indifferent_access
+          error_handler.handle do
+            sync_record(attrs)
+            sync_associations(attrs)
+          end
         end
 
-        ctx.result.after = @model.imports_count
+        context.result.after = @model.imports_count
       end
     end
 
@@ -42,9 +46,7 @@ module Synchronizable
 
     def initialize(model)
       @model, @synchronizer = model, model.synchronizer
-
       @logger = @synchronizer.logger
-      @error_handler = ErrorHandler.new(@logger)
     end
 
     def sync
@@ -63,39 +65,36 @@ module Synchronizable
 
     # Method called by {#run} for each remote model attribute hash
     #
-    # @param context [Synchronizable::Context] synchronization context
     # @param remote_attrs [Hash] hash with remote attributes
     #
     # @return [Boolean] `true` if synchronization was completed
     #   without errors, `false` otherwise
     #
-    # @raise [MissedRemoteIdError] raised when data doesn't contain `remote_id`
+    # @raise [MissedRemoteIdError] raised when the given
+    #   attributes hash doesn't contain `remote_id`
     #
-    # @see Synchronizable::Context
     # @see Synchronizable::ErrorHandler
     #
     # @api private
-    def sync_record(context, remote_attrs)
-      @error_handler.handle(context) do
-        remote_id   = @synchronizer.extract_remote_id(remote_attrs)
-        local_attrs = @synchronizer.map_attributes(remote_attrs)
+    def sync_record(remote_attrs)
+      remote_id   = @synchronizer.extract_remote_id(remote_attrs)
+      local_attrs = @synchronizer.map_attributes(remote_attrs)
 
-        if verbose_logging?
-          @logger.info { "remote id: #{remote_id}" }
-          @logger.info { "remote attributes: #{remote_attrs.inspect}" }
-          @logger.info { "local attributes: #{local_attrs.inspect}"   }
-        end
+      if verbose_logging?
+        @logger.info { "remote id: #{remote_id}" }
+        @logger.info { "remote attributes: #{remote_attrs.inspect}" }
+        @logger.info { "local attributes: #{local_attrs.inspect}"   }
+      end
 
-        import_record = Import.find_by(
-          :remote_id => remote_id,
-          :synchronizable_type => @model
-        )
+      import_record = Import.find_by(
+        :remote_id => remote_id,
+        :synchronizable_type => @model
+      )
 
-        if import_record.present? && import_record.synchronizable.present?
-          update_record(local_attrs, import_record.synchronizable)
-        else
-          create_record_pair(local_attrs, remote_id)
-        end
+      if import_record.present? && import_record.synchronizable.present?
+        update_record(local_attrs, import_record.synchronizable)
+      else
+        create_record_pair(local_attrs, remote_id)
       end
     end
 
@@ -117,6 +116,27 @@ module Synchronizable
       if verbose_logging?
         @logger.info { "#{@model}: #{local_record.id} was created" }
         @logger.info { "#{import_record.class}: #{import_record.id} was created" }
+      end
+    end
+
+    # Tries to find association keys in the given attributes hash.
+    #
+    # @param remote_attrs [Hash] hash with remote attributes
+    # @raise [MissedAssocationsError] raised when the given
+    #   attributes hash doesn't required associations
+    #
+    # @see Synchronizable::DSL::Associations
+    # @see Synchronizable::DSL::Associations::Association
+    #
+    # @api private
+    def sync_associations(attrs)
+      associations = @synchronizer.associations_for(attrs.keys)
+      associations.each do |association|
+        value = attrs[association.key]
+        association_attrs = association.model.synchronizer.fetch(value)
+
+        sync_record(association_attrs)
+        sync_associations(association_attrs)
       end
     end
 

@@ -9,7 +9,7 @@ class BreakConventionTeamSynchronizer
   )
   except :ignored_1, :ignored_2
 
-  sync do
+  fetch do |*args|
     [{
       :maet_id   => 'team_0',
       :eman      => 'z',

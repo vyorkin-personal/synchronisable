@@ -1,37 +1,45 @@
+require 'synchronizable/dsl/associations/has_one'
+require 'synchronizable/dsl/associations/has_many'
+
 module Synchronizable
   module DSL
     module Associations
       extend ActiveSupport::Concern
 
       included do
-        # storage for has_one/has_many associations.
         class_attribute :associations
         self.associations = {}
       end
 
       module ClassMethods
-        %w(one many).each do |suffix|
-          define_method(:"has_#{suffix}") do |model, opts = {}|
-            model_name = model.to_s.demodulize.underscore
-            setup_options(model_name, opts)
-            associations[model_name.to_sym] = opts
+        [HasOne, HasMany].each do |klass|
+          macro = klass.to_s.demodulize.underscore.to_sym
+
+          define_method(macro) do |name, options = {}|
+            klass.create(self, name, options)
           end
+        end
+
+        def associations_for(keys)
+          ensure_required_associations(keys)
+          intersection = associations.map(&:key) & keys
+          Hash[intersection.map { |key| [key, associations[key]] }]
         end
 
         private
 
-        def setup_options(model, opts)
-          opts[:model] = model.classify.constantize
-
-          if opts[:key].blank?
-            suffix = singular?(model) ? 's' : ''
-            opts[:key] = "#{model}_id#{suffix}"
+        def ensure_required_associations(keys)
+          missing = required_associations - keys
+          if missing.present?
+            raise MissedAssociationsError, I18n.t(
+              'errors.missed_associations',
+              keys: missing, attrs: attrs
+            )
           end
         end
 
-        def singular?(word)
-          word.pluralize != word &&
-          word.singularize == word
+        def required_associations
+          associations.select(&:required).map(&:key)
         end
       end
     end

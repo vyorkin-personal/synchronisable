@@ -2,8 +2,6 @@ require 'synchronizable/dsl/options'
 require 'synchronizable/dsl/associations'
 require 'synchronizable/exceptions'
 
-require 'pry-byebug'
-
 module Synchronizable
   # @abstract Subclass to create your model specific synchronizer class to
   # setup synchronization options and behavior.
@@ -37,9 +35,15 @@ module Synchronizable
     option :logger, default: -> {
       defined?(Rails) ? Rails.logger : Logger.new(STDOUT)
     }
-
-    # lambda or method name (symbol), that returns array of hashes with remote attributes.
-    option :fetch, default: ->(*args) { [] }
+    # Lambda that returns array of hashes with remote attributes.
+    option :fetch, default: []
+    # Lambda that returns a hash with remote attributes by id.
+    #
+    # @example
+    #   class FooSynchronizer < Synchronizable::Syncronizer
+    #     find { |id| remote_source.find { |h| h.key?(id) } }
+    #   end
+    option :find
 
     class << self
       # Extracts the remote id from given attribute hash.

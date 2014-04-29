@@ -133,10 +133,12 @@ module Synchronizable
       associations = @synchronizer.associations_for(attrs.keys)
       associations.each do |association|
         value = attrs[association.key]
-        association_attrs = association.model.synchronizer.fetch(value)
+        [*value].each do |id|
+          association_attrs = association.model.synchronizer.find(id)
 
-        sync_record(association_attrs)
-        sync_associations(association_attrs)
+          sync_record(association_attrs)
+          sync_associations(association_attrs)
+        end
       end
     end
 

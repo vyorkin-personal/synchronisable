@@ -2,6 +2,7 @@ require 'active_record'
 
 require 'active_support/core_ext/hash'
 require 'active_support/core_ext/class/attribute'
+require 'active_support/core_ext/object/deep_dup'
 require 'active_support/core_ext/string/inflections'
 require 'active_support/configurable'
 require 'active_support/concern'

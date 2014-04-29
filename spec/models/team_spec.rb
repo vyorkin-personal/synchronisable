@@ -32,8 +32,8 @@ describe Team do
         -> { Team.sync }
       end
 
-      it { should change { Team.count }.by(1) }
-      it { should change { Synchronizable::Import.count }.by(1) }
+      it { should change { Team.count }.by(2) }
+      it { should change { Synchronizable::Import.count }.by(2) }
     end
 
     context 'when remote id is not specified' do
@@ -44,10 +44,7 @@ describe Team do
 
     context 'when local record does not exist' do
       subject do
-        -> {
-          binding.pry
-          Team.sync(remote_attrs.take(2))
-        }
+        -> { Team.sync(remote_attrs.take(2)) }
       end
 
       it { should change { Team.count }.by(2) }

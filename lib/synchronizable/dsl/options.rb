@@ -1,7 +1,5 @@
 require 'synchronizable/dsl/options/option'
 
-require 'pry-byebug'
-
 module Synchronizable::DSL
   # Allows to define DSL-like attributes (options)
   # to be used in target class/module. Also you can override option
@@ -35,8 +33,7 @@ module Synchronizable::DSL
 
     module ClassMethods
       def inherited(subclass)
-        binding.pry
-        class_options[subclass] = class_options[self].dup
+        class_options[subclass] = class_options[self].deep_dup
       end
 
       # Defines a new option.

@@ -1,6 +1,4 @@
-class MatchPlayerSynchronizer
-  include Synchronizable::Synchronizer
-
+class MatchPlayerSynchronizer < Synchronizable::Synchronizer
   destroy_missed true
   mappings(
     :ref       => :ref_type,

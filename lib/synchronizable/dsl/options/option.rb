@@ -1,9 +1,14 @@
 module Synchronizable
   module DSL
     module Options
+      # Serves as storage & provides lazy evaluation for option.
+      #
+      # @see Synchronizable::DSL::Options
+      #
+      # @api private
       class Option
         def initialize(options)
-          @source, @value = nil, nil
+          @source = nil
 
           @default   = options[:default]
           @converter = options[:converter]
@@ -18,8 +23,7 @@ module Synchronizable
         end
 
         def value
-          @value ||= evaluate(@source) ||
-                     evaluate(@default)
+          evaluate(@source) || evaluate(@default)
         end
 
         private

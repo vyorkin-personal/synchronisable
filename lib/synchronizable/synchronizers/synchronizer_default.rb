@@ -5,8 +5,7 @@ module Synchronizable
   # model specific synchronizer is not defined.
   #
   # @api private
-  class SynchronizerDefault
-    include Synchronizer
+  class SynchronizerDefault < Synchronizer
     include Singleton
   end
 end

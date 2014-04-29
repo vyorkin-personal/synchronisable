@@ -1,5 +1,4 @@
-class MatchSynchronizer
-  include Synchronizable::Synchronizer
+class MatchSynchronizer < Synchronizable::Synchronizer
 
   has_one :team, key: 'home_team_id'
   has_one :team, key: 'away_team_id'

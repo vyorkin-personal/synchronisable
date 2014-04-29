@@ -4,7 +4,8 @@ require 'pry-byebug'
 
 module Synchronizable::DSL
   # Allows to define DSL-like attributes (options)
-  # to be used in target class/module.
+  # to be used in target class/module. Also you can override option
+  # definitions in subclasses, for example you can change the default value.
   #
   # @example Common use cases
   #   class Foo
@@ -34,6 +35,7 @@ module Synchronizable::DSL
 
     module ClassMethods
       def inherited(subclass)
+        binding.pry
         class_options[subclass] = class_options[self].dup
       end
 

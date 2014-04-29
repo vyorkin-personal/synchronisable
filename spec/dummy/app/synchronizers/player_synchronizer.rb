@@ -1,6 +1,4 @@
-class PlayerSynchronizer
-  include Synchronizable::Synchronizer
-
+class PlayerSynchronizer < Synchronizable::Synchronizer
   remote_id :player_id
   mappings(
     :eman_tsrif   => :first_name,

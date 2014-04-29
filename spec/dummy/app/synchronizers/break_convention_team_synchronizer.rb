@@ -1,6 +1,4 @@
-class BreakConventionTeamSynchronizer
-  include Synchronizable::Synchronizer
-
+class BreakConventionTeamSynchronizer < Synchronizable::Synchronizer
   remote_id :maet_id
   mappings(
     :eman    => :name,
@@ -9,13 +7,9 @@ class BreakConventionTeamSynchronizer
   )
   except :ignored_1, :ignored_2
 
-  fetch do |*args|
-    [{
-      :maet_id   => 'team_0',
-      :eman      => 'z',
-      :yrtnuoc   => 'France',
-      :ytic      => 'Paris',
-      :ignored_2 => 'ignored'
-    }]
+  gateway TeamGateway
+
+  fetch do |value|
+    [*value].map { |id| gateway.find(id) }
   end
 end

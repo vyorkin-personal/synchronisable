@@ -44,7 +44,10 @@ describe Team do
 
     context 'when local record does not exist' do
       subject do
-        -> { Team.sync(remote_attrs.take(2)) }
+        -> {
+          binding.pry
+          Team.sync(remote_attrs.take(2))
+        }
       end
 
       it { should change { Team.count }.by(2) }

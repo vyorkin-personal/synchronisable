@@ -1,8 +1,9 @@
 require 'spec_helper'
+require 'pry-byebug'
 
-describe Synchronizable::DSL::Options do
-  describe 'commom options' do
-    subject { HasOptions }
+describe Synchronizable::DSL::Macro do
+  describe 'commom attributes' do
+    subject { HasMacro }
 
     before do
       subject.xyz 7
@@ -22,13 +23,13 @@ describe Synchronizable::DSL::Options do
     its(:arr) { should eq([1, 2, 3]) }
   end
 
-  describe 'option with default value lambda that raises an error' do
+  describe 'attribute with default value lambda that raises an error' do
     it 'raises error' do
-      expect { HasOptions.carefull }.to raise_error(NotImplementedError)
+      expect { HasMacro.carefull }.to raise_error(NotImplementedError)
     end
 
     context 'when overriden in subclass not to raise an error' do
-      subject { HasOptionsSubclass }
+      subject { HasMacroSubclass }
 
       it { respond_to? :foo }
       it { respond_to? :bar }
@@ -37,12 +38,23 @@ describe Synchronizable::DSL::Options do
       its(:bar) { should eq(1)   }
 
       it 'not raises error' do
-        expect { HasOptionsSubclass.carefull }.to_not raise_error
+        expect { HasMacroSubclass.carefull }.to_not raise_error
       end
 
       it 'equals to the new default value' do
-        expect(HasOptionsSubclass.carefull).to eq(0)
+        expect(HasMacroSubclass.carefull).to eq(0)
       end
+    end
+  end
+
+  describe 'methods' do
+    subject { HasMacroSubclass }
+
+    it { respond_to? :sqr }
+    its(:sqr) { respond_to? :call }
+
+    it "sqr method definition returns square of two numbers" do
+      expect(subject.sqr.(2)).to eq(4)
     end
   end
 end

@@ -1,12 +1,13 @@
-require 'synchronizable/dsl/options'
+require 'synchronizable/dsl/macro'
+require 'pry-byebug'
 
 module Synchronizable
   module DSL
     module Associations
       class Association
-        include Synchronizable::DSL::Options
+        include Synchronizable::DSL::Macro
 
-        option :key_suffix, default: -> { raise NotImplementedError }
+        attribute :key_suffix, default: -> { raise NotImplementedError }
 
         class << self
           attr_accessor :valid_options

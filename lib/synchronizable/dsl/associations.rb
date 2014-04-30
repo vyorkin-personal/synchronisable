@@ -22,7 +22,7 @@ module Synchronizable
 
         def associations_for(keys)
           ensure_required_associations(keys)
-          intersection = associations.map(&:key) & keys
+          intersection = associations.map { |key, _| key } & keys
           Hash[intersection.map { |key| [key, associations[key]] }]
         end
 
@@ -39,7 +39,7 @@ module Synchronizable
         end
 
         def required_associations
-          associations.select(&:required).map(&:key)
+          associations.select { |_, a| a.required }.map(&:key)
         end
       end
     end

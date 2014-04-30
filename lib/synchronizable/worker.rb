@@ -2,6 +2,8 @@ require 'synchronizable/error_handler'
 require 'synchronizable/context'
 require 'synchronizable/models/import'
 
+require 'pry-byebug'
+
 module Synchronizable
   # Responsible for model synchronization.
   #
@@ -29,7 +31,7 @@ module Synchronizable
         error_handler = ErrorHandler.new(@logger, context)
         context.result.before = @model.imports_count
 
-        data = @synchronizer.fetch if data.blank?
+        data = @synchronizer.fetch.() if data.blank?
         data.each do |attrs|
           attrs = attrs.with_indifferent_access
           error_handler.handle do
@@ -122,6 +124,7 @@ module Synchronizable
     # Tries to find association keys in the given attributes hash.
     #
     # @param remote_attrs [Hash] hash with remote attributes
+    #
     # @raise [MissedAssocationsError] raised when the given
     #   attributes hash doesn't required associations
     #
@@ -131,15 +134,16 @@ module Synchronizable
     # @api private
     def sync_associations(attrs)
       associations = @synchronizer.associations_for(attrs.keys)
-      associations.each do |association|
-        value = attrs[association.key]
-        [*value].each do |id|
-          association_attrs = association.model.synchronizer.find(id)
-
-          sync_record(association_attrs)
-          sync_associations(association_attrs)
+      associations.each do |key, association|
+        [*attrs[key]].each do |id|
+          sync_association(id, association)
         end
       end
+    end
+
+    def sync_association(id, association)
+      attrs = association.model.synchronizer.find.(id)
+      Worker.run(association.model, [attrs])
     end
 
     def verbose_logging?

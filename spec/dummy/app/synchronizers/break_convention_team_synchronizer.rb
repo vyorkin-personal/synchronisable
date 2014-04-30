@@ -25,6 +25,6 @@ class BreakConventionTeamSynchronizer < Synchronizable::Synchronizer
   )
   except :ignored_1, :ignored_2
 
-  find  { |id| @source.find { |h| h.key?(id) } }
+  find  { |id| @source.find { |h| h[:maet_id] == id } }
   fetch { @source }
 end

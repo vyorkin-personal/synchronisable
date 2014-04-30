@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+require 'pry-byebug'
+
 describe Team do
   describe 'synchronization' do
     let!(:remote_attrs) do
@@ -27,7 +29,7 @@ describe Team do
       ]
     end
 
-    context 'using sync to get remote data' do
+    context 'sync with no data specified' do
       subject do
         -> { Team.sync }
       end

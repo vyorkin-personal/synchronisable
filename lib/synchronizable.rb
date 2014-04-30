@@ -38,7 +38,10 @@ module Synchronizable
     }
   end
 
+  # Syncs models that is defined in {Synchronizable#models}
   def self.sync
+    # TODO: Ebash here
+    #
     # 1. Get all synchronizable active record models if config.models is not defined
     # 2. Call sync for each of them
   end

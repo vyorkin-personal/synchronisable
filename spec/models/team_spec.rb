@@ -47,6 +47,22 @@ describe Team do
     context 'when local record does not exist' do
       subject do
         -> { Team.sync(remote_attrs.take(2)) }
+
+        # The desired interface:
+        # ><(((*>
+        #
+        # + Model.sync
+        # + Model.sync([{},...])
+        #
+        # Match.sync(:include => {
+        #   :match => {
+        #     :match_players => :player
+        #   }
+        # })
+        # Model.sync([id1, ..., idn])
+        #
+        # Model.where(condition).sync
+        # Model.where(condition).sync(:include => [:team, :match, :match_player, :player])
       end
 
       it { should change { Team.count }.by(2) }

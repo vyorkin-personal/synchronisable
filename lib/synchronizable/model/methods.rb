@@ -8,11 +8,15 @@ module Synchronizable
       # Creates a new worker, that initiates synchronization
       # for this particular model.
       #
+      # @overload sync(options)
+      # @overload sync(data)
+      # @overload sync
+      #
       # @param data [Array<Hash>] array of hashes with remote attributes.
       #
       # @see Synchronizable::Worker
-      def sync(data = nil)
-        Worker.run(self, data)
+      def sync(*args)
+        Worker.run(self, args)
       end
 
       # Count of import records for this model.

@@ -14,10 +14,13 @@ module Synchronizable
       #
       # @param model [Class] model class to be synchronized
       # @param data [Array<Hash>] array of hashes with remote attributes
-      def run(model, data)
-        new(model).run(data)
+      #
+      def run(model, args)
+        new(model).run(args)
       end
     end
+
+    private
 
     # Initiates model synchronization.
     #
@@ -26,10 +29,12 @@ module Synchronizable
     #   using `sync` lambda/proc defined in corresponding synchronizer.
     #
     # @api private
-    def run(data = nil)
+    def run(args)
       sync do |context|
         error_handler = ErrorHandler.new(@logger, context)
         context.result.before = @model.imports_count
+
+        options = args.extract_options!
 
         data = @synchronizer.fetch.() if data.blank?
         data.each do |attrs|
@@ -43,8 +48,6 @@ module Synchronizable
         context.result.after = @model.imports_count
       end
     end
-
-    private
 
     def initialize(model)
       @model, @synchronizer = model, model.synchronizer

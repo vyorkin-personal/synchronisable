@@ -4,6 +4,9 @@ require 'pry-byebug'
 module Synchronizable
   module DSL
     module Associations
+      # Association builder.
+      #
+      # @api private
       class Association
         include Synchronizable::DSL::Macro
 

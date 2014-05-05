@@ -36,7 +36,7 @@ module Synchronizable
       defined?(Rails) ? Rails.logger : Logger.new(STDOUT)
     }
     # Lambda that returns array of hashes with remote attributes.
-    method :fetch, default: []
+    method :fetch, default: -> { [] }
     # Lambda that returns a hash with remote attributes by id.
     #
     # @example Common use case
@@ -46,6 +46,22 @@ module Synchronizable
     #     end
     #   end
     method :find
+    # Lambda, that will be called before synchronization of each record.
+    #
+    # @param remote_attrs [Hash] hash with remote attributes
+    # @param context [Synchronizable::Context] synchronization context
+    #
+    # @return [Boolean] `true` to continue sync, `false` to cancel
+    method :before_record_sync
+    # Lambda, that will be called every time after record is synchronized.
+    #
+    # @param remote_attrs [Hash] hash with remote attributes
+    # @param context [Synchronizable::Context] synchronization context
+    method :after_record_sync
+
+    # TODO: Write yardoc
+    method :before_association_sync
+    method :after_association_sync
 
     class << self
       # Extracts the remote id from given attribute hash.

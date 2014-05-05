@@ -6,4 +6,7 @@ class MatchPlayerSynchronizer < Synchronizable::Synchronizer
     :match     => :match_id,
     :player    => :player_id
   )
+
+  find  { |id| MatchPlayerGateway.find(id) }
+  fetch { MatchPlayerGateway.fetch }
 end

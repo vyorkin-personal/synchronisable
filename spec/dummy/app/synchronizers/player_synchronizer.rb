@@ -10,4 +10,7 @@ class PlayerSynchronizer < Synchronizable::Synchronizer
     :team         => :team_id
   )
   only :team, :eman_tsrif, :eman_tsal
+
+  find  { |id| PlayerGateway.find(id) }
+  fetch { PlayerGateway.fetch }
 end

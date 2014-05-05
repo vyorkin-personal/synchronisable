@@ -15,10 +15,9 @@ module Synchronizable
       # @overload synchronizable(klass, options)
       #   @param klass [Class] synchronizer class to be used
       #   @param options [Hash] describes behavior of synchronizable model
-      # @overload synchronizable(options)
-      #   @param options [Hash] describes behavior of synchronizable model
       #   @option options [Class] :synchronizer class that provides
       #     synchronization configuration
+      # @overload synchronizable(options)
       # @overload synchronizable
       #
       # @see Synchronizable::Synchronizer

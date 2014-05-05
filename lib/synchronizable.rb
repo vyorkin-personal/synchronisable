@@ -39,11 +39,31 @@ module Synchronizable
   end
 
   # Syncs models that is defined in {Synchronizable#models}
-  def self.sync
-    # TODO: Ebash here
-    #
-    # 1. Get all synchronizable active record models if config.models is not defined
-    # 2. Call sync for each of them
+  #
+  # @param models [Array] array of models that should be synchronized.
+  #   This take a precedence over models defined in {Synchronizable#models}.
+  #   If not specified and {Synchronizable#models} is empty, than it will try
+  #   to synchronize only those models which have a corresponding synchronizers.
+  #
+  # @return [Synchronizable::Context] synchronization context
+  #
+  # @see Synchronizable::Context
+  def self.sync(*models)
+    source = source_models(models)
+    source.each { |model| model.try(:safe_constantize).try(:sync) }
+  end
+
+  private
+
+  def self.source_models(models)
+    source = models.present? ? models : self.models
+    source = source.present? ? source : lookup_models
+  end
+
+  def self.lookup_models
+    ActiveRecord::Base.descendants.select do |model|
+      model.included_modules.include?(Synchronizable::Model)
+    end
   end
 end
 

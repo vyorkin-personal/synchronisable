@@ -19,6 +19,10 @@ module Synchronizable
           transform(@source)
         end
 
+        def default
+          transform(@default)
+        end
+
         protected
 
         def transform(arg)

@@ -55,14 +55,14 @@ describe Team do
         # + Model.sync([{},...])
         #
         # Match.sync(:include => {
-        #   :match => {
-        #     :match_players => :player
-        #   }
+        #   :match_players => :player
         # })
         # Model.sync([id1, ..., idn])
         #
         # Model.where(condition).sync
-        # Model.where(condition).sync(:include => [:team, :match, :match_player, :player])
+        # Match.where(condition).sync(:include => {
+        #   :match_players => :player
+        # })
       end
 
       it { should change { Team.count }.by(2) }

@@ -3,7 +3,7 @@ require 'pry-byebug'
 
 describe Match do
   describe 'synchronization' do
-    context 'when has associations' do
+    context 'when has associations defined in Synchronizer' do
       subject do
         -> { Match.sync }
       end

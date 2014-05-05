@@ -11,7 +11,7 @@ module Synchronizable
       # @see Synchronizable::DSL::Attribute
       # @see Synchronizable::DSL::Method
       class Expression
-        attr_reader :source
+        attr_reader :source, :default
 
         def initialize(options)
           @default = options[:default]
@@ -23,10 +23,6 @@ module Synchronizable
         end
 
         protected
-
-        def default
-          transform(@default)
-        end
 
         def transform(arg)
           evaluate(arg)

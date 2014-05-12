@@ -140,7 +140,7 @@ module Synchronizable
         after  = send(:"after_#{method}")
 
         return unless before.(*args) if before
-        block.call
+        block.()
         after.(*args) if after
       end
 

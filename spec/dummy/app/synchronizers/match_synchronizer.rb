@@ -31,7 +31,6 @@ class MatchSynchronizer < Synchronizable::Synchronizer
   fetch { @gateway.fetch }
 
   after_sync do |source|
-    binding.pry
     attrs = source.remote_attrs
 
     MatchPlayer::REF_TYPES.each do |ref_type|
@@ -47,18 +46,12 @@ class MatchSynchronizer < Synchronizable::Synchronizer
       end
 
       local_player_ids.each do |player_id|
-        match_player = MatchPlayer.find_by(
+        MatchPlayer.create_with(
+          :ref_type => ref_type
+        ).find_or_create_by(
           :match_id  => match.id,
           :player_id => player_id
         )
-
-        unless match_player
-          MatchPlayer.create!({
-            :ref_type  => ref_type,
-            :match_id  => match.id,
-            :player_id => player_id
-          })
-        end
       end
     end
   end

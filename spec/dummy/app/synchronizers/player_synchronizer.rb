@@ -12,7 +12,7 @@ class PlayerSynchronizer < Synchronizable::Synchronizer
     :thgiew       => :weight,
     :team         => :team_id
   )
-  only :team, :eman_tsrif, :eman_tsal
+  only :team_id, :first_name, :last_name
 
   find  { |id| @gateway.find(id) }
   fetch { @gateway.fetch }

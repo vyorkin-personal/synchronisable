@@ -29,17 +29,22 @@ module Synchronizable
         return false
     end
 
+    private
+
     def log(e, source)
-      @logger.error do
-        I18n.t('errors.import_error',
-          :model         => @context.model.to_s,
-          :error         => e.message,
-          :remote_attrs  => source.remote_attrs,
-          :local_attrs   => source.local_attrs,
-          :import_record => source.import_record.inspect,
-          :local_record  => source.local_record.inspect
-        )
-      end
+      msg = error_message(e, source)
+      @logger.error msg
+    end
+
+    def error_message(e, source)
+      I18n.t('errors.import_error',
+        :model         => @context.model.to_s,
+        :error         => e.message,
+        :remote_attrs  => source.remote_attrs,
+        :local_attrs   => source.local_attrs,
+        :import_record => source.import_record.inspect,
+        :local_record  => source.local_record.inspect
+      )
     end
   end
 end

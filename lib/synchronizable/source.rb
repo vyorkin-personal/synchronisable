@@ -16,20 +16,15 @@ module Synchronizable
     #
     # @api private
     def build
-      @remote_id    = @synchronizer.extract_remote_id(@remote_attrs)
-      @local_attrs  = @synchronizer.map_attributes(@remote_attrs)
+      @remote_id = @synchronizer.extract_remote_id(@remote_attrs)
+      @local_attrs = @synchronizer.map_attributes(@remote_attrs)
       @associations = @synchronizer.associations_for(@local_attrs)
 
       @local_attrs.delete_if do |key, _|
         @associations.keys.any? { |a| a.key == key }
       end
 
-      # TODO: Add parent {key, value} to local_attrs
-
-      @import_record = Import.find_by(
-        :remote_id => @remote_id,
-        :synchronizable_type => model
-      )
+      set_parent_attribute
     end
 
     def updatable?
@@ -47,6 +42,27 @@ module Synchronizable
         remote attributes: #{remote_attrs},
         local attributes: #{local_attrs}
       )
+    end
+
+    private
+
+    def set_parent_attribute
+      return unless @parent
+      name = parent_attribute_name
+      @local_attrs[name] = @parent.local_record.id if name
+    end
+
+    def parent_attribute_name
+      return nil unless parent_has_model_as_reflection?
+      parent_name = @parent.model.table_name.singularize
+      "#{parent_name}_id"
+    end
+
+    def parent_has_model_as_reflection?
+      @parent.model.reflections.values.any? do |reflection|
+        reflection.plural_name == @model.table_name &&
+        [:has_one, :has_many].include?(reflection.macro)
+      end
     end
   end
 end

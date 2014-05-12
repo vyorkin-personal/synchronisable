@@ -1,13 +1,18 @@
-class TeamGateway
-  class << self
-    @source = [FactoryGirl.build_pair(:team)]
+class TeamGateway < GatewayBase
+  def id_key
+    :maet_id
+  end
 
-    def fetch
-      @source
-    end
-
-    def find(id)
-      @source.find { |h| h[:maet_id] == id }
-    end
+  def source
+    @source ||= [
+      FactoryGirl.build(:remote_team,
+        :maet_id     => 'team_0',
+        :players_ids => %w(player_0 player_2)
+      ),
+      FactoryGirl.build(:remote_team,
+        :maet_id     => 'team_1',
+        :players_ids => %w(player_1 player_3)
+      )
+    ]
   end
 end

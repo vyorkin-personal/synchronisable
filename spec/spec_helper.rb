@@ -52,6 +52,12 @@ Spork.prefork do
       config.filter_run_excluding slow: true
     end
   end
+
+  FactoryGirl.define do
+    %w(match team player match_player stage tournament).each do |model|
+      sequence(:"#{model}_id") { |n| "#{model}_#{n}" }
+    end
+  end
 end
 
 Spork.each_run do

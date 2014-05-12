@@ -14,22 +14,32 @@ module Synchronizable
       module ClassMethods
         [HasOne, HasMany].each do |klass|
           macro = klass.to_s.demodulize.underscore.to_sym
-
           define_method(macro) do |name, options = {}|
             klass.create(self, name, options)
           end
         end
 
-        def associations_for(keys)
-          ensure_required_associations(keys)
-          intersection = associations.map { |key, _| key } & keys
-          Hash[intersection.map { |key| [key, associations[key]] }]
+        # Builds hash with association as key and array of ids as value.
+        #
+        # @param attrs [Hash] local record attributes
+        #
+        # @return [Hash<Synchronizable::Association, Array>] associations hash
+        #
+        # @raise [MissedAssocationsError] raised when the given
+        #   attributes hash doesn't required associations
+        def associations_for(attrs)
+          ensure_required_associations(attrs)
+          intersection = self.associations.map { |key, _| key } & attrs.keys
+
+          Hash[intersection.map { |key|
+            [self.associations[key], [*attrs[key].dup]]
+          }]
         end
 
         private
 
-        def ensure_required_associations(keys)
-          missing = required_associations - keys
+        def ensure_required_associations(attrs)
+          missing = required_associations - attrs.keys
           if missing.present?
             raise MissedAssociationsError, I18n.t(
               'errors.missed_associations',
@@ -39,7 +49,7 @@ module Synchronizable
         end
 
         def required_associations
-          associations.select { |_, a| a.required }.map(&:key)
+          self.associations.select { |_, a| a.required }.map(&:key)
         end
       end
     end

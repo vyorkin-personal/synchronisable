@@ -1,15 +1,26 @@
-class PlayerGateway
-  class << self
-    @source =
-      FactoryGirl.build_list(:remote_player, 11, team: 'team_0') +
-      FactoryGirl.build_list(:remote_player, 11, team: 'team_1')
+class PlayerGateway < GatewayBase
+  def id_key
+    :player_id
+  end
 
-    def fetch
-      @source
-    end
-
-    def find(id)
-      @source.find { |h| h[:player_id] == id }
-    end
+  def source
+    @source ||= [
+      FactoryGirl.build(:remote_player,
+        :team      => 'team_0',
+        :player_id => 'player_0'
+      ),
+      FactoryGirl.build(:remote_player,
+        :team      => 'team_0',
+        :player_id => 'player_2'
+      ),
+      FactoryGirl.build(:remote_player,
+        :team      => 'team_1',
+        :player_id => 'player_1'
+      ),
+      FactoryGirl.build(:remote_player,
+        :team      => 'team_1',
+        :player_id => 'player_3'
+      )
+    ]
   end
 end

@@ -10,7 +10,7 @@ describe Synchronizable do
     describe 'models specified in configuration' do
       context 'only Team and Match' do
         before :all do
-          Synchronizable.models = %w(Team Match)
+          Synchronizable.models = %w(Match Team)
         end
 
         it { should change { Match.count }.by(1) }
@@ -26,8 +26,8 @@ describe Synchronizable do
 
         it { should change { Match.count }.by(1) }
         it { should change { Team.count }.by(2) }
-        it { should change { MatchPlayer.count }.by(4) }
-        it { should change { Player.count }.by(4) }
+        it { should change { MatchPlayer.count }.by(22) }
+        it { should change { Player.count }.by(22) }
 
         it { should change { Synchronizable::Import.count }.by(11) }
       end
@@ -42,7 +42,7 @@ describe Synchronizable do
         end
 
         it { should change { Match.count }.by(1) }
-        it { should change { Player.count }.by(4) }
+        it { should change { Player.count }.by(22) }
         it { should_not change { Team.count }.by(2) }
 
         it { should change { Synchronizable::Import.count }.by(5) }

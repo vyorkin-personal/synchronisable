@@ -5,25 +5,37 @@ describe Match do
   describe 'synchronization' do
     context 'when has associations defined in Synchronizer' do
       subject do
-        -> { Match.sync }
+        -> {
+          binding.pry
+          Match.sync
+        }
       end
 
       it { should change { Match.count }.by(1) }
-      it { should change { Team.count  }.by(2) }
+      it { should change { Team.count }.by(2) }
+
       it { should change { Synchronizable::Import.count }.by(3) }
     end
 
     context 'when associations specified with :include option' do
       subject do
+        -> { sync_match }
+      end
+
+      def sync_match
         Match.sync(:include => {
           :match => {
-            :match_players => :player
+            :team => :players
           }
         })
       end
 
       it { should change { Match.count }.by(1) }
-      # it { should change
+      it { should change { Team.count }.by(2) }
+      it { should change { Player.count }.by(22) }
+      it { should change { MatchPlayer.count }.by(22) }
+
+      it { should change { Synchronizable::Import.count }.by(47) }
     end
   end
 end

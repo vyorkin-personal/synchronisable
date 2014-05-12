@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140422140817) do
+ActiveRecord::Schema.define(version: 20140507140039) do
 
   create_table "imports", force: true do |t|
     t.string   "synchronizable_type", null: false
@@ -44,7 +44,10 @@ ActiveRecord::Schema.define(version: 20140422140817) do
     t.string   "weather"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "stage_id"
   end
+
+  add_index "matches", ["stage_id"], name: "index_matches_on_stage_id"
 
   create_table "players", force: true do |t|
     t.string   "first_name"
@@ -67,10 +70,32 @@ ActiveRecord::Schema.define(version: 20140422140817) do
     t.datetime "updated_at"
   end
 
+  create_table "stages", force: true do |t|
+    t.date     "beginning"
+    t.date     "ending"
+    t.integer  "tournament_id"
+    t.string   "name"
+    t.integer  "number"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "stages", ["tournament_id"], name: "index_stages_on_tournament_id"
+
   create_table "teams", force: true do |t|
     t.string   "name"
     t.string   "country"
     t.string   "city"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "tournaments", force: true do |t|
+    t.string   "name"
+    t.string   "short_name"
+    t.date     "beginning"
+    t.date     "ending"
+    t.boolean  "is_current", default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

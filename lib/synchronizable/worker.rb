@@ -1,5 +1,6 @@
 require 'synchronizable/error_handler'
 require 'synchronizable/context'
+require 'synchronizable/source'
 require 'synchronizable/models/import'
 
 require 'pry-byebug'
@@ -12,17 +13,19 @@ module Synchronizable
     class << self
       # Creates a new instance of worker and initiates model synchronization.
       #
-      # @param model [Class] model class to be synchronized
-      # @param args [Array<Hash>] array of hashes with remote attributes
+      # @overload run(model, data, options)
+      #   @param model [Class] model class to be synchronized
+      #   @param options [Hash] synchronization options
+      #   @option options [Hash] :include assocations to be synchronized.
+      #     Use this option to override `has_one` & `has_many` assocations
+      #     defined in model synchronizer.
+      # @overload run(model, data)
+      # @overload run(model)
       #
       # @return [Synchronizable::Context] synchronization context
-      #
-      # @see Synchronizable::Context
-      #
-      # @api private
-      def run(model, args)
+      def run(model, *args)
         options = args.extract_options!
-        data    = args.first
+        data = args.first
 
         new(model, options).run(data)
       end
@@ -32,38 +35,36 @@ module Synchronizable
     #
     # @param data [Array<Hash>] array of hashes with remote attriutes.
     #   If not specified worker will try to get the data
-    #   using `fetch` lambda/proc defined in corresponding synchronizer.
+    #   using `fetch` lambda/proc defined in corresponding synchronizer
     #
     # @return [Synchronizable::Context] synchronization context
-    #
-    # @see Synchronizable::Context
-    #
-    # @api private
     def run(data)
       sync do |context|
         error_handler = ErrorHandler.new(@logger, context)
-        context.result.before = @model.imports_count
+        context.before = @model.imports_count
 
         data = @synchronizer.fetch.() if data.blank?
         data.each do |attrs|
-
           # TODO: Handle case when only array of ids is given
           # What to do with associations?
 
-          attrs = attrs.with_indifferent_access
-          error_handler.handle do
-            sync_record(attrs, context)
-            sync_associations(attrs, context)
+          source = Source.new(model, parent, attrs)
+          error_handler.handle(source) do
+            @synchronizer.with_sync_callbacks(source) do
+              sync_record(source)
+              sync_associations(source)
+            end
           end
         end
 
-        context.result.after = @model.imports_count
+        context.after = @model.imports_count
+        context.deleted = 0
       end
     end
 
     private
 
-    def initialize(model, options = {})
+    def initialize(model, options)
       @model, @synchronizer = model, model.synchronizer
       @logger = @synchronizer.logger
       @options = options
@@ -73,7 +74,7 @@ module Synchronizable
       @logger.progname = "#{@model} synchronization"
       @logger.info { 'starting' }
 
-      context = Context.new(@model)
+      context = Context.new(@model, @parent.try(:model))
       yield context
 
       @logger.info { 'done' }
@@ -83,62 +84,47 @@ module Synchronizable
       context
     end
 
+    # TODO: Think about how to move it from here to Source or some other place
+
     # Method called by {#run} for each remote model attribute hash
     #
-    # @param remote_attrs [Hash] hash with remote attributes
-    # @param context [Synchronizable::Context] synchronization context
+    # @param source [Synchronizable::Source] synchronization source
     #
     # @return [Boolean] `true` if synchronization was completed
     #   without errors, `false` otherwise
-    #
-    # @raise [MissedRemoteIdError] raised when the given
-    #   attributes hash doesn't contain `remote_id`
-    #
-    # @see Synchronizable::ErrorHandler
-    #
-    # @api private
-    def sync_record(remote_attrs, context)
-      with_record_sync_callbacks(remote_attrs, context) do
-        remote_id   = @synchronizer.extract_remote_id(remote_attrs)
-        local_attrs = @synchronizer.map_attributes(remote_attrs)
+    def sync_record(source)
+      @synchronizer.with_record_sync_callbacks(source) do
+        source.build(@model)
 
-        if verbose_logging?
-          @logger.info { "remote id: #{remote_id}" }
-          @logger.info { "remote attributes: #{remote_attrs.inspect}" }
-          @logger.info { "local attributes: #{local_attrs.inspect}"   }
-        end
+        @logger.info { source.dump_message } if verbose_logging?
 
-        import_record = Import.find_by(
-          :remote_id => remote_id,
-          :synchronizable_type => @model
-        )
-
-        if import_record.present? && import_record.synchronizable.present?
-          update_record(local_attrs, import_record.synchronizable)
+        if source.updatable?
+          update_record(source)
         else
-          create_record_pair(local_attrs, remote_id)
+          create_record_pair(source)
         end
       end
     end
 
-    def with_record_sync_callbacks(attrs, context)
-      success = @synchronizer.before_record_sync.(attrs, context)
+    def update_record(source)
+      if verbose_logging?
+        @logger.info { "updating #{@model}: #{source.local_record.id}" }
+      end
+
+      # TODO: Напрашивается, да?
+      source.local_record.update_attributes!(source.local_attrs)
     end
 
-    def update_record(attrs, record)
-      @logger.info { "updating #{@model}: #{record.id}" } if verbose_logging?
-
-      record.update_attributes!(attrs)
-    end
-
-    def create_record_pair(attrs, remote_id)
-      local_record = @model.create!(attrs)
+    def create_record_pair(source)
+      local_record = @model.create!(source.local_attrs)
       import_record = Import.create!(
         :synchronizable_id    => local_record.id,
         :synchronizable_type  => @model.to_s,
-        :remote_id            => remote_id,
-        :attrs                => attrs
+        :remote_id            => source.remote_id,
+        :attrs                => source.local_attrs
       )
+
+      source.import_record = import_record
 
       if verbose_logging?
         @logger.info { "#{@model}: #{local_record.id} was created" }
@@ -146,30 +132,32 @@ module Synchronizable
       end
     end
 
-    # Tries to find association keys in the given attributes hash.
+    # Synchronizes associations.
     #
-    # @param remote_attrs [Hash] hash with remote attributes
-    #
-    # @raise [MissedAssocationsError] raised when the given
-    #   attributes hash doesn't required associations
+    # @param source [Synchronizable::Source] synchronization source
     #
     # @see Synchronizable::DSL::Associations
     # @see Synchronizable::DSL::Associations::Association
-    #
-    # @api private
-    def sync_associations(attrs)
-      # TODO: Handle case with has_many association
-      associations = @synchronizer.associations_for(attrs.keys)
-      associations.each do |key, association|
-        [*attrs[key]].each do |id|
-          sync_association(id, association)
-        end
+    def sync_associations(source)
+      if verbose_logging? && source.associations.present?
+        @logger.info { "starting associations sync" }
+      end
+
+      source.associations.each do |association, ids|
+        ids.each { |id| sync_association(source, id, association) }
       end
     end
 
-    def sync_association(id, association)
-      attrs = association.model.synchronizer.find.(id)
-      Worker.run(association.model, *[attrs])
+    def sync_association(source, id, association)
+      binding.pry
+      if verbose_logging?
+        @logger.info { "synchronizing association with id: #{id}" }
+      end
+
+      @synchronizer.with_association_sync_callbacks(source, id, association) do
+        attrs = association.model.synchronizer.find.(id)
+        Worker.run(association.model, [attrs], { :parent => source })
+      end
     end
 
     def verbose_logging?

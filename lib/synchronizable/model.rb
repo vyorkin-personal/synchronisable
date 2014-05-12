@@ -46,8 +46,8 @@ module Synchronizable
       end
 
       def default_synchronizer
-        "#{self.name.demodulize}#{SYNCHRONIZER_SUFFIX}".safe_constantize ||
-        SynchronizerDefault.instance
+        const_name = "#{self.name.demodulize}#{SYNCHRONIZER_SUFFIX}"
+        const_name.safe_constantize || SynchronizerDefault.instance
       end
     end
   end

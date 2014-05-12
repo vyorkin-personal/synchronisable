@@ -45,12 +45,12 @@ module Synchronizable
   #   If not specified and {Synchronizable#models} is empty, than it will try
   #   to synchronize only those models which have a corresponding synchronizers.
   #
-  # @return [Synchronizable::Context] synchronization context
+  # @return [Array<[Synchronizable::Context]>] array of synchronization contexts
   #
   # @see Synchronizable::Context
   def self.sync(*models)
     source = source_models(models)
-    source.each { |model| model.try(:safe_constantize).try(:sync) }
+    source.map { |model| model.try(:safe_constantize).try(:sync) }
   end
 
   private

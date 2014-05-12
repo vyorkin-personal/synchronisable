@@ -14,24 +14,30 @@ module Synchronizable
     # Wraps the given block in transaction.
     # Rescued exceptions are written to log and saved to errors array.
     #
+    # @param source [Synchronizable::Source] synchronization source
+    #
     # @return [Boolean] `true` if syncronization was completed
     #   without errors, `false` otherwise
-    def handle
+    def handle(source)
       ActiveRecord::Base.transaction do
         yield
         return true
       end
       rescue Exception => e
         @context.errors << e
-        log(e, @context.model)
+        log(e, source)
         return false
     end
 
-    def log(e, model)
+    def log(e, source)
       @logger.error do
         I18n.t('errors.import_error',
-          :model => model.to_s,
-          :error => e.message
+          :model         => @context.model.to_s,
+          :error         => e.message,
+          :remote_attrs  => source.remote_attrs,
+          :local_attrs   => source.local_attrs,
+          :import_record => source.import_record.inspect,
+          :local_record  => source.local_record.inspect
         )
       end
     end

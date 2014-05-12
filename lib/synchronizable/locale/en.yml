@@ -3,9 +3,15 @@ en:
   errors:
     missed_remote_id: Couldn't find remote id '%{remote_id}' in given data hash
     missed_associations: Couldn't find associations %{keys} in %{attrs}
-    import_error: '%{model} import error: %{error}'
+    import_error: |
+      %{model} import error: %{error}.
+      remote attrs: %{remote_attrs},
+      local attrs: %{local_attrs},
+      import record: %{import_record},
+      local record: %{local_record}
+    gateway_method_missing: Method %{method} is not implemented for gateway
   messages:
-    result: >
-      %{model} synchronization.
+    result: |
+      %{model} synchronization, parent: %{parent}.
       Record count before / after: %{before} / %{after},
       deleted record count: %{deleted}, error count: %{errors}

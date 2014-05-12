@@ -3,9 +3,15 @@ ru:
   errors:
     missed_remote_id: В хэше не указан remote id '%{remote_id}'
     missed_associations: В хэше %{attrs} не указаны ассоциации %{keys}
-    import_error: 'Ошибка при импорте %{model}: %{error}'
+    import_error: >
+      Ошибка при импорте %{model}: %{error},
+      remote attrs: %{remote_attrs},
+      local attrs: %{local_attrs},
+      import record: %{import_record},
+      local record: %{local_record}
+    gateway_method_missing: Не реализован метод '%{method}' для Gateway
   messages:
     result: >
-      Синхронизация %{model}.
+      Синхронизация %{model}, родительская запись: %{parent}.
       Количество записей до: %{before}, количество записей после: %{after},
       количество удаленных записей: %{deleted}, количество ошибок: %{errors}

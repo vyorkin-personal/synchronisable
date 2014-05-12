@@ -1,12 +1,21 @@
-FactoryGirl.define :remote_team, class: Hash do
-  maet_id { |n| "team_#{n}" }
+FactoryGirl.define do
+  factory :remote_team, class: Hash do
+    maet_id { generate :team_id }
 
-  eman    generate :name
-  yrtnuoc generate :string
-  ytic    generate :string
+    eman    { generate :name }
+    yrtnuoc { generate :string }
+    ytic    { generate :string }
 
-  ignored_1 generate :string
-  ignored_2 generate :timestamp
+    ignored_1 { generate :string }
+    ignored_2 { generate :timestamp }
 
-  # TODO: Somehow add player ids?
+    initialize_with { attributes }
+
+    trait :with_players do
+      after(:build) do |object, evaluator|
+        players = build_list(:remote_player, 11, team: object[:maet_id])
+        object[:player_ids] = players.map { |h| h[:player_id] }
+      end
+    end
+  end
 end

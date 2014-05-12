@@ -1,26 +1,23 @@
 module Synchronizable
   # Synchronization context.
-  #
-  # @api private
   class Context
-    Result = Struct.new(:before, :after, :deleted)
+    attr_accessor :model, :errors,
+                  :before, :after, :deleted
 
-    attr_reader :result
-    attr_accessor :model, :errors
-
-    def initialize(model)
-      @model  = model
+    def initialize(model, parent)
+      @model, @parent  = model, parent
       @errors = []
-      @result = Result.new(0, 0, 0)
+      @before, @after, @deleted = 0, 0, 0
     end
 
-    # String with summary synchronization info.
+    # @return [String] summary synchronization info.
     def summary_message
       I18n.t('messages.result',
         :model   => model,
-        :before  => result.before,
-        :after   => result.after,
-        :deleted => result.deleted,
+        :parent  => parent,
+        :before  => before,
+        :after   => after,
+        :deleted => deleted,
         :errors  => errors.count
       )
     end

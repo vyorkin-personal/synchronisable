@@ -1,13 +1,9 @@
 require 'spec_helper'
-require 'pry-byebug'
 
 describe Synchronizable do
   describe 'synchronization' do
     subject do
-      -> {
-        # binding.pry
-        Synchronizable.sync
-      }
+      -> { Synchronizable.sync }
     end
 
     describe 'models specified in configuration' do

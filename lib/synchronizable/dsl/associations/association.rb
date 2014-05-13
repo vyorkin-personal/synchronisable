@@ -1,5 +1,4 @@
 require 'synchronizable/dsl/macro'
-require 'pry-byebug'
 
 module Synchronizable
   module DSL

@@ -1,5 +1,3 @@
-require 'pry-byebug'
-
 class MatchSynchronizer < Synchronizable::Synchronizer
   @gateway = MatchGateway.new
 

@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'pry-byebug'
 
 describe Synchronizable::DSL::Macro do
   describe 'commom attributes' do

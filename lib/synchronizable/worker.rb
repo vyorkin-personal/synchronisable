@@ -3,8 +3,6 @@ require 'synchronizable/context'
 require 'synchronizable/source'
 require 'synchronizable/models/import'
 
-require 'pry-byebug'
-
 module Synchronizable
   # Responsible for model synchronization.
   #
@@ -95,7 +93,6 @@ module Synchronizable
     #   without errors, `false` otherwise
     def sync_record(source)
       @synchronizer.with_record_sync_callbacks(source) do
-        # binding.pry if @model == Tournament
         source.build
 
         @logger.info(source.dump_message) if verbose_logging?

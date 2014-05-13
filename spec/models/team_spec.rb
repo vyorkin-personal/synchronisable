@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-require 'pry-byebug'
-
 describe Team do
   describe 'synchronization' do
     let!(:remote_attrs) do

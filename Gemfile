@@ -6,4 +6,4 @@ gem 'pry'
 gem 'byebug'
 gem 'pry-byebug'
 
-gem 'rspec-nc'
+gem 'rspec-nc' if RUBY_PLATFORM =~ /darwin/

@@ -4,8 +4,11 @@ Primary objectives
 * except/only (DONE)
 * sync method (DONE)
 * dependent syncronization & mapping (DONE)
-* tests for Synchronizable.sync
+* tests for Synchronizable.sync (DONE)
 * destroy_missed
+* worker.rb refactoring
+* integrate with travis, stillmaintained, gemnasium
+* write a good README
 * extended interface
   * sync with include
   * sync with ids array

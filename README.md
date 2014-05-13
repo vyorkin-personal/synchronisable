@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/vyorkin/synchronizable.png?branch=master)](https://travis-ci.org/vyorkin/synchronizable)
+
 # Synchronizable
 
 Provides base fuctionality (models, DSL) for AR synchronization with external resources (apis, services etc)

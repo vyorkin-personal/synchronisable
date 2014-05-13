@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['vasiliy.yorkin@gmail.com']
   spec.description   = 'Provides base fuctionality (models, DSL) for AR synchronization with external resources (apis, services etc)'
   spec.summary       = spec.description
-  spec.homepage      = 'https://git.undev.cc/vyorkin/synchronizable'
+  spec.homepage      = 'https://github.com/vyorkin/synchronizable'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0")
@@ -36,5 +36,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "guard-spork"
   spec.add_development_dependency "guard-rspec"
   spec.add_development_dependency "simplecov"
-  spec.add_development_dependency "undev"
 end

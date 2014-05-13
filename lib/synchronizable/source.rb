@@ -24,12 +24,16 @@ module Synchronizable
         @associations.keys.any? { |a| a.key == key }
       end
 
+      @import_record = Import.find_by(
+        :remote_id => @remote_id,
+        :synchronizable_type => @model
+      )
+
       set_parent_attribute
     end
 
     def updatable?
-      @import_record.present? &&
-      @local_record.present?
+      @import_record.present? && local_record.present?
     end
 
     def local_record

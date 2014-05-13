@@ -7,6 +7,8 @@ module Synchronizable
     module Methods
       # Creates a new worker, that initiates synchronization
       # for this particular model.
+      # If you have implemented `fetch` & `find` methods
+      # in your model synchronizer, than it will be used if no data supplied.
       #
       # @overload sync(data, options)
       #   @param options [Hash] synchronization options
@@ -31,7 +33,7 @@ module Synchronizable
       #     ...
       #   ])
       #
-      # @example Generic usage
+      # @example General usage
       #   FooModel.sync(:include => {
       #     :assocation_model => :nested_assocaiton_model
       #   })
@@ -41,7 +43,7 @@ module Synchronizable
       #     :match_players => :player
       #   })
       def sync(*args)
-        Worker.run(self, args)
+        Worker.run(self, *args)
       end
 
       # Count of import records for this model.

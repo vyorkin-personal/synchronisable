@@ -121,9 +121,9 @@ module Synchronizable
       # @api private
       def map_attributes(attrs)
         result = attrs.dup
-        result.transform_keys! { |key| mappings[key] || key } if mappings.present?
-        result.keep_if { |key| only.include? key } if only.present?
-        result.delete_if { |key| key.nil? || except.include?(key) } if except.present?
+        apply_mappings(result) if mappings.present?
+        apply_only_filter(result) if only.present?
+        apply_except_filter(result) if except.present?
         result
       end
 
@@ -134,6 +134,21 @@ module Synchronizable
       end
 
       private
+
+      def apply_mappings(attrs)
+        attrs.transform_keys! { |key| mappings[key] || key }
+      end
+
+      def apply_only_filter(attrs)
+        attrs.keep_if do |key|
+          only.include?(key) ||
+          associations.keys.include?(key)
+        end
+      end
+
+      def apply_except_filter(attrs)
+        attrs.delete_if { |key| key.nil? || except.include?(key) }
+      end
 
       def run_callbacks(method, args, block)
         before = send(:"before_#{method}")

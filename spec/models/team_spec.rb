@@ -35,7 +35,9 @@ describe Team do
       end
 
       it { should change { Team.count }.by(2) }
-      it { should change { Synchronizable::Import.count }.by(2) }
+      it { should change { Player.count }.by(4) }
+
+      it { should change { Synchronizable::Import.count }.by(6) }
     end
 
     context 'when remote id is not specified' do
@@ -58,28 +60,28 @@ describe Team do
         create(:import,
           :remote_id => 'team1',
           :synchronizable => create(:team,
-            :name    => 'x',
+            :name => 'x',
             :country => 'Russia',
-            :city    => 'Moscow',
+            :city => 'Moscow',
           )
         )
       end
 
-      let!(:team_x) { import.synchronizable }
+      let!(:team) { import.synchronizable }
 
       subject do
         -> {
           Team.sync(remote_attrs.take(2))
-          team_x.reload
+          team.reload
         }
       end
 
       it { should change { Team.count }.by(1) }
       it { should change { Synchronizable::Import.count }.by(1) }
 
-      it { should change { team_x.name    }.from('x').to('y') }
-      it { should change { team_x.country }.from('Russia').to('USA') }
-      it { should change { team_x.city    }.from('Moscow').to('Washington') }
+      it { should change { team.name    }.from('x').to('y') }
+      it { should change { team.country }.from('Russia').to('USA') }
+      it { should change { team.city    }.from('Moscow').to('Washington') }
     end
   end
 end

@@ -13,8 +13,8 @@ FactoryGirl.define do
 
     trait :with_players do
       after(:build) do |object, evaluator|
-        players = build_list(:remote_player, 11, team: object[:maet_id])
-        object[:player_ids] = players.map { |h| h[:player_id] }
+        players = build_list(:remote_player, 4, team: object[:maet_id])
+        object[:players_ids] = players.map { |h| h[:player_id] }
       end
     end
   end

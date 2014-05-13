@@ -6,8 +6,9 @@ class TournamentGateway < GatewayBase
   def source
     @source ||= [
       FactoryGirl.build(:remote_tournament,
-        tour_id => 'tournament_0',
-        is_current => true
+        :tour_id => 'tournament_0',
+        :is_current => true,
+        :stages_ids => %w(stage_0 stage_1)
       )
     ]
   end

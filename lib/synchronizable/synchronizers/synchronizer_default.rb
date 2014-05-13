@@ -6,6 +6,5 @@ module Synchronizable
   #
   # @api private
   class SynchronizerDefault < Synchronizer
-    include Singleton
   end
 end

@@ -31,11 +31,15 @@ class MatchSynchronizer < Synchronizable::Synchronizer
   fetch { @gateway.fetch }
 
   after_sync do |source|
-    attrs = source.remote_attrs
-
     MatchPlayer::REF_TYPES.each do |ref_type|
+      sync_match_players(source, ref_type)
+    end
+  end
+
+  class << self
+    def sync_match_players(source, ref_type)
       match = source.local_record
-      remote_player_ids = attrs[ref_type.to_sym] || {}
+      remote_player_ids = source.remote_attrs[ref_type.to_sym] || {}
 
       player_imports = Synchronizable::Import
         .with_synchronizable_type(Player)
@@ -46,11 +50,22 @@ class MatchSynchronizer < Synchronizable::Synchronizer
       end
 
       local_player_ids.each do |player_id|
-        MatchPlayer.create_with(
-          :ref_type => ref_type
-        ).find_or_create_by(
+        sync_match_player({
           :match_id  => match.id,
-          :player_id => player_id
+          :player_id => player_id,
+          :ref_type  => ref_type
+        })
+      end
+    end
+
+    def sync_match_player(attrs)
+      match_player = MatchPlayer.find_by(attrs)
+      unless match_player
+        remote_id = "#{attrs[:match_id]}_#{attrs[:player_id]}"
+        Synchronizable::Import.create!(
+          :synchronizable => MatchPlayer.create!(attrs),
+          :remote_id => remote_id,
+          :attrs => attrs
         )
       end
     end

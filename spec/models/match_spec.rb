@@ -10,9 +10,10 @@ describe Match do
 
       it { should change { Match.count }.by(1) }
       it { should change { Team.count }.by(2) }
+      it { should change { Player.count }.by(4) }
       it { should change { MatchPlayer.count }.by(4) }
 
-      it { should change { Synchronizable::Import.count }.by(7) }
+      it { should change { Synchronizable::Import.count }.by(11) }
     end
 
     # TODO: Left here until :include option is implemented

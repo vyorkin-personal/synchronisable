@@ -12,5 +12,15 @@ FactoryGirl.define do
     ignored_2 { generate :timestamp }
 
     initialize_with { attributes }
+
+    trait :with_matches do
+      after(:build) do
+        match = build(:remote_match,
+          :home_team => 'team_0',
+          :away_team => 'team_1'
+        )
+        object[:matches_ids] = [match[:match_id]]
+      end
+    end
   end
 end

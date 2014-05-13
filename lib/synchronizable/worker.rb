@@ -95,6 +95,7 @@ module Synchronizable
     #   without errors, `false` otherwise
     def sync_record(source)
       @synchronizer.with_record_sync_callbacks(source) do
+        # binding.pry if @model == Tournament
         source.build
 
         @logger.info(source.dump_message) if verbose_logging?
@@ -175,6 +176,7 @@ module Synchronizable
     # @see ActiveRecord::Reflection::AssociationReflection
     def belongs_to_parent_reflection
       return unless @parent
+
       model_reflections.find do |r|
         r.macro == :belongs_to &&
         r.plural_name == @parent.model.table_name

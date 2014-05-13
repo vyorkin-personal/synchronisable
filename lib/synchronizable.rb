@@ -58,25 +58,29 @@ module Synchronizable
   #
   # @param models [Array] array of models that should be synchronized.
   #   This take a precedence over models defined in {Synchronizable#models}.
-  #   If not specified and {Synchronizable#models} is empty, than it will try
-  #   to synchronize only those models which have a corresponding synchronizers.
+  #   If this parameter is not specified and {Synchronizable#models} is empty,
+  #   than it will try to sync only those models which have a corresponding synchronizers.
   #
   # @return [Array<[Synchronizable::Context]>] array of synchronization contexts
   #
   # @see Synchronizable::Context
   def self.sync(*models)
     source = source_models(models)
-    source.map { |model| model.try(:safe_constantize).try(:sync) }
+    source.map(&:sync)
   end
 
   private
 
   def self.source_models(models)
-    source = models.present? ? models : self.models
-    source = source.present? ? source : lookup_models
+    source = models.present? ? models : default_models
+    source = source.present? ? source : find_models
   end
 
-  def self.lookup_models
+  def self.default_models
+    models.map(&:safe_constantize).compact
+  end
+
+  def self.find_models
     ActiveRecord::Base.descendants.select do |model|
       model.included_modules.include?(Synchronizable::Model)
     end

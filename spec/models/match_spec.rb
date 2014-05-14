@@ -7,12 +7,12 @@ describe Match do
         -> { Match.sync }
       end
 
-      it { should change { Match.count }.by(1) }
-      it { should change { Team.count }.by(2) }
-      it { should change { Player.count }.by(4) }
-      it { should change { MatchPlayer.count }.by(4) }
+      it { is_expected.to change { Match.count }.by(1) }
+      it { is_expected.to change { Team.count }.by(2) }
+      it { is_expected.to change { Player.count }.by(4) }
+      it { is_expected.to change { MatchPlayer.count }.by(4) }
 
-      it { should change { Synchronisable::Import.count }.by(11) }
+      it { is_expected.to change { Synchronisable::Import.count }.by(11) }
     end
 
     # TODO: Left here until :include option is implemented
@@ -30,12 +30,12 @@ describe Match do
     #     })
     #   end
 
-    #   it { should change { Match.count }.by(1) }
-    #   it { should change { Team.count }.by(2) }
-    #   it { should change { Player.count }.by(22) }
-    #   it { should change { MatchPlayer.count }.by(22) }
+    #   it { is_expected.to change { Match.count }.by(1) }
+    #   it { is_expected.to change { Team.count }.by(2) }
+    #   it { is_expected.to change { Player.count }.by(22) }
+    #   it { is_expected.to change { MatchPlayer.count }.by(22) }
 
-    #   it { should change { Synchronisable::Import.count }.by(47) }
+    #   it { is_expected.to change { Synchronisable::Import.count }.by(47) }
     # end
   end
 end

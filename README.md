@@ -27,6 +27,61 @@ Or install it yourself as:
 
 ## Usage
 
+For examples we'll be using a well-known domain of posts & comments
+
+```ruby
+class Post < ActiveRecord::Base
+  has_many :comments
+
+  synchronizable
+end
+
+class Comment < ActiveRecord::Base
+  belongs_to :post
+
+  synchronizable MyCommentSynchronizer
+end
+```
+
+As you can see above the first step is to declare your models to be
+synchronizable. You can do so by using corresponding dsl instruction,
+that optionally takes a synchonizer class to be used. Actually,
+the only reason to specify it its when it has a name, that can't be figured out
+by the following convention: `ModelSynchronizer`.
+
+After that you should define your model synchronizers
+
+```ruby
+class PostSynchronizer < Synchronisable::Synchronizer
+  remote_id :p_id
+
+  mappings(
+    :t => :title,
+    :c => :content
+  )
+
+  except :ignored_attr1, :ignored_attr42
+
+  has_many :comments
+
+  after_sync do |source|
+  end
+end
+
+class CommentSynchronizer < Synchronizable::Synchronizer
+  remote_id :c_id
+
+  mappings(
+    :a => :author,
+    :t => :body
+  )
+
+  only :author, :body
+end
+```
+
+P.S.: i promise i'll finish this later, soon, this week, promise!
+
 ## Support
 
 <a href='https://www.codersclan.net/task/yorkinv' target='_blank'><img src='https://www.codersclan.net/button/yorkinv' alt='expert-button' width='205' height='64' style='width: 205px; height: 64px;'></a>

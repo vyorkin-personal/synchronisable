@@ -26,7 +26,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_development_dependency "yard"
   spec.add_development_dependency "rails", "~> 4.0.0"
-  spec.add_development_dependency "rspec-rails", "~> 3.0.0.beta"
+  spec.add_development_dependency "rspec-rails", "~> 3.0.0.beta2"
   # spec.add_development_dependency "rspec-given"
   spec.add_development_dependency "rspec-its"
   spec.add_development_dependency "sqlite3"

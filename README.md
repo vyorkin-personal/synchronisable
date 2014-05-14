@@ -27,7 +27,7 @@ Or install it yourself as:
 
 ## Usage
 
-For examples we'll be using a well-known domain of posts & comments
+For examples we'll be using a well-known domain with posts & comments
 
 ```ruby
 class Post < ActiveRecord::Base
@@ -64,11 +64,44 @@ class PostSynchronizer < Synchronisable::Synchronizer
 
   has_many :comments
 
+  fetch do
+    # return array of hashes with
+    # remote entity attributes
+  end
+
+  find do |id|
+    # return a hash with
+    # with remote entity attributes
+  end
+
+  # Hooks/callbacks
+
+  before_record_sync do |source|
+    # ...
+  end
+
+  after_record_sync do |source|
+    # ...
+  end
+
+  before_association_sync do |source, remote_id, association|
+    # ...
+  end
+
+  after_association_sync do |source, remote_id, association|
+    # ...
+  end
+
+  before_sync do |source|
+    # ...
+  end
+
   after_sync do |source|
+    # ...
   end
 end
 
-class CommentSynchronizer < Synchronizable::Synchronizer
+class MyCommentSynchronizer < Synchronizable::Synchronizer
   remote_id :c_id
 
   mappings(
@@ -77,7 +110,19 @@ class CommentSynchronizer < Synchronizable::Synchronizer
   )
 
   only :author, :body
+
+  fetch do
+    # ...
+  end
+
+  find do |id|
+    # ...
+  end
+
 end
+```
+
+```ruby
 ```
 
 P.S.: i promise i'll finish this later, soon, this week, promise!

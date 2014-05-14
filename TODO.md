@@ -7,7 +7,8 @@ Primary objectives
 * tests for Synchronisable.sync (DONE)
 * destroy_missed
 * worker.rb refactoring
-* integrate with travis, stillmaintained, gemnasium
+* integrate with travis, stillmaintained, gemnasium,
+  codeclimate, coveralls, inch-pages, codesclan (DONE)
 * write a good README
 * extended interface
   * sync with include

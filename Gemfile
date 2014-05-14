@@ -6,8 +6,15 @@ gem 'pry'
 gem 'byebug'
 gem 'pry-byebug'
 
-gem "codeclimate-test-reporter", group: :test, require: nil
+group :test, :development do
+  gem 'pre-commit'
+end
 
-if RUBY_PLATFORM =~ /darwin/
-  gem 'rspec-nc'
+group :test do
+  gem 'coveralls', require: false
+  gem 'codeclimate-test-reporter', require: false
+
+  if RUBY_PLATFORM =~ /darwin/
+    gem 'rspec-nc'
+  end
 end

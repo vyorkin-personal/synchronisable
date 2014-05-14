@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/vyorkin/synchronisable.png?branch=master)](https://travis-ci.org/vyorkin/synchronisable)
 [![Code Climate](https://codeclimate.com/github/vyorkin/synchronisable.png)](https://codeclimate.com/github/vyorkin/synchronisable)
+[![Coverage Status](https://coveralls.io/repos/vyorkin/synchronisable/badge.png)](https://coveralls.io/r/vyorkin/synchronisable)
 [![Inch Pages](http://inch-pages.github.io/github/vyorkin/synchronisable)](http://inch-pages.github.io/github/vyorkin/synchronisable)
 
 # Synchronisable

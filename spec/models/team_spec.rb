@@ -30,10 +30,10 @@ describe Team do
     context 'sync with no data specified' do
       subject { -> { Team.sync } }
 
-      it { should change { Team.count }.by(2) }
-      it { should change { Player.count }.by(4) }
+      it { is_expected.to change { Team.count }.by(2) }
+      it { is_expected.to change { Player.count }.by(4) }
 
-      it { should change { Synchronisable::Import.count }.by(6) }
+      it { is_expected.to change { Synchronisable::Import.count }.by(6) }
     end
 
     context 'when remote id is not specified' do
@@ -45,8 +45,8 @@ describe Team do
     context 'when local record does not exist' do
       subject { -> { Team.sync(remote_attrs.take(2)) } }
 
-      it { should change { Team.count }.by(2) }
-      it { should change { Synchronisable::Import.count }.by(2) }
+      it { is_expected.to change { Team.count }.by(2) }
+      it { is_expected.to change { Synchronisable::Import.count }.by(2) }
     end
 
     context 'when local and import records exists' do
@@ -70,12 +70,12 @@ describe Team do
         }
       end
 
-      it { should change { Team.count }.by(1) }
-      it { should change { Synchronisable::Import.count }.by(1) }
+      it { is_expected.to change { Team.count }.by(1) }
+      it { is_expected.to change { Synchronisable::Import.count }.by(1) }
 
-      it { should change { team.name    }.from('x').to('y') }
-      it { should change { team.country }.from('Russia').to('USA') }
-      it { should change { team.city    }.from('Moscow').to('Washington') }
+      it { is_expected.to change { team.name    }.from('x').to('y') }
+      it { is_expected.to change { team.country }.from('Russia').to('USA') }
+      it { is_expected.to change { team.city    }.from('Moscow').to('Washington') }
     end
   end
 end

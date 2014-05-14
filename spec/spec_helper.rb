@@ -1,3 +1,6 @@
+require "codeclimate-test-reporter"
+CodeClimate::TestReporter.start
+
 ENV['RAILS_ENV'] ||= 'test'
 
 require 'database_cleaner'
@@ -25,7 +28,6 @@ ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 
 Spork.prefork do
   RSpec.configure do |config|
-    config.treat_symbols_as_metadata_keys_with_true_values = true
     config.run_all_when_everything_filtered = true
     config.filter_run focus: true
     config.order = 'random'

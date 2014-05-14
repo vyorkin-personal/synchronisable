@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/vyorkin/synchronisable.png?branch=master)](https://travis-ci.org/vyorkin/synchronisable)
+[![Code Climate](https://codeclimate.com/github/vyorkin/synchronisable.png)](https://codeclimate.com/github/vyorkin/synchronisable)
 
 # Synchronisable
 

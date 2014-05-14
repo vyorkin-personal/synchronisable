@@ -122,7 +122,10 @@ class MyCommentSynchronizer < Synchronizable::Synchronizer
 end
 ```
 
+To start synchronization
+
 ```ruby
+Post.sync
 ```
 
 P.S.: i promise i'll finish this later, soon, this week, promise!

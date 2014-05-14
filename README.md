@@ -5,11 +5,12 @@
 [![Gem Version](http://stillmaintained.com/vyorkin/synchronisable.png)](http://stillmaintained.com/vyorkin/synchronisable)
 [![Dependency Status](https://gemnasium.com/vyorkin/synchronisable.svg)](https://gemnasium.com/vyorkin/synchronisable)
 
-
-
 # Synchronisable
 
-Provides base fuctionality (models, DSL) for AR synchronization with external resources (apis, services etc)
+Provides base fuctionality (models, DSL) for AR synchronization
+with external resources (apis, services etc).
+
+## Overview
 
 ## Installation
 
@@ -27,3 +28,6 @@ Or install it yourself as:
 
 ## Usage
 
+## Support
+
+<a href='https://www.codersclan.net/task/yorkinv' target='_blank'><img src='https://www.codersclan.net/button/yorkinv' alt='expert-button' width='205' height='64' style='width: 205px; height: 64px;'></a>

@@ -33,18 +33,18 @@ For examples we'll be using a well-known domain with posts & comments
 class Post < ActiveRecord::Base
   has_many :comments
 
-  synchronizable
+  synchronisable
 end
 
 class Comment < ActiveRecord::Base
   belongs_to :post
 
-  synchronizable MyCommentSynchronizer
+  synchronisable MyCommentSynchronizer
 end
 ```
 
 As you can see above the first step is to declare your models to be
-synchronizable. You can do so by using corresponding dsl instruction,
+synchronisable. You can do so by using corresponding dsl instruction,
 that optionally takes a synchonizer class to be used. Actually,
 the only reason to specify it its when it has a name, that can't be figured out
 by the following convention: `ModelSynchronizer`.
@@ -101,7 +101,7 @@ class PostSynchronizer < Synchronisable::Synchronizer
   end
 end
 
-class MyCommentSynchronizer < Synchronizable::Synchronizer
+class MyCommentSynchronizer < Synchronisable::Synchronizer
   remote_id :c_id
 
   mappings(

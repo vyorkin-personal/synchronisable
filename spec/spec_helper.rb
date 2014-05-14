@@ -7,9 +7,16 @@ require 'database_cleaner'
 require 'factory_girl'
 require 'factory_girl_sequences'
 require 'spork'
-require 'simplecov'
 
-SimpleCov.start
+if ENV['COVERAGE']
+  require 'simplecov'
+  SimpleCov.start
+end
+
+if ENV['TRAVIS']
+  require 'coveralls'
+  Coveralls.wear!
+end
 
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 

@@ -2,8 +2,10 @@
 [![Code Climate](https://codeclimate.com/github/vyorkin/synchronisable.png)](https://codeclimate.com/github/vyorkin/synchronisable)
 [![Coverage Status](https://coveralls.io/repos/vyorkin/synchronisable/badge.png)](https://coveralls.io/r/vyorkin/synchronisable)
 [![Inch Pages](http://inch-pages.github.io/github/vyorkin/synchronisable)](http://inch-pages.github.io/github/vyorkin/synchronisable)
-[![Stillmaintained](http://stillmaintained.com/docxtor/docxtor)](http://stillmaintained.com/docxtor/docxtor)
+[![Gem Version](http://stillmaintained.com/vyorkin/synchronisable.png)](http://stillmaintained.com/vyorkin/synchronisable)
 [![Dependency Status](https://gemnasium.com/vyorkin/synchronisable.svg)](https://gemnasium.com/vyorkin/synchronisable)
+
+
 
 # Synchronisable
 

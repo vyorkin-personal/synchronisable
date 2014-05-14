@@ -3,5 +3,5 @@ class Tournament < ActiveRecord::Base
 
   validates :name, :beginning, :ending, :presence => true
 
-  synchronizable
+  synchronisable
 end

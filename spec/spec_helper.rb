@@ -10,12 +10,12 @@ SimpleCov.start
 
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 
-require 'synchronizable'
+require 'synchronisable'
 
 require File.expand_path('../dummy/config/environment', __FILE__)
 require 'rspec/rails'
 
-support_pattern   = File.join(File.dirname(__FILE__), 'synchronizable', 'support', '**', '*.rb')
+support_pattern   = File.join(File.dirname(__FILE__), 'synchronisable', 'support', '**', '*.rb')
 factories_pattern = File.join(File.dirname(__FILE__), 'factories', '**', '*.rb')
 
 Dir[factories_pattern].each { |file| require file }

@@ -1,2 +1,2 @@
-Synchronizable.configure do |config|
+Synchronisable.configure do |config|
 end

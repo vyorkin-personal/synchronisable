@@ -3,5 +3,5 @@ class Stadium < ActiveRecord::Base
   # so synchronization worker is gonna try
   # to use remote attributes as is to create a record
 
-  synchronizable
+  synchronisable
 end

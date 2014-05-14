@@ -6,5 +6,5 @@ class Match < ActiveRecord::Base
 
   has_many :match_players, dependent: :destroy
 
-  synchronizable
+  synchronisable
 end

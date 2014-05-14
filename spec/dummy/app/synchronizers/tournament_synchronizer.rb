@@ -1,4 +1,4 @@
-class TournamentSynchronizer < Synchronizable::Synchronizer
+class TournamentSynchronizer < Synchronisable::Synchronizer
   @gateway = TournamentGateway.new
 
   has_many :stages

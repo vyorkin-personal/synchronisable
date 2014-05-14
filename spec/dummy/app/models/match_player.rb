@@ -11,5 +11,5 @@ class MatchPlayer < ActiveRecord::Base
 
   validates :match, :player, presence: true
 
-  synchronizable
+  synchronisable
 end

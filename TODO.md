@@ -4,7 +4,7 @@ Primary objectives
 * except/only (DONE)
 * sync method (DONE)
 * dependent syncronization & mapping (DONE)
-* tests for Synchronizable.sync (DONE)
+* tests for Synchronisable.sync (DONE)
 * destroy_missed
 * worker.rb refactoring
 * integrate with travis, stillmaintained, gemnasium

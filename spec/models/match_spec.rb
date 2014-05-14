@@ -12,7 +12,7 @@ describe Match do
       it { should change { Player.count }.by(4) }
       it { should change { MatchPlayer.count }.by(4) }
 
-      it { should change { Synchronizable::Import.count }.by(11) }
+      it { should change { Synchronisable::Import.count }.by(11) }
     end
 
     # TODO: Left here until :include option is implemented
@@ -35,7 +35,7 @@ describe Match do
     #   it { should change { Player.count }.by(22) }
     #   it { should change { MatchPlayer.count }.by(22) }
 
-    #   it { should change { Synchronizable::Import.count }.by(47) }
+    #   it { should change { Synchronisable::Import.count }.by(47) }
     # end
   end
 end

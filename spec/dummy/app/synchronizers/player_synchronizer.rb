@@ -1,4 +1,4 @@
-class PlayerSynchronizer < Synchronizable::Synchronizer
+class PlayerSynchronizer < Synchronisable::Synchronizer
   @gateway = PlayerGateway.new
 
   remote_id :player_id

@@ -1,4 +1,4 @@
-class MatchSynchronizer < Synchronizable::Synchronizer
+class MatchSynchronizer < Synchronisable::Synchronizer
   @gateway = MatchGateway.new
 
   has_one :team, key: 'home_team_id'
@@ -39,12 +39,12 @@ class MatchSynchronizer < Synchronizable::Synchronizer
       match = source.local_record
       remote_player_ids = source.remote_attrs[ref_type.to_sym] || {}
 
-      player_imports = Synchronizable::Import
-        .with_synchronizable_type(Player)
+      player_imports = Synchronisable::Import
+        .with_synchronisable_type(Player)
         .with_remote_ids(remote_player_ids)
 
       local_player_ids = player_imports.map do |import|
-        import.synchronizable.id
+        import.synchronisable.id
       end
 
       local_player_ids.each do |player_id|
@@ -60,8 +60,8 @@ class MatchSynchronizer < Synchronizable::Synchronizer
       match_player = MatchPlayer.find_by(attrs)
       unless match_player
         remote_id = "#{attrs[:match_id]}_#{attrs[:player_id]}"
-        Synchronizable::Import.create!(
-          :synchronizable => MatchPlayer.create!(attrs),
+        Synchronisable::Import.create!(
+          :synchronisable => MatchPlayer.create!(attrs),
           :remote_id => remote_id,
           :attrs => attrs
         )

@@ -1,4 +1,4 @@
-class StageSynchronizer < Synchronizable::Synchronizer
+class StageSynchronizer < Synchronisable::Synchronizer
   @gateway = StageGateway.new
 
   has_many :matches

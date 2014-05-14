@@ -1,4 +1,4 @@
-class BreakConventionTeamSynchronizer < Synchronizable::Synchronizer
+class BreakConventionTeamSynchronizer < Synchronisable::Synchronizer
   @gateway = TeamGateway.new
 
   remote_id :maet_id

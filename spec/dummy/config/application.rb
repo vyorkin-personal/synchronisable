@@ -7,7 +7,7 @@ require 'action_view/railtie'
 require 'sprockets/railtie'
 
 Bundler.require(*Rails.groups)
-require 'synchronizable'
+require 'synchronisable'
 
 module Dummy
   class Application < Rails::Application

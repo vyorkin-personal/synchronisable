@@ -14,8 +14,8 @@
 ActiveRecord::Schema.define(version: 20140507140039) do
 
   create_table "imports", force: true do |t|
-    t.string   "synchronizable_type", null: false
-    t.integer  "synchronizable_id",   null: false
+    t.string   "synchronisable_type", null: false
+    t.integer  "synchronisable_id",   null: false
     t.text     "attrs"
     t.string   "remote_id",           null: false
     t.datetime "created_at"
@@ -23,7 +23,7 @@ ActiveRecord::Schema.define(version: 20140507140039) do
   end
 
   add_index "imports", ["remote_id"], name: "index_imports_on_remote_id"
-  add_index "imports", ["synchronizable_type", "synchronizable_id"], name: "index_imports_on_synchronizable_type_and_synchronizable_id"
+  add_index "imports", ["synchronisable_type", "synchronisable_id"], name: "index_imports_on_synchronisable_type_and_synchronisable_id"
 
   create_table "match_players", force: true do |t|
     t.integer  "match_id"

@@ -10,9 +10,10 @@ module Synchronisable
       @remote_attrs = remote_attrs.with_indifferent_access
     end
 
-    # Extracts the `remote_id` from remote attributes, maps remote attirubtes
-    # to local attributes and tries to find import record for given model
-    # by extracted remote id.
+    # Prepares synchronization source:
+    # `remote_id`, `local_attributes`, `import_record` and `associations`.
+    # Sets foreign key if current model is specified as `has_one` or `has_many`
+    # association of parent model.
     #
     # @api private
     def prepare
@@ -30,7 +31,7 @@ module Synchronisable
         :synchronisable_type => @model
       )
 
-      set_parent_attribute
+      set_foreign_key
     end
 
     def updatable?
@@ -65,13 +66,13 @@ module Synchronisable
 
     private
 
-    def set_parent_attribute
+    def set_foreign_key
       return unless @parent
-      name = parent_attribute_name
+      name = foreign_key_name
       @local_attrs[name] = @parent.local_record.id if name
     end
 
-    def parent_attribute_name
+    def foreign_key_name
       return nil unless parent_has_model_as_reflection?
       parent_name = @parent.model.table_name.singularize
       "#{parent_name}_id"

@@ -8,8 +8,8 @@ module Synchronisable
 
     def initialize(mappings, options = {})
       @mappings = mappings
-      @only, @except = options[:only], options[:except]
       @keep = options[:keep] || []
+      @only, @except = options[:only], options[:except]
     end
 
     def map(source)

@@ -92,6 +92,7 @@ module Synchronisable
     def sync_record(source)
       @synchronizer.with_record_sync_callbacks(source) do
         source.prepare
+
         log_info(source.dump_message)
 
         if source.updatable?

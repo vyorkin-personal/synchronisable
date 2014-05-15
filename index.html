@@ -1,0 +1,181 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Synchronisable by vyorkin</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Synchronisable</h1>
+        <p>Provides base fuctionality (models, DSL) for AR synchronization with external resources (apis, services etc)</p>
+
+        <p class="view"><a href="https://github.com/vyorkin/synchronisable">View the Project on GitHub <small>vyorkin/synchronisable</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/vyorkin/synchronisable/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/vyorkin/synchronisable/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/vyorkin/synchronisable">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p><a href="https://travis-ci.org/vyorkin/synchronisable"><img src="https://travis-ci.org/vyorkin/synchronisable.png?branch=master" alt="Build Status"></a>
+<a href="https://codeclimate.com/github/vyorkin/synchronisable"><img src="https://codeclimate.com/github/vyorkin/synchronisable.png" alt="Code Climate"></a>
+<a href="http://inch-pages.github.io/github/vyorkin/synchronisable"><img src="http://inch-pages.github.io/github/vyorkin/synchronisable.png" alt="Inline docs"></a>
+<a href="https://coveralls.io/r/vyorkin/synchronisable"><img src="https://coveralls.io/repos/vyorkin/synchronisable/badge.png" alt="Coverage Status"></a>
+<a href="http://stillmaintained.com/vyorkin/synchronisable"><img src="http://stillmaintained.com/vyorkin/synchronisable.png" alt="Gem Version"></a>
+<a href="https://gemnasium.com/vyorkin/synchronisable"><img src="https://gemnasium.com/vyorkin/synchronisable.svg" alt="Dependency Status"></a></p>
+
+<h1>
+<a name="synchronisable" class="anchor" href="#synchronisable"><span class="octicon octicon-link"></span></a>Synchronisable</h1>
+
+<p>Provides base fuctionality (models, DSL) for AR synchronization
+with external resources (apis, services etc).</p>
+
+<h2>
+<a name="overview" class="anchor" href="#overview"><span class="octicon octicon-link"></span></a>Overview</h2>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>Add this line to your application's Gemfile:</p>
+
+<pre><code>gem 'synchronisable'
+</code></pre>
+
+<p>And then execute:</p>
+
+<pre><code>$ bundle
+</code></pre>
+
+<p>Or install it yourself as:</p>
+
+<pre><code>$ gem install synchronisable
+</code></pre>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>For examples we'll be using a well-known domain with posts &amp; comments</p>
+
+<div class="highlight highlight-ruby"><pre><span class="k">class</span> <span class="nc">Post</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+  <span class="n">has_many</span> <span class="ss">:comments</span>
+
+  <span class="n">synchronisable</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Comment</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+  <span class="n">belongs_to</span> <span class="ss">:post</span>
+
+  <span class="n">synchronisable</span> <span class="no">MyCommentSynchronizer</span>
+<span class="k">end</span>
+</pre></div>
+
+<p>As you can see above the first step is to declare your models to be
+synchronisable. You can do so by using corresponding dsl instruction,
+that optionally takes a synchonizer class to be used. Actually,
+the only reason to specify it its when it has a name, that can't be figured out
+by the following convention: <code>ModelSynchronizer</code>.</p>
+
+<p>After that you should define your model synchronizers</p>
+
+<div class="highlight highlight-ruby"><pre><span class="k">class</span> <span class="nc">PostSynchronizer</span> <span class="o">&lt;</span> <span class="no">Synchronisable</span><span class="o">::</span><span class="no">Synchronizer</span>
+  <span class="n">remote_id</span> <span class="ss">:p_id</span>
+
+  <span class="n">mappings</span><span class="p">(</span>
+    <span class="ss">:t</span> <span class="o">=&gt;</span> <span class="ss">:title</span><span class="p">,</span>
+    <span class="ss">:c</span> <span class="o">=&gt;</span> <span class="ss">:content</span>
+  <span class="p">)</span>
+
+  <span class="n">except</span> <span class="ss">:ignored_attr1</span><span class="p">,</span> <span class="ss">:ignored_attr42</span>
+
+  <span class="n">has_many</span> <span class="ss">:comments</span>
+
+  <span class="n">fetch</span> <span class="k">do</span>
+    <span class="c1"># return array of hashes with</span>
+    <span class="c1"># remote entity attributes</span>
+  <span class="k">end</span>
+
+  <span class="n">find</span> <span class="k">do</span> <span class="o">|</span><span class="nb">id</span><span class="o">|</span>
+    <span class="c1"># return a hash with</span>
+    <span class="c1"># with remote entity attributes</span>
+  <span class="k">end</span>
+
+  <span class="c1"># Hooks/callbacks</span>
+
+  <span class="n">before_record_sync</span> <span class="k">do</span> <span class="o">|</span><span class="n">source</span><span class="o">|</span>
+    <span class="c1"># ...</span>
+  <span class="k">end</span>
+
+  <span class="n">after_record_sync</span> <span class="k">do</span> <span class="o">|</span><span class="n">source</span><span class="o">|</span>
+    <span class="c1"># ...</span>
+  <span class="k">end</span>
+
+  <span class="n">before_association_sync</span> <span class="k">do</span> <span class="o">|</span><span class="n">source</span><span class="p">,</span> <span class="n">remote_id</span><span class="p">,</span> <span class="n">association</span><span class="o">|</span>
+    <span class="c1"># ...</span>
+  <span class="k">end</span>
+
+  <span class="n">after_association_sync</span> <span class="k">do</span> <span class="o">|</span><span class="n">source</span><span class="p">,</span> <span class="n">remote_id</span><span class="p">,</span> <span class="n">association</span><span class="o">|</span>
+    <span class="c1"># ...</span>
+  <span class="k">end</span>
+
+  <span class="n">before_sync</span> <span class="k">do</span> <span class="o">|</span><span class="n">source</span><span class="o">|</span>
+    <span class="c1"># ...</span>
+  <span class="k">end</span>
+
+  <span class="n">after_sync</span> <span class="k">do</span> <span class="o">|</span><span class="n">source</span><span class="o">|</span>
+    <span class="c1"># ...</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">MyCommentSynchronizer</span> <span class="o">&lt;</span> <span class="no">Synchronisable</span><span class="o">::</span><span class="no">Synchronizer</span>
+  <span class="n">remote_id</span> <span class="ss">:c_id</span>
+
+  <span class="n">mappings</span><span class="p">(</span>
+    <span class="ss">:a</span> <span class="o">=&gt;</span> <span class="ss">:author</span><span class="p">,</span>
+    <span class="ss">:t</span> <span class="o">=&gt;</span> <span class="ss">:body</span>
+  <span class="p">)</span>
+
+  <span class="n">only</span> <span class="ss">:author</span><span class="p">,</span> <span class="ss">:body</span>
+
+  <span class="n">fetch</span> <span class="k">do</span>
+    <span class="c1"># ...</span>
+  <span class="k">end</span>
+
+  <span class="n">find</span> <span class="k">do</span> <span class="o">|</span><span class="nb">id</span><span class="o">|</span>
+    <span class="c1"># ...</span>
+  <span class="k">end</span>
+
+<span class="k">end</span>
+</pre></div>
+
+<p>To start synchronization</p>
+
+<div class="highlight highlight-ruby"><pre><span class="no">Post</span><span class="o">.</span><span class="n">sync</span>
+</pre></div>
+
+<p>P.S.: i promise i'll finish this later, soon, this week, promise!</p>
+
+<h2>
+<a name="support" class="anchor" href="#support"><span class="octicon octicon-link"></span></a>Support</h2>
+
+<p><a href="https://www.codersclan.net/task/yorkinv" target="_blank"><img src="https://www.codersclan.net/button/yorkinv" alt="expert-button" width="205" height="64"></a></p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/vyorkin">vyorkin</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>

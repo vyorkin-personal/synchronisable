@@ -1,4 +1,5 @@
 require 'synchronisable/dsl/macro'
+require 'synchronisable/attribute_mapper'
 require 'synchronisable/dsl/associations'
 require 'synchronisable/exceptions'
 
@@ -110,7 +111,6 @@ module Synchronisable
       def extract_remote_id(attrs)
         id = attrs.delete(remote_id)
         ensure_remote_id(id)
-        id
       end
 
       # Maps the remote attributes to local model attributes.
@@ -120,11 +120,11 @@ module Synchronisable
       #
       # @api private
       def map_attributes(attrs)
-        result = attrs.dup
-        apply_mappings(result) if mappings.present?
-        apply_only_filter(result) if only.present?
-        apply_except_filter(result) if except.present?
-        result
+        AttributeMapper.map(attrs, mappings, {
+          :only   => only,
+          :except => except,
+          :keep   => associations.keys
+        })
       end
 
       %w(sync record_sync association_sync).each do |method|
@@ -134,21 +134,6 @@ module Synchronisable
       end
 
       private
-
-      def apply_mappings(attrs)
-        attrs.transform_keys! { |key| mappings[key] || key }
-      end
-
-      def apply_only_filter(attrs)
-        attrs.keep_if do |key|
-          only.include?(key) ||
-          associations.keys.include?(key)
-        end
-      end
-
-      def apply_except_filter(attrs)
-        attrs.delete_if { |key| key.nil? || except.include?(key) }
-      end
 
       def run_callbacks(method, args, block)
         before = send(:"before_#{method}")
@@ -165,12 +150,11 @@ module Synchronisable
       #
       # @raise [MissedRemoteIdError] raised when data doesn't contain remote id
       def ensure_remote_id(id)
-        if id.blank?
-          raise MissedRemoteIdError, I18n.t(
-            'errors.missed_remote_id',
-            remote_id: remote_id
-          )
-        end
+        return id if id.present?
+        raise MissedRemoteIdError, I18n.t(
+          'errors.missed_remote_id',
+          remote_id: remote_id
+        )
       end
     end
   end

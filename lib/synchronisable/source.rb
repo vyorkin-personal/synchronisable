@@ -20,6 +20,7 @@ module Synchronisable
       @local_attrs = @synchronizer.map_attributes(@remote_attrs)
       @associations = @synchronizer.associations_for(@local_attrs)
 
+      # remove associations keys from local attributes
       @local_attrs.delete_if do |key, _|
         @associations.keys.any? { |a| a.key == key }
       end

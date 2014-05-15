@@ -71,19 +71,17 @@ module Synchronisable
 
     def sync
       @logger.progname = "#{@model} synchronization"
-      @logger.info 'starting'
+      log_info 'starting'
 
       context = Context.new(@model, @parent.try(:model))
       yield context
 
-      @logger.info 'done'
-      @logger.info(context.summary_message)
+      log_info 'done'
+      log_info(context.summary_message)
       @logger.progname = nil
 
       context
     end
-
-    # TODO: Think about how to move it from here to Source or some other place
 
     # Method called by {#run} for each remote model attribute hash
     #
@@ -93,41 +91,18 @@ module Synchronisable
     #   without errors, `false` otherwise
     def sync_record(source)
       @synchronizer.with_record_sync_callbacks(source) do
-        source.build
+        source.prepare
 
-        @logger.info(source.dump_message) if verbose_logging?
+        log_info(source.dump_message)
 
         if source.updatable?
-          update_record(source)
+          log_info "updating #{@model}: #{source.local_record.id}"
+          source.update_record
         else
-          create_record_pair(source)
+          source.create_record_pair
+          log_info "#{@model}: #{source.local_record.id} was created"
+          log_info "#{source.import_record.class}: #{source.import_record.id} was created"
         end
-      end
-    end
-
-    def update_record(source)
-      if verbose_logging?
-        @logger.info "updating #{@model}: #{source.local_record.id}"
-      end
-
-      # TODO: Напрашивается, да?
-      source.local_record.update_attributes!(source.local_attrs)
-    end
-
-    def create_record_pair(source)
-      local_record = @model.create!(source.local_attrs)
-      import_record = Import.create!(
-        :synchronisable_id    => local_record.id,
-        :synchronisable_type  => @model.to_s,
-        :remote_id            => source.remote_id,
-        :attrs                => source.local_attrs
-      )
-
-      source.import_record = import_record
-
-      if verbose_logging?
-        @logger.info "#{@model}: #{local_record.id} was created"
-        @logger.info "#{import_record.class}: #{import_record.id} was created"
       end
     end
 
@@ -148,9 +123,7 @@ module Synchronisable
     # @see Synchronisable::DSL::Associations
     # @see Synchronisable::DSL::Associations::Association
     def sync_associations(source)
-      if verbose_logging? && source.associations.present?
-        @logger.info "starting associations sync"
-      end
+      log_info "starting associations sync" if source.associations.present?
 
       source.associations.each do |association, ids|
         ids.each { |id| sync_association(source, id, association) }
@@ -158,9 +131,7 @@ module Synchronisable
     end
 
     def sync_association(source, id, association)
-      if verbose_logging?
-        @logger.info "synchronizing association with id: #{id}"
-      end
+      log_info "synchronizing association with id: #{id}"
 
       @synchronizer.with_association_sync_callbacks(source, id, association) do
         attrs = association.model.synchronizer.find.(id)
@@ -182,6 +153,10 @@ module Synchronisable
 
     def model_reflections
       @model.reflections.values
+    end
+
+    def log_info(msg)
+      @logger.info(msg) if verbose_logging?
     end
 
     def verbose_logging?

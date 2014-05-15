@@ -15,7 +15,7 @@ module Synchronisable
     # by extracted remote id.
     #
     # @api private
-    def build
+    def prepare
       @remote_id = @synchronizer.extract_remote_id(@remote_attrs)
       @local_attrs = @synchronizer.map_attributes(@remote_attrs)
       @associations = @synchronizer.associations_for(@local_attrs)
@@ -34,6 +34,20 @@ module Synchronisable
 
     def updatable?
       @import_record.present? && local_record.present?
+    end
+
+    def update_record
+      local_record.update_attributes!(@local_attrs)
+    end
+
+    def create_record_pair
+      record = @model.create!(@local_attrs)
+      @import_record = Import.create!(
+        :synchronisable_id    => record.id,
+        :synchronisable_type  => @model.to_s,
+        :remote_id            => @remote_id,
+        :attrs                => @local_attrs
+      )
     end
 
     def local_record

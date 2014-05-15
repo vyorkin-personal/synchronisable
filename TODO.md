@@ -17,8 +17,8 @@ Primary objectives
 
 Think about
 ======================================
-has_many :bars, :through => FooModel
-polymorphic associations
+* has_many :bars, :through => FooModel
+* polymorphic associations
 
 Secondary objectives
 ======================================

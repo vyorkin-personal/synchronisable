@@ -8,12 +8,17 @@ Primary objectives
 * destroy_missed
 * worker.rb refactoring
 * integrate with travis, stillmaintained, gemnasium,
-  codeclimate, coveralls, inch-pages, codesclan (DONE)
+  codeclimate, coveralls, inch-pages, codersclan (DONE)
 * write a good README
 * extended interface
   * sync with include
   * sync with ids array
   * sync method for collection proxy (Model.where(condition).sync)
+
+Think about
+======================================
+has_many :bars, :through => FooModel
+polymorphic associations
 
 Secondary objectives
 ======================================

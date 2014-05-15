@@ -71,13 +71,13 @@ module Synchronisable
 
     def sync
       @logger.progname = "#{@model} synchronization"
-      log_info 'starting'
+      @logger.info 'starting'
 
       context = Context.new(@model, @parent.try(:model))
       yield context
 
-      log_info 'done'
-      log_info(context.summary_message)
+      @logger.info 'done'
+      @logger.info(context.summary_message)
       @logger.progname = nil
 
       context
@@ -92,7 +92,6 @@ module Synchronisable
     def sync_record(source)
       @synchronizer.with_record_sync_callbacks(source) do
         source.prepare
-
         log_info(source.dump_message)
 
         if source.updatable?

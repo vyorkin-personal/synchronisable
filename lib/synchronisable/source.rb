@@ -58,7 +58,7 @@ module Synchronisable
 
     def dump_message
       %Q(
-        remote id: #{remote_id},
+        remote id: '#{remote_id}',
         remote attributes: #{remote_attrs},
         local attributes: #{local_attrs}
       )

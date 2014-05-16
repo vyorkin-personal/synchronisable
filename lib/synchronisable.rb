@@ -49,6 +49,7 @@ module Synchronisable
   end
   config_accessor :logging do
     {
+      :logger   => defined?(Rails) ? Rails.logger : Logger.new(STDOUT),
       :verbose  => true,
       :colorize => true
     }

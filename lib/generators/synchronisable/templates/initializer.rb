@@ -1,7 +1,11 @@
 Synchronisable.configure do |config|
   # Logging configuration
   #
+  # Default logger fallbacks to `Rails.logger` if available, otherwise
+  # `STDOUT` will be used for output.
+  #
   # config.logging = {
+  #   :logger   => defined?(Rails) ? Rails.logger : Logger.new(STDOUT)
   #   :verbose  => true,
   #   :colorize => true
   # }

@@ -14,7 +14,7 @@ module Synchronisable
     def summary_message
       I18n.t('messages.result',
         :model   => model,
-        :parent  => @parent.try(:model),
+        :parent  => @parent.try(:model) || 'nil',
         :before  => before,
         :after   => after,
         :deleted => deleted,

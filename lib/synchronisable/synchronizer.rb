@@ -36,11 +36,7 @@ module Synchronisable
 
     # Logger that will be used during synchronization
     # of this particular model.
-    # Fallbacks to `Rails.logger` if available, otherwise
-    # `STDOUT` will be used for output.
-    attribute :logger, default: -> {
-      defined?(Rails) ? Rails.logger : Logger.new(STDOUT)
-    }
+    attribute :logger, default: -> { Synchronisable.logging[:logger] }
 
     # Lambda that returns array of hashes with remote attributes.
     method :fetch, default: -> { [] }

@@ -71,12 +71,12 @@ module Synchronisable
 
     def sync
       @logger.progname = "#{@model} synchronization"
-      @logger.info 'starting'
+      @logger.info 'STARTING'
 
       context = Context.new(@model, @parent.try(:model))
       yield context
 
-      @logger.info 'done'
+      @logger.info 'DONE'
       @logger.info(context.summary_message)
       @logger.progname = nil
 
@@ -100,7 +100,7 @@ module Synchronisable
           source.update_record
         else
           source.create_record_pair
-          log_info "#{@model}: #{source.local_record.id} was created"
+          log_info "#{@model} (id: #{source.local_record.id}) was created"
           log_info "#{source.import_record.class}: #{source.import_record.id} was created"
         end
       end

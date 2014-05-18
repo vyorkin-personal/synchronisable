@@ -5,6 +5,7 @@ Primary objectives
 * sync method (DONE)
 * dependent syncronization & mapping (DONE)
 * tests for Synchronisable.sync (DONE)
+* fix a mess with Context
 * destroy_missed
 * worker.rb refactoring
 * integrate with travis, stillmaintained, gemnasium,

@@ -24,4 +24,4 @@ Think about
 Secondary objectives
 ======================================
 [X] option for verbose logging
-[ ] colorized STDOUT
+[X] colorized STDOUT

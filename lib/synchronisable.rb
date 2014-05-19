@@ -65,7 +65,7 @@ module Synchronisable
   # @param models [Array] array of models that should be synchronized.
   #   This take a precedence over models defined in {Synchronisable#models}.
   #   If this parameter is not specified and {Synchronisable#models} is empty,
-  #   than it will try to sync only those models which have a corresponding synchronizers.
+  #   than it will try to sync only those models which have a corresponding synchronizers
   #
   # @return [Array<[Synchronisable::Context]>] array of synchronization contexts
   #

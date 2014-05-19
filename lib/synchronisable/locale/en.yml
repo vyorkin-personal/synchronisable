@@ -13,5 +13,5 @@ en:
   messages:
     result: |
       %{model} synchronization, parent: %{parent}.
-      Record count before / after: %{before} / %{after},
-      deleted record count: %{deleted}, error count: %{errors}
+      Records before: %{before}, records after: %{after},
+      deleted records: %{deleted}, errors: %{errors}

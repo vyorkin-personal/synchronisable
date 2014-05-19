@@ -6,7 +6,6 @@ require 'action_mailer/railtie'
 require 'action_view/railtie'
 require 'sprockets/railtie'
 
-Bundler.require(*Rails.groups)
 require 'synchronisable'
 
 module Dummy

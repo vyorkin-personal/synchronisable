@@ -128,8 +128,7 @@ To start synchronization
 ```ruby
 Post.sync
 ```
-
-P.S.: i promise i'll finish this later, soon, this week, promise!
+P.S.: Better readme & wiki is coming! ^__^
 
 ## Support
 

@@ -1,3 +1,5 @@
+require 'colorize'
+
 require 'synchronisable/error_handler'
 require 'synchronisable/context'
 require 'synchronisable/source'
@@ -71,13 +73,13 @@ module Synchronisable
 
     def sync
       @logger.progname = "#{@model} synchronization"
-      @logger.info 'STARTING'
+      log_info('STARTING', :yellow, true)
 
       context = Context.new(@model, @parent.try(:model))
       yield context
 
-      @logger.info 'DONE'
-      @logger.info(context.summary_message)
+      log_info('DONE', :yellow, true)
+      log_info(context.summary_message, :cyan, true)
       @logger.progname = nil
 
       context
@@ -93,15 +95,15 @@ module Synchronisable
       @synchronizer.with_record_sync_callbacks(source) do
         source.prepare
 
-        log_info(source.dump_message)
+        log_info(source.dump_message, :green)
 
         if source.updatable?
-          log_info "updating #{@model}: #{source.local_record.id}"
+          log_info("updating #{@model}: #{source.local_record.id}", :light_green)
           source.update_record
         else
           source.create_record_pair
-          log_info "#{@model} (id: #{source.local_record.id}) was created"
-          log_info "#{source.import_record.class}: #{source.import_record.id} was created"
+          log_info("#{@model} (id: #{source.local_record.id}) was created", :light_red)
+          log_info("#{source.import_record.class}: #{source.import_record.id} was created", :light_red)
         end
       end
     end
@@ -123,7 +125,7 @@ module Synchronisable
     # @see Synchronisable::DSL::Associations
     # @see Synchronisable::DSL::Associations::Association
     def sync_associations(source)
-      log_info "starting associations sync" if source.associations.present?
+      log_info("starting associations sync", :blue) if source.associations.present?
 
       source.associations.each do |association, ids|
         ids.each { |id| sync_association(source, id, association) }
@@ -131,7 +133,7 @@ module Synchronisable
     end
 
     def sync_association(source, id, association)
-      log_info "synchronizing association with id: #{id}"
+      log_info("synchronizing association with id: #{id}", :blue)
 
       @synchronizer.with_association_sync_callbacks(source, id, association) do
         attrs = association.model.synchronizer.find.(id)
@@ -155,12 +157,15 @@ module Synchronisable
       @model.reflections.values
     end
 
-    def log_info(msg)
-      @logger.info(msg) if verbose_logging?
+    def log_info(msg, color = :white, force = true)
+      text = msg.colorize(color) if colorize_logging?
+      @logger.info(text)         if force || verbose_logging?
     end
 
-    def verbose_logging?
-      Synchronisable.logging[:verbose]
+    %i(verbose colorize).each do |name|
+      define_method("#{name}_logging?".to_sym) do
+        Synchronisable.logging[name]
+      end
     end
   end
 end

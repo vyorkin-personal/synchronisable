@@ -36,7 +36,54 @@ describe Team do
       it { is_expected.to change { Synchronisable::Import.count }.by(6) }
     end
 
-    context 'when remote id is not specified' do
+    describe 'restrict sync to specific record(s)' do
+      context 'when remote id is specified' do
+        context "when local record doesn't exist" do
+          subject { -> { Team.sync('team_0') } }
+
+          it { is_expected.to change { Team.count }.by(1) }
+          it { is_expected.to change { Synchronisable::Import.count }.by(3) }
+        end
+
+        context 'when local record exists' do
+          include_context 'team_0 import'
+
+          subject do
+            -> {
+              Team.sync('team_0')
+              team_0.reload
+            }
+          end
+
+          it { is_expected.not_to change { Team.count } }
+
+          it { is_expected.to change { Player.count }.by(2) }
+          it { is_expected.to change { Synchronisable::Import.count }.by(2) }
+
+          it { is_expected.to change { team_0.name    } }
+          it { is_expected.to change { team_0.country } }
+          it { is_expected.to change { team_0.city    } }
+        end
+      end
+
+      context 'when there is 2 imports with corresponding local records' do
+        include_context 'team imports'
+
+        context 'when local id is specified' do
+          subject { -> { Team.sync(team_0.id) } }
+        end
+
+        context 'when array of local ids is specified' do
+          subject { -> { Team.sync([team_0.id, team_1.id]) } }
+        end
+
+        context 'when array of remote ids is specified' do
+          subject { -> { Team.sync([import_0.remote_id, import_1.remote_id]) } }
+        end
+      end
+    end
+
+    context 'when remote id is not specified in attributes hash' do
       subject { Team.sync([remote_attrs.last]) }
 
       its(:errors) { should have(1).items }

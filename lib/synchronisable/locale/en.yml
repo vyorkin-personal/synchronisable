@@ -12,6 +12,6 @@ en:
     gateway_method_missing: Method %{method} is not implemented for gateway
   messages:
     result: |
-      %{model} synchronization, parent: %{parent}.
-      Records before: %{before}, records after: %{after},
+      parent: %{parent},
+      records before: %{before}, records after: %{after},
       deleted records: %{deleted}, errors: %{errors}

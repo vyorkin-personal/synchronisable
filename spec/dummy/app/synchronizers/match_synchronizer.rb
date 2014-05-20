@@ -4,8 +4,6 @@ class MatchSynchronizer < Synchronisable::Synchronizer
   has_one :team, key: 'home_team_id'
   has_one :team, key: 'away_team_id'
 
-  has_many :players
-
   remote_id :match_id
 
   mappings(

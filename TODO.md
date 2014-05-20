@@ -13,7 +13,8 @@ Primary objectives
 - [ ] write a good README
 - [ ] extended interface
 -   [ ] sync with include
-  - [ ] sync with ids array
+  - [x] sync with ids array
+  - [ ] handle case when association type is a :hash
   - [ ] sync method for collection proxy (Model.where(condition).sync)
 
 Think about

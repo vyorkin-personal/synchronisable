@@ -1,6 +1,8 @@
 class BreakConventionTeamSynchronizer < Synchronisable::Synchronizer
   @gateway = TeamGateway.new
 
+  has_many :players
+
   remote_id :maet_id
   mappings(
     :eman    => :name,

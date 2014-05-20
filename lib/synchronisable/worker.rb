@@ -2,6 +2,7 @@ require 'colorize'
 
 require 'synchronisable/error_handler'
 require 'synchronisable/context'
+require 'synchronisable/data_builder'
 require 'synchronisable/source'
 require 'synchronisable/models/import'
 
@@ -43,11 +44,8 @@ module Synchronisable
         error_handler = ErrorHandler.new(@logger, context)
         context.before = @model.imports_count
 
-        data = @synchronizer.fetch.() if data.blank?
-        data.each do |attrs|
-          # TODO: Handle case when only array of ids is given
-          # What to do with associations?
-
+        hashes = DataBuilder.build(@model, @synchronizer, data)
+        hashes.each do |attrs|
           source = Source.new(@model, @parent, attrs)
           error_handler.handle(source) do
             @synchronizer.with_sync_callbacks(source) do
@@ -80,7 +78,6 @@ module Synchronisable
 
       log_info('DONE', :yellow, true)
       log_info(context.summary_message, :cyan, true)
-      @logger.progname = nil
 
       context
     end
@@ -98,12 +95,12 @@ module Synchronisable
         log_info(source.dump_message, :green)
 
         if source.updatable?
-          log_info("updating #{@model}: #{source.local_record.id}", :light_green)
+          log_info("updating #{@model}: #{source.local_record.id}", :blue)
           source.update_record
         else
           source.create_record_pair
-          log_info("#{@model} (id: #{source.local_record.id}) was created", :light_red)
-          log_info("#{source.import_record.class}: #{source.import_record.id} was created", :light_red)
+          log_info("#{@model} (id: #{source.local_record.id}) was created", :blue)
+          log_info("#{source.import_record.class}: #{source.import_record.id} was created", :blue)
         end
       end
     end

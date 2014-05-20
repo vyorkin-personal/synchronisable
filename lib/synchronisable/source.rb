@@ -3,7 +3,8 @@ module Synchronisable
   class Source
     attr_accessor :import_record
     attr_reader :model, :remote_attrs,
-                :remote_id, :local_attrs, :associations
+                :remote_id, :local_attrs,
+                :associations, :import_ids
 
     def initialize(model, parent, remote_attrs)
       @model, @parent, @synchronizer = model, parent, model.synchronizer
@@ -20,6 +21,9 @@ module Synchronisable
       @remote_id = @synchronizer.extract_remote_id(@remote_attrs)
       @local_attrs = @synchronizer.map_attributes(@remote_attrs)
       @associations = @synchronizer.associations_for(@local_attrs)
+
+      # TODO: implement destroy_missed, somehow pass @import_ids,
+      # get all import records if nil
 
       # remove associations keys from local attributes
       @local_attrs.delete_if do |key, _|

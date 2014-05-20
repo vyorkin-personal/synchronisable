@@ -35,10 +35,10 @@ module Synchronisable
     private
 
     def find_by_array_of_ids(element_class, ids)
-      records = case element_class
-      when Integer
+      records = case element_class.name
+      when 'Integer'
         ids.map { |id| @model.find_by(id: id).try(&:synchronisable) }
-      when String
+      when 'String'
         ids.map { |id| Import.find_by(id: id) }
       end
 

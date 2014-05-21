@@ -2,7 +2,7 @@ require 'colorize'
 
 require 'synchronisable/error_handler'
 require 'synchronisable/context'
-require 'synchronisable/data_builder'
+require 'synchronisable/input_dispatcher'
 require 'synchronisable/source'
 require 'synchronisable/models/import'
 
@@ -45,7 +45,7 @@ module Synchronisable
         error_handler = ErrorHandler.new(@logger, context)
         context.before = @model.imports_count
 
-        hashes = DataBuilder.build(@model, @synchronizer, data)
+        hashes = InputDispatcher.dispatch(@model, @synchronizer, data)
         hashes.each do |attrs|
           source = Source.new(@model, @parent, attrs)
           error_handler.handle(source) do

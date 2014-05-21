@@ -1,10 +1,11 @@
 require 'synchronisable/input_descriptor'
 
 module Synchronisable
-  class DataBuilder
+  # @api private
+  class InputDispatcher
     class << self
-      def build(model, synchronizer, data)
-        new(model, synchronizer).build(data)
+      def dispatch(model, synchronizer, data)
+        new(model, synchronizer).dispatch(data)
       end
     end
 
@@ -13,7 +14,7 @@ module Synchronisable
       @synchronizer = synchronizer
     end
 
-    def build(data)
+    def dispatch(data)
       input = InputDescriptor.new(data)
 
       result = case
@@ -43,8 +44,6 @@ module Synchronisable
       import = @model.find_by(id: id).try(:import)
       import ? @synchronizer.find(import.remote_id) : nil
     end
-
-    private
 
     def find_imports(class_name, ids)
       case class_name

@@ -1,4 +1,5 @@
 module Synchronisable
+  # @api private
   class InputDescriptor
     attr_reader :data
 

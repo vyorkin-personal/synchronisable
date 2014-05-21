@@ -26,3 +26,4 @@ Secondary objectives
 ======================================
 - [x] option for verbose logging
 - [x] colorized STDOUT
+- [ ] actualize docs

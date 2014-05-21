@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pry-byebug'
 
 describe Team do
   describe 'synchronization' do
@@ -70,15 +71,52 @@ describe Team do
         include_context 'team imports'
 
         context 'when local id is specified' do
-          subject { -> { Team.sync(team_0.id) } }
+          subject do
+            -> {
+              Team.sync(team_0.id)
+              team_0.reload
+            }
+          end
+
+          it { is_expected.not_to change { Team.count } }
+
+          it { is_expected.to change { Player.count }.by(2) }
+          it { is_expected.to change { Synchronisable::Import.count }.by(2) }
+
+          it { is_expected.to change { team_0.name    } }
+          it { is_expected.to change { team_0.country } }
+          it { is_expected.to change { team_0.city    } }
         end
 
         context 'when array of local ids is specified' do
-          subject { -> { Team.sync([team_0.id, team_1.id]) } }
+          subject do
+            -> {
+              Team.sync([team_0.id, team_1.id])
+              [team_0, team_1].each(&:reload)
+            }
+          end
+
+          it { is_expected.not_to change { Team.count } }
+
+          it { is_expected.to change { Player.count }.by(4) }
+          it { is_expected.to change { Synchronisable::Import.count }.by(4) }
+
+          it { is_expected.to change { team_0.name    } }
+          it { is_expected.to change { team_0.country } }
+          it { is_expected.to change { team_0.city    } }
+
+          it { is_expected.to change { team_1.name    } }
+          it { is_expected.to change { team_1.country } }
+          it { is_expected.to change { team_1.city    } }
         end
 
         context 'when array of remote ids is specified' do
-          subject { -> { Team.sync([import_0.remote_id, import_1.remote_id]) } }
+          subject do
+            -> {
+              Team.sync([import_0.remote_id, import_1.remote_id])
+              [team_0, team_1].each(&:reload)
+            }
+          end
         end
       end
     end

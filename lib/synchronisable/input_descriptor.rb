@@ -19,14 +19,24 @@ module Synchronisable
     end
 
     def array_of_ids?
-      @data.is_a?(Enumerable) && (
-        element_class.is_a?(String) ||
-        element_class.is_a?(Integer)
+       enumerable? && (
+        first_element.is_a?(String) ||
+        first_element.is_a?(Integer)
       )
     end
 
     def element_class
-      @element_class ||= @data.try(:first).try(:class)
+      first_element.try(:class)
+    end
+
+    private
+
+    def first_element
+      @data.try(:first)
+    end
+
+    def enumerable?
+      @data.is_a?(Enumerable)
     end
   end
 end

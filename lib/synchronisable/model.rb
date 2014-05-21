@@ -31,7 +31,7 @@ module Synchronisable
         extend Synchronisable::Model::Methods
 
         class_attribute :synchronizer
-        has_one :import, as: :synchronisable
+        has_one :import, as: :synchronisable, class_name: 'Synchronisable::Import'
 
         set_defaults(args)
       end

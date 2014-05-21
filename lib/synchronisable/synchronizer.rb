@@ -38,8 +38,13 @@ module Synchronisable
     # of this particular model.
     attribute :logger, default: -> { Synchronisable.logging[:logger] }
 
+    # Gateway to be used to get the remote data
+    #
+    # @see Synchronizable::Gateway
+    attribute :gateway
+
     # Lambda that returns array of hashes with remote attributes.
-    method :fetch, default: -> { [] }
+    method :fetcher, default: -> { [] }
 
     # Lambda that returns a hash with remote attributes by id.
     #
@@ -49,7 +54,7 @@ module Synchronisable
     #       remote_source.find { |h| h[:foo_id] == id } }
     #     end
     #   end
-    method :find
+    method :finder, default: -> (id) { nil }
 
     # Lambda, that will be called before synchronization
     # of each record and its assocations.
@@ -95,6 +100,20 @@ module Synchronisable
     method :after_association_sync
 
     class << self
+      def fetch
+        data = fetcher.()
+        data.present? ? data : gateway_instance.try(:fetch)
+      end
+
+      def find(id)
+        data = finder.(id)
+        data.present? ? data : gateway_instance.try(:find, id)
+      end
+
+      def gateway_instance
+        @gateway_instance ||= gateway.try(:new, self)
+      end
+
       # Extracts remote id from given attribute hash.
       #
       # @param attrs [Hash] remote attributes

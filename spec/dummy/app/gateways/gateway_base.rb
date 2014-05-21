@@ -1,12 +1,12 @@
-class GatewayBase
+require 'synchronisable/gateway'
+
+class GatewayBase < Synchronisable::Gateway
   def id_key
-    raise NotImplementedError,
-      I18n.t('errors.gateway_method_missing', method: 'id_key')
+    not_implemented :id_key
   end
 
   def source
-    raise NotImplementedError,
-      I18n.t('errors.gateway_method_missing', method: 'source')
+    not_implemented :source
   end
 
   def fetch

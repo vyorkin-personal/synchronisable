@@ -36,7 +36,8 @@ module Synchronisable
     #
     # @param data [Array<Hash>] array of hashes with remote attriutes.
     #   If not specified worker will try to get the data
-    #   using `fetch` lambda/proc defined in corresponding synchronizer
+    #   using defined gateway class or `fetch` lambda/proc
+    #   defined in corresponding synchronizer
     #
     # @return [Synchronisable::Context] synchronization context
     def run(data)
@@ -133,7 +134,7 @@ module Synchronisable
       log_info("synchronizing association with id: #{id}", :blue)
 
       @synchronizer.with_association_sync_callbacks(source, id, association) do
-        attrs = association.model.synchronizer.find.(id)
+        attrs = association.model.synchronizer.find(id)
         Worker.run(association.model, [attrs], { :parent => source })
       end
     end

@@ -1,6 +1,4 @@
 class PlayerSynchronizer < Synchronisable::Synchronizer
-  @gateway = PlayerGateway.new
-
   remote_id :player_id
 
   mappings(
@@ -14,6 +12,5 @@ class PlayerSynchronizer < Synchronisable::Synchronizer
   )
   only :team_id, :first_name, :last_name
 
-  find  { |id| @gateway.find(id) }
-  fetch { @gateway.fetch }
+  gateway PlayerGateway
 end

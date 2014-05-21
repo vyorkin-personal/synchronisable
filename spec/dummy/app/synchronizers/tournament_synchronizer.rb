@@ -1,6 +1,4 @@
 class TournamentSynchronizer < Synchronisable::Synchronizer
-  @gateway = TournamentGateway.new
-
   has_many :stages
 
   remote_id :tour_id
@@ -15,6 +13,5 @@ class TournamentSynchronizer < Synchronisable::Synchronizer
 
   only :name, :beginning, :ending
 
-  find  { |id| @gateway.find(id) }
-  fetch { @gateway.fetch }
+  gateway TournamentGateway
 end

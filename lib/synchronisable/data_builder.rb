@@ -18,9 +18,9 @@ module Synchronisable
 
       result = case input
       when ->(i) { i.empty? }
-        @synchronizer.fetch.()
+        @synchronizer.fetch
       when ->(i) { i.remote_id? }
-        @synchronizer.find.(data)
+        @synchronizer.find(data)
       when ->(i) { i.local_id? }
         find_by_local_id(data)
       when ->(i) { i.array_of_ids? }
@@ -29,19 +29,19 @@ module Synchronisable
         result = data.dup
       end
 
-      [result].flatten
+      [result].flatten.compact
     end
 
     private
 
     def find_by_array_of_ids(input)
       records = find_imports(input.element_class.name, input.data)
-      records.map { |r| @synchronizer.find.(r.remote_id) }
+      records.map { |r| @synchronizer.find(r.remote_id) }
     end
 
     def find_by_local_id(id)
       import = @model.find_by(id: id).try(:import)
-      import ? @synchronizer.find.(import.remote_id) : nil
+      import ? @synchronizer.find(import.remote_id) : nil
     end
 
     private

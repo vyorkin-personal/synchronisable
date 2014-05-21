@@ -1,6 +1,4 @@
 class BreakConventionTeamSynchronizer < Synchronisable::Synchronizer
-  @gateway = TeamGateway.new
-
   has_many :players
 
   remote_id :maet_id
@@ -11,6 +9,5 @@ class BreakConventionTeamSynchronizer < Synchronisable::Synchronizer
   )
   except :ignored_1, :ignored_2
 
-  find  { |id| @gateway.find(id) }
-  fetch { @gateway.fetch }
+  gateway TeamGateway
 end

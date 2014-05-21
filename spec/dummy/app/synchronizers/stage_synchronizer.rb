@@ -1,6 +1,4 @@
 class StageSynchronizer < Synchronisable::Synchronizer
-  @gateway = StageGateway.new
-
   has_many :matches
 
   remote_id :stage_id
@@ -15,6 +13,5 @@ class StageSynchronizer < Synchronisable::Synchronizer
 
   except :ignored_1, :ignored_2
 
-  find  { |id| @gateway.find(id) }
-  fetch { @gateway.fetch }
+  gateway StageGateway
 end

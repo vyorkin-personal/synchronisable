@@ -16,14 +16,14 @@ module Synchronisable
     def build(data)
       input = InputDescriptor.new(data)
 
-      result = case input
-      when ->(i) { i.empty? }
+      result = case
+      when input.empty?
         @synchronizer.fetch
-      when ->(i) { i.remote_id? }
+      when input.remote_id?
         @synchronizer.find(data)
-      when ->(i) { i.local_id? }
+      when input.local_id?
         find_by_local_id(data)
-      when ->(i) { i.array_of_ids? }
+      when input.array_of_ids?
         find_by_array_of_ids(input)
       else
         result = data.dup

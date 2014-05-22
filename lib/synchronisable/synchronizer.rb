@@ -165,7 +165,7 @@ module Synchronisable
       #
       # @raise [MissedRemoteIdError] raised when data doesn't contain remote id
       def ensure_remote_id(id)
-        return id if id.present?
+        return id.to_s if id.present?
         raise MissedRemoteIdError, I18n.t(
           'errors.missed_remote_id',
           remote_id: remote_id

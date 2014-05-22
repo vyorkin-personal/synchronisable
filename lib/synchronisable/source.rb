@@ -31,7 +31,7 @@ module Synchronisable
       end
 
       @import_record = Import.find_by(
-        :remote_id => @remote_id,
+        :remote_id => @remote_id.to_s,
         :synchronisable_type => @model
       )
 

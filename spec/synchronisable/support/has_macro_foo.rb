@@ -1,4 +1,4 @@
-class HasMacro
+class HasMacroFoo
   include Synchronisable::DSL::Macro
 
   attribute :bar, default: 1

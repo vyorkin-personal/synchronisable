@@ -41,13 +41,13 @@ module Synchronisable
       def set_defaults(args)
         options = args.extract_options!
 
-        self.synchronizer = args.first ||
-          options[:synchronizer] || default_synchronizer
+        self.synchronizer = args.first || options[:synchronizer] ||
+          find_synchronizer || SynchronizerDefault
       end
 
-      def default_synchronizer
+      def find_synchronizer
         const_name = "#{self.name.demodulize}#{SYNCHRONIZER_SUFFIX}"
-        const_name.safe_constantize || SynchronizerDefault
+        const_name.safe_constantize
       end
     end
   end

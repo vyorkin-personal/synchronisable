@@ -12,6 +12,11 @@ module Synchronisable
       end
 
       module ClassMethods
+        def inherited(subclass)
+          super
+          subclass.associations = {}
+        end
+
         [HasOne, HasMany].each do |klass|
           macro = klass.to_s.demodulize.underscore.to_sym
           define_method(macro) do |name, options = {}|

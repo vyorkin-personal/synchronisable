@@ -48,6 +48,7 @@ module Synchronisable
 
       module ClassMethods
         def inherited(subclass)
+          super
           class_attributes[subclass] = class_attributes[self].deep_dup
         end
 

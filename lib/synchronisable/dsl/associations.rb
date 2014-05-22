@@ -49,7 +49,7 @@ module Synchronisable
         end
 
         def required_associations
-          self.associations.select { |_, a| a.required }.map(&:key)
+          self.associations.select { |_, a| a.required }.keys
         end
       end
     end

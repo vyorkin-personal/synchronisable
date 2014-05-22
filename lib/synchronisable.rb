@@ -14,6 +14,7 @@ require 'synchronisable/version'
 require 'synchronisable/models/import'
 require 'synchronisable/synchronizer'
 require 'synchronisable/model'
+require 'synchronisable/gateway'
 
 locale_paths = File.join(File.dirname(__FILE__),
   'synchronisable', 'locale', '*.yml')
@@ -34,7 +35,7 @@ I18n.available_locales = [:en, :ru]
 # Match.sync(:include => {
 #   :match_players => :player
 # })
-# Model.sync([id1, ..., idn])
+# + Model.sync([id1, ..., idn])
 #
 # Model.where(condition).sync
 # Match.where(condition).sync(:include => {

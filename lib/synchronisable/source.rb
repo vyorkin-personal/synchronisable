@@ -51,7 +51,7 @@ module Synchronisable
       @import_record = Import.create!(
         :synchronisable_id    => record.id,
         :synchronisable_type  => @model.to_s,
-        :remote_id            => @remote_id,
+        :remote_id            => @remote_id.to_s,
         :attrs                => @local_attrs
       )
     end

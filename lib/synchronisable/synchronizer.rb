@@ -110,10 +110,6 @@ module Synchronisable
         data.present? ? data : gateway_instance.try(:find, id)
       end
 
-      def gateway_instance
-        @gateway_instance ||= gateway.try(:new, self)
-      end
-
       # Extracts remote id from given attribute hash.
       #
       # @param attrs [Hash] remote attributes
@@ -170,6 +166,10 @@ module Synchronisable
           'errors.missed_remote_id',
           remote_id: remote_id
         )
+      end
+
+      def gateway_instance
+        @gateway_instance ||= gateway.try(:new, self)
       end
     end
   end

@@ -37,7 +37,7 @@ module Synchronisable
           intersection = self.associations.map { |key, _| key } & attrs.keys
 
           Hash[intersection.map { |key|
-            [self.associations[key], [*attrs[key].dup]]
+            [self.associations[key], [*attrs[key]]]
           }]
         end
 

@@ -27,3 +27,25 @@ Secondary objectives
 - [x] option for verbose logging
 - [x] colorized STDOUT
 - [ ] actualize docs
+
+
+The desired interface:
+======================================
+```
++ Model.sync
++ Model.sync([{},...])
+```
+
+```
+Match.sync(:include => {
+  :match_players => :player
+})
++ Model.sync([id1, ..., idn])
+```
+
+```
+Model.where(condition).sync
+Match.where(condition).sync(:include => {
+  :match_players => :player
+})
+```

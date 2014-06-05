@@ -26,22 +26,6 @@ I18n.config.enforce_available_locales = true
 I18n.default_locale = :en
 I18n.available_locales = [:en, :ru]
 
-# The desired interface:
-# ><(((*>
-#
-# + Model.sync
-# + Model.sync([{},...])
-#
-# Match.sync(:include => {
-#   :match_players => :player
-# })
-# + Model.sync([id1, ..., idn])
-#
-# Model.where(condition).sync
-# Match.where(condition).sync(:include => {
-#   :match_players => :player
-# })
-
 module Synchronisable
   include ActiveSupport::Configurable
 

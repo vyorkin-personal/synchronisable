@@ -169,7 +169,7 @@ module Synchronisable
       end
 
       def gateway_instance
-        @gateway_instance ||= gateway.try(:new, self)
+        @gateway ||= gateway.try(:new)
       end
     end
   end

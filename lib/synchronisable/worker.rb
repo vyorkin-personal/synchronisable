@@ -40,6 +40,8 @@ module Synchronisable
     #   defined in corresponding synchronizer
     #
     # @return [Synchronisable::Context] synchronization context
+    #
+    # @see Synchronisable::InputDispatcher
     def run(data)
       sync do |context|
         error_handler = ErrorHandler.new(@logger, context)

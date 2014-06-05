@@ -2,10 +2,6 @@ module Synchronisable
   class Gateway
     attr_reader :synchronizer
 
-    def initialize(synchronizer)
-      @synchronizer = synchronizer
-    end
-
     def fetch
       not_implemented :fetch
     end

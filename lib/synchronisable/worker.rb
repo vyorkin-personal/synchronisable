@@ -1,3 +1,4 @@
+require 'pry-byebug'
 require 'colorize'
 
 require 'synchronisable/error_handler'
@@ -5,12 +6,17 @@ require 'synchronisable/context'
 require 'synchronisable/input_dispatcher'
 require 'synchronisable/source'
 require 'synchronisable/models/import'
+require 'synchronisable/helper/logging'
 
 module Synchronisable
   # Responsible for model synchronization.
   #
   # @api private
   class Worker
+    include Helper::Logging
+
+    attr_reader :logger
+
     class << self
       # Creates a new instance of worker and initiates model synchronization.
       #
@@ -50,11 +56,12 @@ module Synchronisable
         hashes = InputDispatcher.dispatch(@model, @synchronizer, data)
         hashes.each do |attrs|
           source = Source.new(@model, @parent, attrs)
+
           error_handler.handle(source) do
             @synchronizer.with_sync_callbacks(source) do
               sync_record(source)
-              sync_associations(source)
               set_record_foreign_keys(source)
+              sync_associations(source)
             end
           end
         end
@@ -125,7 +132,8 @@ module Synchronisable
     # @see Synchronisable::DSL::Associations
     # @see Synchronisable::DSL::Associations::Association
     def sync_associations(source)
-      log_info("starting associations sync", :blue) if source.associations.present?
+      return if source.associations.blank?
+      log_info("starting associations sync", :blue)
 
       source.associations.each do |association, ids|
         ids.each { |id| sync_association(source, id, association) }
@@ -155,17 +163,6 @@ module Synchronisable
 
     def model_reflections
       @model.reflections.values
-    end
-
-    def log_info(msg, color = :white, force = true)
-      text = msg.colorize(color) if colorize_logging?
-      @logger.info(text)         if force || verbose_logging?
-    end
-
-    %i(verbose colorize).each do |name|
-      define_method("#{name}_logging?".to_sym) do
-        Synchronisable.logging[name]
-      end
     end
   end
 end

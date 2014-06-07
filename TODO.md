@@ -5,14 +5,15 @@ Primary objectives
 - [x] sync method
 - [x] dependent syncronization & mapping
 - [x] tests for Synchronisable.sync
-- [ ] fix a mess with Context
+- [ ] fix a mess with Context: return an array of sync contexts,
+      or aggregate all syncronization contexts into just one
 - [ ] destroy_missed
 - [ ] worker.rb refactoring
 - [x] integrate with travis, stillmaintained, gemnasium,
-    codeclimate, coveralls, inch-pages, codersclan
+      codeclimate, coveralls, inch-pages, codersclan
 - [ ] write a good README
 - [ ] extended interface
--   [ ] sync with include
+  - [ ] sync with include
   - [x] sync with ids array
   - [ ] handle case when association type is a :hash
   - [ ] sync method for collection proxy (Model.where(condition).sync)

@@ -153,7 +153,7 @@ module Synchronisable
     #
     # @see ActiveRecord::Reflection::AssociationReflection
     def belongs_to_parent_reflection
-      return unless @parent
+      return nil unless @parent
 
       model_reflections.find do |r|
         r.macro == :belongs_to &&

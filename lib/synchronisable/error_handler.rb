@@ -21,14 +21,16 @@ module Synchronisable
     # @return [Boolean] `true` if syncronization was completed
     #   without errors, `false` otherwise
     def handle(source)
-      ActiveRecord::Base.transaction do
+      block = ->() {
         yield
         return true
-      end
-      rescue Exception => e
-        @context.errors << e
-        log(e, source)
-        return false
+      }
+
+      source.parent ? block.() : ActiveRecord::Base.transaction(&block)
+    rescue Exception => e
+      @context.errors << e
+      log(e, source)
+      return false
     end
 
     private

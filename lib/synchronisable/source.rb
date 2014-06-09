@@ -9,7 +9,7 @@ module Synchronisable
     attr_accessor :import_record
     attr_reader :parent_associations, :child_associations
     attr_reader :model, :remote_attrs, :remote_id,
-                :local_attrs, :import_ids
+                :local_attrs, :import_ids, :parent
 
     def initialize(model, parent, remote_attrs)
       @model, @parent, @synchronizer = model, parent, model.synchronizer

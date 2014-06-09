@@ -1,3 +1,5 @@
+require 'pry-byebug'
+
 module Synchronisable
   # Helper class for synchronization errors handling.
   #
@@ -40,6 +42,7 @@ module Synchronisable
       I18n.t('errors.import_error',
         :model         => @context.model.to_s,
         :error         => e.message,
+        :backtrace     => e.backtrace.join("\n"),
         :remote_attrs  => source.remote_attrs,
         :local_attrs   => source.local_attrs,
         :import_record => source.import_record.inspect,

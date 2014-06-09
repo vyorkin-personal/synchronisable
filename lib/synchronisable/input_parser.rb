@@ -1,20 +1,22 @@
 require 'synchronisable/input_descriptor'
 
 module Synchronisable
+  # Responsible for guessing the user input format.
+  #
   # @api private
-  class InputDispatcher
-    class << self
-      def dispatch(model, synchronizer, data)
-        new(model, synchronizer).dispatch(data)
-      end
-    end
-
+  class InputParser
     def initialize(model, synchronizer)
       @model = model
       @synchronizer = synchronizer
     end
 
-    def dispatch(data)
+    # Parses the user input.
+    #
+    # @param data [Array<Hash>, Array<String>, Array<Integer>, String, Integer]
+    #   synchronization data to handle.
+    #
+    # @return [Array<Hash>] array of hashes with remote attributes
+    def parse(data)
       input = InputDescriptor.new(data)
 
       result = case

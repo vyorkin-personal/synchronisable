@@ -1,11 +1,11 @@
-require 'synchronisable/worker'
+require 'synchronisable/controller'
 require 'synchronisable/models/import'
 
 module Synchronisable
   module Model
     # Methods that will be attached to synchronisable model class.
     module Methods
-      # Creates a new worker, that initiates synchronization
+      # Creates a new controller, that initiates synchronization
       # for this particular model.
       # If you have implemented `fetch` & `find` methods
       # in your model synchronizer, than it will be used if no data supplied.
@@ -21,7 +21,7 @@ module Synchronisable
       #
       # @param data [Array<Hash>] array of hashes with remote attributes.
       #
-      # @see Synchronisable::Worker
+      # @see Synchronisable::Controller
       #
       # @example Supplying array of hashes with remote attributes
       #   FooModel.sync([
@@ -43,7 +43,7 @@ module Synchronisable
       #     :match_players => :player
       #   })
       def sync(*args)
-        Worker.run(self, *args)
+        Controller.call(self, *args)
       end
 
       # Count of import records for this model.

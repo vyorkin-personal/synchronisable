@@ -1,5 +1,6 @@
 require 'synchronisable/dsl/associations/has_one'
 require 'synchronisable/dsl/associations/has_many'
+require 'synchronisable/dsl/associations/belongs_to'
 
 module Synchronisable
   module DSL
@@ -17,7 +18,7 @@ module Synchronisable
           subclass.associations = {}
         end
 
-        [HasOne, HasMany].each do |klass|
+        [HasOne, HasMany, BelongsTo].each do |klass|
           macro = klass.to_s.demodulize.underscore.to_sym
           define_method(macro) do |name, options = {}|
             klass.create(self, name, options)
@@ -34,11 +35,9 @@ module Synchronisable
         #   attributes hash doesn't required associations
         def associations_for(attrs)
           ensure_required_associations(attrs)
-          intersection = self.associations.map { |key, _| key } & attrs.keys
 
-          Hash[intersection.map { |key|
-            [self.associations[key], [*attrs[key]]]
-          }]
+          intersection = self.associations.map { |key, _| key } & attrs.keys
+          Hash[intersection.map { |key| [self.associations[key], [*attrs[key]]] }]
         end
 
         private

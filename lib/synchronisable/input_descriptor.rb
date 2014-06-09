@@ -1,5 +1,10 @@
 module Synchronisable
+  # Provides a set of helper methods
+  # to describe user input.
+  #
   # @api private
+  #
+  # @see Synchronisable::InputParser
   class InputDescriptor
     attr_reader :data
 

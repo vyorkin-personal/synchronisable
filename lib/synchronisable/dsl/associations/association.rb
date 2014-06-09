@@ -4,6 +4,7 @@ module Synchronisable
   module DSL
     module Associations
       # Association builder.
+      # Subclasses must implement #macro method.
       class Association
         include Synchronisable::DSL::Macro
 
@@ -17,9 +18,9 @@ module Synchronisable
           end
         end
 
-        self.valid_options = %i(key class_name required type)
+        self.valid_options = %i(key class_name required)
 
-        attr_reader :name, :model, :key, :required, :type
+        attr_reader :name, :model, :key, :required
 
         def initialize(synchronizer, name)
           @synchronizer, @name = synchronizer, name.to_sym
@@ -30,7 +31,6 @@ module Synchronisable
 
           @key = options[:key]
           @required = options[:required]
-          @type = options[:type]
 
           if options[:class_name].present?
             @model = options[:class_name].constantize
@@ -41,11 +41,14 @@ module Synchronisable
           @synchronizer.associations[@key] = self
         end
 
+        def macro
+          raise NotImplementedError
+        end
+
         protected
 
         def set_defaults
           @required ||= false
-          @type ||= :ids
 
           @model ||= @name.to_s.classify.constantize
           @key = "#{@name}_#{self.class.key_suffix}" unless @key.present?

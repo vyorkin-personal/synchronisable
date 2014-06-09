@@ -5,6 +5,7 @@ ru:
     missed_associations: В хэше %{attrs} не указаны ассоциации %{keys}
     import_error: >
       Ошибка при импорте %{model}: %{error},
+      backtrace: %{backtrace},
       remote attrs: %{remote_attrs},
       local attrs: %{local_attrs},
       import record: %{import_record},

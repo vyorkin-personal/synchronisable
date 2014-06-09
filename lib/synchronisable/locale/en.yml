@@ -5,6 +5,7 @@ en:
     missed_associations: Couldn't find associations %{keys} in %{attrs}
     import_error: |
       %{model} import error: %{error}.
+      backtrace: %{backtrace},
       remote attrs: %{remote_attrs},
       local attrs: %{local_attrs},
       import record: %{import_record},

@@ -6,6 +6,10 @@ module Synchronisable
       # `has_one` association builder.
       class HasOne < Association
         key_suffix 'id'
+
+        def macro
+          :has_one
+        end
       end
     end
   end

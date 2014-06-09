@@ -6,6 +6,10 @@ module Synchronisable
       # `has_many` association builder.
       class HasMany < Association
         key_suffix 'ids'
+
+        def macro
+          :has_many
+        end
       end
     end
   end

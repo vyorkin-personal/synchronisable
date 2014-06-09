@@ -8,7 +8,7 @@ Primary objectives
 - [ ] fix a mess with Context: return an array of sync contexts,
       or aggregate all syncronization contexts into just one
 - [ ] destroy_missed
-- [ ] worker.rb refactoring
+- [x] worker.rb refactoring
 - [x] integrate with travis, stillmaintained, gemnasium,
       codeclimate, coveralls, inch-pages, codersclan
 - [ ] write a good README

@@ -6,6 +6,10 @@ module Synchronisable
       # `belongs_to` association builder.
       class BelongsTo < Association
         key_suffix 'id'
+
+        def macro
+          :belongs_to
+        end
       end
     end
   end

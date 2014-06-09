@@ -1,6 +1,8 @@
 module Synchronisable
   module Helper
-    # Logging helper methods
+    # Provides logging helper methods.
+    # Class or module that includes this one
+    # should implement `logger` method.
     #
     # @api private
     module Logging

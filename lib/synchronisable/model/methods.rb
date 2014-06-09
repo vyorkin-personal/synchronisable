@@ -6,11 +6,12 @@ module Synchronisable
     # Methods that will be attached to synchronisable model class.
     module Methods
       # Creates a new controller, that initiates synchronization
-      # for this particular model.
+      # for this particular model and its associations.
       # If you have implemented `fetch` & `find` methods
       # in your model synchronizer, than it will be used if no data supplied.
       #
       # @overload sync(data, options)
+      #   @param data [Array<Hash>, Array<String>, Array<Integer>, String, Integer] synchronization data
       #   @param options [Hash] synchronization options
       #   @option options [Hash] :include assocations to be synchronized.
       #     Use this option to override `has_one` & `has_many` assocations
@@ -19,7 +20,6 @@ module Synchronisable
       # @overload sync(data)
       # @overload sync
       #
-      # @param data [Array<Hash>] array of hashes with remote attributes.
       #
       # @see Synchronisable::Controller
       #

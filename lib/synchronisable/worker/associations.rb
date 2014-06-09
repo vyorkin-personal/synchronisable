@@ -36,7 +36,7 @@ module Synchronisable
           Controller.call(association.model, [attrs])
 
           import_record = Import.find_by(
-            :remote_id => id,
+            :remote_id => id.to_s,
             :synchronisable_type => association.model.to_s
           )
           @source.local_attrs[association.key] = import_record.synchronisable.id

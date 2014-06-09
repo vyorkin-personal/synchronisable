@@ -6,32 +6,21 @@ module Synchronisable
     #
     # @api private
     class Associations < Base
-
-      # TODO: Massive refactoring needed
-
       # Synchronizes associations.
       #
       # @see Synchronisable::Source
       # @see Synchronisable::DSL::Associations
       # @see Synchronisable::DSL::Associations::Association
-      def sync_child_associations
-        log_info('starting child associations sync', :blue)
+      %w(child parent).each do |type|
+        define_method(:"sync_#{type}_associations") do
+          log_info("starting #{type} associations sync", :blue)
 
-        @source.child_associations.each do |association, ids|
-          ids.each { |id| sync_child_association(id, association) }
+          @source.send(:"#{type}_associations").each do |association, ids|
+            ids.each { |id| self.send(:"sync_#{type}_association", id, association) }
+          end
+
+          log_info("done #{type} associations sync", :blue)
         end
-
-        log_info('done child associations sync', :blue)
-      end
-
-      def sync_parent_associations
-        log_info('starting parent associations sync', :blue)
-
-        @source.parent_associations.each do |association, id|
-          sync_parent_association(id, association)
-        end
-
-        log_info('done parent associations sync', :blue)
       end
 
       private

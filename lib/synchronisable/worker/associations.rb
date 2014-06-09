@@ -13,13 +13,16 @@ module Synchronisable
       # @see Synchronisable::DSL::Associations::Association
       %w(child parent).each do |type|
         define_method(:"sync_#{type}_associations") do
-          log_info("starting #{type} associations sync", :blue)
+          associations = @source.send(:"#{type}_associations")
+          log_info("starting #{type} associations sync", :blue) if associations.present?
 
-          @source.send(:"#{type}_associations").each do |association, ids|
-            ids.each { |id| self.send(:"sync_#{type}_association", id, association) }
+          associations.each do |association, ids|
+            ids.each do |id|
+              send(:"sync_#{type}_association", id, association)
+            end
           end
 
-          log_info("done #{type} associations sync", :blue)
+          log_info("done #{type} associations sync", :blue) if associations.present?
         end
       end
 

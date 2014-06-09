@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140507140039) do
+ActiveRecord::Schema.define(version: 20140609133855) do
 
   create_table "imports", force: true do |t|
     t.string   "synchronisable_type", null: false
@@ -81,6 +81,18 @@ ActiveRecord::Schema.define(version: 20140507140039) do
   end
 
   add_index "stages", ["tournament_id"], name: "index_stages_on_tournament_id"
+
+  create_table "team_group_statistics", force: true do |t|
+    t.integer  "team_id"
+    t.integer  "games_played"
+    t.integer  "games_won"
+    t.integer  "games_lost"
+    t.integer  "games_draw"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "team_group_statistics", ["team_id"], name: "index_team_group_statistics_on_team_id"
 
   create_table "teams", force: true do |t|
     t.string   "name"

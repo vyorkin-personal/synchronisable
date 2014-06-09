@@ -39,7 +39,7 @@ module Synchronisable
             :remote_id => id,
             :synchronisable_type => association.model.to_s
           )
-          @source.local_attrs[association.key] = model.id
+          @source.local_attrs[association.key] = import_record.synchronisable.id
         end
       end
 

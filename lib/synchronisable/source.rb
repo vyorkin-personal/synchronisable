@@ -1,5 +1,3 @@
-require 'pry-byebug'
-
 module Synchronisable
   # TODO: Massive refactoring needed
 

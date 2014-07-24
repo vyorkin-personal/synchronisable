@@ -1,5 +1,4 @@
 require 'synchronisable/worker/base'
-require 'pry-byebug'
 
 module Synchronisable
   module Worker

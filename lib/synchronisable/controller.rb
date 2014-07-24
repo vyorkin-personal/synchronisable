@@ -1,4 +1,3 @@
-require 'pry-byebug'
 require 'colorize'
 
 require 'synchronisable/error_handler'

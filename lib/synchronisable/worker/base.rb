@@ -13,6 +13,7 @@ module Synchronisable
 
       def initialize(synchronizer, source)
         @synchronizer, @source = synchronizer, source
+        @includes = source.includes
       end
 
       def logger

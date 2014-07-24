@@ -34,12 +34,12 @@ module Synchronisable
       #   ])
       #
       # @example General usage
-      #   FooModel.sync(:include => {
-      #     :assocation_model => :nested_assocaiton_model
+      #   FooModel.sync(:includes => {
+      #     :assocation_model => :nested_association_model
       #   })
       #
       # @example Football domain use case
-      #   Match.sync(:include => {
+      #   Match.sync(:includes => {
       #     :match_players => :player
       #   })
       def sync(*args)

@@ -45,6 +45,10 @@ module Synchronisable
           raise NotImplementedError
         end
 
+        def model_name
+          @model.to_s.demodulize.underscore.to_sym
+        end
+
         protected
 
         def set_defaults

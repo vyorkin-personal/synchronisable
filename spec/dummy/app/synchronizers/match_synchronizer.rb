@@ -31,6 +31,11 @@ class MatchSynchronizer < Synchronisable::Synchronizer
 
   class << self
     def sync_match_players(source, ref_type)
+
+      # to support :includes option
+      return unless source.includes.nil? ||
+        source.includes.try(:include?, :match_players)
+
       match = source.local_record
       remote_player_ids = source.remote_attrs[ref_type.to_sym] || {}
 

@@ -1,3 +1,5 @@
+require 'pry-byebug'
+
 module Synchronisable
   # TODO: Massive refactoring needed
 
@@ -9,10 +11,13 @@ module Synchronisable
     attr_accessor :import_record
     attr_reader :parent_associations, :child_associations
     attr_reader :model, :remote_attrs, :remote_id,
-                :local_attrs, :import_ids, :parent
+                :local_attrs, :import_ids, :parent,
+                :includes
 
-    def initialize(model, parent, remote_attrs)
+    def initialize(model, parent, includes, remote_attrs)
       @model, @parent, @synchronizer = model, parent, model.synchronizer
+      @model_name = @model.to_s.demodulize.underscore.to_sym
+      @includes = includes
       @remote_attrs = remote_attrs.with_indifferent_access
     end
 
@@ -26,15 +31,10 @@ module Synchronisable
     def prepare
       @remote_id = @synchronizer.extract_remote_id(@remote_attrs)
       @local_attrs = @synchronizer.map_attributes(@remote_attrs)
-
       @associations = @synchronizer.associations_for(@local_attrs)
-      @parent_associations = @associations.select do |association|
-        PARENT_ASSOCIATION_KEYS.include? association.macro
-      end
 
-      @child_associations = @associations.select do |association|
-        CHILD_ASSOCIATION_KEYS.include? association.macro
-      end
+      @parent_associations = filter_associations(PARENT_ASSOCIATION_KEYS)
+      @child_associations  = filter_associations(CHILD_ASSOCIATION_KEYS)
 
       @import_record = Import.find_by(
         :remote_id => @remote_id.to_s,
@@ -75,7 +75,6 @@ module Synchronisable
     def set_belongs_to_parent_foreign_key
       return unless @parent && parent_has_current_model_as_reflection?
       @local_attrs[parent_foreign_key_name] = @parent.local_record.id
-
     end
 
     def parent_foreign_key_name
@@ -91,6 +90,10 @@ module Synchronisable
         reflection.plural_name == @model.table_name &&
         %i(has_one has_many).include?(reflection.macro)
       end
+    end
+
+    def filter_associations(macroses)
+      @associations.select { |a| macroses.include? a.macro }
     end
   end
 end

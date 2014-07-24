@@ -58,7 +58,7 @@ module Synchronisable
 
         hashes = @input.parse(data)
         hashes.each do |attrs|
-          source = Source.new(@model, @parent, attrs)
+          source = Source.new(@model, @parent, @includes, attrs)
 
           error_handler.handle(source) do
             source.prepare
@@ -84,6 +84,8 @@ module Synchronisable
     def initialize(model, options)
       @model, @synchronizer = model, model.synchronizer
       @logger = @synchronizer.logger
+
+      @includes = options[:includes]
       @parent = options[:parent]
 
       @input = InputParser.new(@model, @synchronizer)

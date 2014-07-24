@@ -1,4 +1,5 @@
 require 'synchronisable/worker/base'
+require 'pry-byebug'
 
 module Synchronisable
   module Worker
@@ -17,9 +18,7 @@ module Synchronisable
           log_info("starting #{type} associations sync", :blue) if associations.present?
 
           associations.each do |association, ids|
-            ids.each do |id|
-              send(:"sync_#{type}_association", id, association)
-            end
+            ids.each { |id| send(:"sync_#{type}_association", id, association) }
           end
 
           log_info("done #{type} associations sync", :blue) if associations.present?
@@ -44,12 +43,33 @@ module Synchronisable
       end
 
       def sync_child_association(id, association)
+        return unless can_sync_association?(association)
+
         log_info("synchronizing child association with id: #{id}", :blue)
 
         @synchronizer.with_association_sync_callbacks(@source, id, association) do
           attrs = association.model.synchronizer.find(id)
-          Controller.call(association.model, [attrs], { :parent => @source })
+
+          Controller.call(association.model, [attrs],
+            child_association_options(association))
         end
+      end
+
+      def can_sync_association?(association)
+        @includes.nil? || (
+          @includes.try(:include?, association.name) ||
+          @includes == association.name
+        )
+      end
+
+      def child_association_options(association)
+        default = @includes.nil? ? nil : {}
+        child_includes = @includes.try(:fetch, association.name) || default
+
+        {
+          :parent => @source,
+          :includes => child_includes
+        }
       end
     end
   end

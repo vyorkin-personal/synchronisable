@@ -4,6 +4,8 @@ module Synchronisable
   # Responsible for guessing the user input format.
   #
   # @api private
+  #
+  # @see Synchronisable::InputDescriptor
   class InputParser
     def initialize(model, synchronizer)
       @model = model

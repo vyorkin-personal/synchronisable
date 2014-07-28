@@ -16,6 +16,10 @@ module Synchronisable
       @data.blank?
     end
 
+    def params?
+      @data.is_a?(Hash)
+    end
+
     def remote_id?
       @data.is_a?(String)
     end

@@ -11,15 +11,14 @@ module Synchronisable
       # in your model synchronizer, than it will be used if no data supplied.
       #
       # @overload sync(data, options)
-      #   @param data [Array<Hash>, Array<String>, Array<Integer>, String, Integer] synchronization data
+      #   @param data [Hash, Array<Hash>, Array<String>, Array<Integer>, String, Integer] synchronization data
       #   @param options [Hash] synchronization options
-      #   @option options [Hash] :include assocations to be synchronized.
+      #   @option options [Hash] :includes assocations to be synchronized.
       #     Use this option to override `has_one` & `has_many` assocations
       #     defined in model synchronizer.
       # @overload sync(options)
       # @overload sync(data)
       # @overload sync
-      #
       #
       # @see Synchronisable::Controller
       #

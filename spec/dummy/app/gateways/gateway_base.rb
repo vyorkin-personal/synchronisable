@@ -9,7 +9,7 @@ class GatewayBase < Synchronisable::Gateway
     not_implemented :source
   end
 
-  def fetch
+  def fetch(params)
     source
   end
 

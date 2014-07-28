@@ -44,17 +44,27 @@ module Synchronisable
     attribute :gateway
 
     # Lambda that returns array of hashes with remote attributes.
-    method :fetcher, default: -> { [] }
+    method :fetcher, default: -> (params = {}) { [] }
 
-    # Lambda that returns a hash with remote attributes by id.
+    # Lambda that returns a hash with remote attributes by params.
     #
     # @example Common use case
     #   class FooSynchronizer < Synchronisable::Synchronizer
-    #     find do |id|
+    #     finder do |id|
     #       remote_source.find { |h| h[:foo_id] == id } }
     #     end
     #   end
-    method :finder, default: -> (id) { nil }
+    # @example Composite identifier
+    #   class BarSynchronizer < Synchronisable::Synchronizer
+    #     finder do |params|
+    #       remote_source.find do |h|
+    #         h[:x] == params[:x] &&
+    #         h[:y] == params[:y] &&
+    #         h[:z] == params[:z]
+    #       end
+    #     end
+    #   end
+    method :finder, default: -> (params) { nil }
 
     # Lambda, that will be called before synchronization
     # of each record and its assocations.
@@ -100,14 +110,14 @@ module Synchronisable
     method :after_association_sync
 
     class << self
-      def fetch
-        data = fetcher.()
-        data.present? ? data : gateway_instance.try(:fetch)
+      def fetch(params = {})
+        data = fetcher.(params)
+        data.present? ? data : gateway_instance.try(:fetch, params)
       end
 
-      def find(id)
-        data = finder.(id)
-        data.present? ? data : gateway_instance.try(:find, id)
+      def find(params)
+        data = finder.(params)
+        data.present? ? data : gateway_instance.try(:find, params)
       end
 
       # Extracts remote id from given attribute hash.

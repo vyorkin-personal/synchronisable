@@ -22,17 +22,17 @@ module Synchronisable
       input = InputDescriptor.new(data)
 
       result = case
-      when input.empty?
-        @synchronizer.fetch
-      when input.remote_id?
-        @synchronizer.find(data)
-      when input.local_id?
-        find_by_local_id(data)
-      when input.array_of_ids?
-        find_by_array_of_ids(input)
-      else
-        result = data.dup
-      end
+               when input.empty? || input.params?
+                 @synchronizer.fetch(data || {})
+               when input.remote_id?
+                 @synchronizer.find(data)
+               when input.local_id?
+                 find_by_local_id(data)
+               when input.array_of_ids?
+                 find_by_array_of_ids(input)
+               else
+                 result = data.dup
+               end
 
       [result].flatten.compact
     end

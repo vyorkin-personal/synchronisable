@@ -41,7 +41,7 @@ module Synchronisable
 
     # Initiates model synchronization.
     #
-    # @param data [Array<Hash>, Array<String>, Array<Integer>, String, Integer]
+    # @param data [Hash, Array<Hash>, Array<String>, Array<Integer>, String, Integer]
     #   synchronization data.
     #   If not specified, it will try to get array of hashes to sync with
     #   using defined gateway class or `fetch` lambda/proc

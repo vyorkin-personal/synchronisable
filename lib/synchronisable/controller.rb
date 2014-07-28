@@ -53,14 +53,14 @@ module Synchronisable
     def call(data)
       sync do |context|
         error_handler = ErrorHandler.new(logger, context)
+        source = Source.new(@model, @parent, @includes)
+
         context.before = @model.imports_count
 
         hashes = @input.parse(data)
         hashes.each do |attrs|
-          source = Source.new(@model, @parent, @includes, attrs)
-
           error_handler.handle(source) do
-            source.prepare
+            source.prepare(data, attrs)
 
             record_worker = Worker::Record.new(@synchronizer, source)
             associations_worker = Worker::Associations.new(@synchronizer, source)

@@ -10,13 +10,12 @@ module Synchronisable
     attr_reader :parent_associations, :child_associations
     attr_reader :model, :remote_attrs, :remote_id,
                 :local_attrs, :import_ids, :parent,
-                :includes
+                :includes, :data
 
-    def initialize(model, parent, includes, remote_attrs)
+    def initialize(model, parent, includes)
       @model, @parent, @synchronizer = model, parent, model.synchronizer
       @model_name = @model.to_s.demodulize.underscore.to_sym
       @includes = includes
-      @remote_attrs = remote_attrs.with_indifferent_access
     end
 
     # Prepares synchronization source:
@@ -26,9 +25,15 @@ module Synchronisable
     # association of parent model.
     #
     # @api private
-    def prepare
-      @remote_id = @synchronizer.extract_remote_id(@remote_attrs)
-      @local_attrs = @synchronizer.map_attributes(@remote_attrs)
+    def prepare(data, remote_attrs)
+      @data = @parent
+        .try(:source).try(:data)
+        .try(:merge, data) || data
+
+      @remote_attrs = remote_attrs.with_indifferent_access
+
+      @remote_id    = @synchronizer.extract_remote_id(@remote_attrs)
+      @local_attrs  = @synchronizer.map_attributes(@remote_attrs)
       @associations = @synchronizer.associations_for(@local_attrs)
 
       @parent_associations = filter_associations(PARENT_ASSOCIATION_KEYS)

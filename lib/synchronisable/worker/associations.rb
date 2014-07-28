@@ -30,8 +30,8 @@ module Synchronisable
         log_info("synchronizing parent association with id: #{id}", :blue)
 
         @synchronizer.with_association_sync_callbacks(@source, id, association) do
-          attrs = association.model.synchronizer.find(id)
-          Controller.call(association.model, [attrs])
+          data = @source.data.try(:merge, { id: id }) || id
+          Controller.call(association.model, data, {})
 
           import_record = Import.find_by(
             :remote_id => id.to_s,
@@ -47,9 +47,9 @@ module Synchronisable
         log_info("synchronizing child association with id: #{id}", :blue)
 
         @synchronizer.with_association_sync_callbacks(@source, id, association) do
-          attrs = association.model.synchronizer.find(id)
+          data = @source.data.try(:merge, { id: id }) || id
 
-          Controller.call(association.model, [attrs],
+          Controller.call(association.model, data,
             child_association_options(association))
         end
       end

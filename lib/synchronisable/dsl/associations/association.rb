@@ -18,9 +18,10 @@ module Synchronisable
           end
         end
 
-        self.valid_options = %i(key class_name required)
+        self.valid_options = %i(key class_name required force_sync)
 
-        attr_reader :name, :model, :key, :required
+        attr_reader :name, :model, :key,
+          :required, :force_sync
 
         def initialize(synchronizer, name)
           @synchronizer, @name = synchronizer, name.to_sym
@@ -31,6 +32,7 @@ module Synchronisable
 
           @key = options[:key]
           @required = options[:required]
+          @force_sync = options[:force_sync]
 
           if options[:class_name].present?
             @model = options[:class_name].constantize
@@ -53,6 +55,7 @@ module Synchronisable
 
         def set_defaults
           @required ||= false
+          @force_sync ||= false
 
           @model ||= @name.to_s.classify.constantize
           @key = "#{@name}_#{self.class.key_suffix}" unless @key.present?

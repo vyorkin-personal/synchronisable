@@ -22,8 +22,10 @@ module Synchronisable
       input = InputDescriptor.new(data)
 
       result = case
-               when input.empty? || input.params?
-                 @synchronizer.fetch(data || {})
+               when input.empty?
+                 @synchronizer.fetch
+               when input.params?
+                 find_or_fetch_by_data(input.data)
                when input.remote_id?
                  @synchronizer.find(data)
                when input.local_id?
@@ -38,6 +40,11 @@ module Synchronisable
     end
 
     private
+
+    def find_or_fetch_by_data(data)
+      sync_method = data.key?(:id) ? :find : :fetch
+      @synchronizer.send(sync_method, data)
+    end
 
     def find_by_array_of_ids(input)
       records = find_imports(input.element_class.name, input.data)

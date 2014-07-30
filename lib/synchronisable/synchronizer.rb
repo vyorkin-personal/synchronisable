@@ -18,6 +18,9 @@ module Synchronisable
     # The name of remote `id` attribute.
     attribute :remote_id, default: :id
 
+    # The unique id to prevent sync of duplicate records.
+    attribute :unique_id
+
     # Mapping configuration between local model attributes and
     # its remote counterpart (including id attribute).
     attribute :mappings, converter: ->(source) {

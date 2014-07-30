@@ -10,10 +10,6 @@ module Synchronisable
     scope :with_remote_id,  ->(id)  { where(remote_id: id.to_s) }
     scope :with_remote_ids, ->(ids) { where(remote_id: ids.map(&:to_s)) }
 
-    def self.find_by_remote_id(id)
-      with_remote_id(id).first
-    end
-
     def destroy_with_synchronisable
       ActiveRecord::Base.transaction do
         synchronisable.try :destroy

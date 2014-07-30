@@ -8,9 +8,8 @@ module Synchronisable
 
     attr_accessor :import_record
     attr_reader :parent_associations, :child_associations
-    attr_reader :model, :remote_attrs, :remote_id,
-                :local_attrs, :import_ids, :parent,
-                :includes, :data
+    attr_reader :model, :remote_attrs, :remote_id, :unique_id,
+                :local_attrs, :import_ids, :parent, :includes, :data
 
     def initialize(model, parent, includes)
       @model, @parent, @synchronizer = model, parent, model.synchronizer
@@ -39,15 +38,30 @@ module Synchronisable
       @parent_associations = filter_associations(PARENT_ASSOCIATION_KEYS)
       @child_associations  = filter_associations(CHILD_ASSOCIATION_KEYS)
 
-      @import_record = Import.find_by(
-        :remote_id => @remote_id.to_s,
-        :synchronisable_type => @model
-      )
+      @unique_id = @local_attrs[@synchronizer.unique_id]
+      @import_record = find_import
 
       remove_association_keys_from_local_attrs
-
-      # TODO: This should be in Synchronisable::RecordWorker
       set_belongs_to_parent_foreign_key
+    end
+
+    def find_import
+      (@unique_id.present? && find_import_by_unique_id) ||
+        find_import_by_remote_id
+    end
+
+    def find_import_by_unique_id
+      Import.find_by(
+        unique_id: @unique_id.to_s,
+        synchronisable_type: @model
+      )
+    end
+
+    def find_import_by_remote_id
+      Import.find_by(
+        remote_id: @remote_id.to_s,
+        synchronisable_type: @model
+      )
     end
 
     def updatable?
@@ -62,6 +76,7 @@ module Synchronisable
     def dump_message
       %Q(
         remote id: '#{remote_id}',
+        unique_id: '#{unique_id}',
         remote attributes: #{remote_attrs},
         local attributes: #{local_attrs}
       )

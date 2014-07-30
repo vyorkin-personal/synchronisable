@@ -12,12 +12,12 @@ describe Synchronisable do
           Synchronisable.models = %w(Match Team)
         end
 
-        it { should change { Match.count }.by(1) }
-        it { should change { Team.count }.by(2) }
-        it { should change { Player.count }.by(4) }
-        it { should change { MatchPlayer.count }.by(4) }
+        it { is_expected.to change { Match.count }.by(1) }
+        it { is_expected.to change { Team.count }.by(2) }
+        it { is_expected.to change { Player.count }.by(4) }
+        it { is_expected.to change { MatchPlayer.count }.by(4) }
 
-        it { should change { Synchronisable::Import.count }.by(11) }
+        it { is_expected.to change { Synchronisable::Import.count }.by(11) }
       end
 
       context 'all' do
@@ -28,18 +28,16 @@ describe Synchronisable do
           )
         end
 
-        it { should change { Tournament.count }.by(1) }
-        it { should change { Stage.count }.by(2) }
-        it { should change { Match.count }.by(1) }
-        it { should change { Team.count }.by(2) }
-        it { should change { MatchPlayer.count }.by(4) }
-        it { should change { Player.count }.by(4) }
+        it { is_expected.to change { Tournament.count }.by(1) }
+        it { is_expected.to change { Stage.count }.by(2) }
+        it { is_expected.to change { Match.count }.by(1) }
+        it { is_expected.to change { Team.count }.by(2) }
+        it { is_expected.to change { MatchPlayer.count }.by(4) }
+        it { is_expected.to change { Player.count }.by(4) }
 
-        it { should change { Synchronisable::Import.count }.by(14) }
+        it { is_expected.to change { Synchronisable::Import.count }.by(14) }
       end
 
-      # TODO: Left here until :include option is implemented
-      #
       # context 'when models setting is overriden in method call' do
       #   before :all do
       #     Synchronisable.models = %w(Team Match)
@@ -49,11 +47,11 @@ describe Synchronisable do
       #     -> { Synchronisable.sync(Match, Player) }
       #   end
 
-      #   it { should change { Match.count }.by(1) }
-      #   it { should change { Player.count }.by(22) }
-      #   it { should_not change { Team.count }.by(2) }
+      #   it { is_expected.to change { Match.count }.by(1) }
+      #   it { is_expected.to change { Player.count }.by(22) }
+      #   it { is_expected.not_to change { Team.count }.by(2) }
 
-      #   it { should change { Synchronisable::Import.count }.by(5) }
+      #   it { is_expected.to change { Synchronisable::Import.count }.by(5) }
       # end
     end
   end

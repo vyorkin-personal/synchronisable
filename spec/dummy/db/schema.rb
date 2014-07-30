@@ -18,12 +18,15 @@ ActiveRecord::Schema.define(version: 20140609133855) do
     t.integer  "synchronisable_id",   null: false
     t.text     "attrs"
     t.string   "remote_id",           null: false
+    t.string   "unique_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "imports", ["remote_id"], name: "index_imports_on_remote_id"
+  add_index "imports", ["synchronisable_type", "remote_id"], name: "index_imports_on_synchronisable_type_and_remote_id"
   add_index "imports", ["synchronisable_type", "synchronisable_id"], name: "index_imports_on_synchronisable_type_and_synchronisable_id"
+  add_index "imports", ["synchronisable_type", "unique_id"], name: "index_imports_on_synchronisable_type_and_unique_id"
 
   create_table "match_players", force: true do |t|
     t.integer  "match_id"

@@ -2,6 +2,7 @@ class TournamentSynchronizer < Synchronisable::Synchronizer
   has_many :stages
 
   remote_id :tour_id
+  unique_id :name
 
   mappings(
     :eman       => :name,

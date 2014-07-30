@@ -18,7 +18,7 @@ class CreateImports < ActiveRecord::Migration
 
   def self.down
     remove_index :imports, :remote_id
-    remove_index :imports, [:synchronisable_type, :synchronisable_id]
+    remove_index :imports, :synchronisable_id
     remove_index :imports, [:synchronisable_type, :remote_id]
     remove_index :imports, [:synchronisable_type, :unique_id]
     drop_table :imports

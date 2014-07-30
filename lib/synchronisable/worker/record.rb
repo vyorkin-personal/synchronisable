@@ -36,6 +36,7 @@ module Synchronisable
           :synchronisable_id    => record.id,
           :synchronisable_type  => @source.model.to_s,
           :remote_id            => @source.remote_id.to_s,
+          :unique_id            => @source.unique_id.to_s,
           :attrs                => @source.local_attrs
         )
       end

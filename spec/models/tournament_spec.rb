@@ -6,7 +6,7 @@ describe Tournament do
       [
         build(:remote_tournament, tour_id: '1', eman: 'tour-1'),
         build(:remote_tournament, tour_id: '2', eman: 'tour-1'),
-        build(:remote_tournament, tour_id: '1', eman: 'tour-2')
+        build(:remote_tournament, tour_id: '3', eman: 'tour-2')
       ]
     end
 

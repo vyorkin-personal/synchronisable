@@ -27,6 +27,10 @@ module Synchronisable
       private
 
       def update_record
+        @source.import_record.update_attributes(
+          remote_id: @source.remote_id,
+          attrs: @source.local_attrs
+        )
         @source.local_record.update_attributes!(@source.local_attrs)
       end
 

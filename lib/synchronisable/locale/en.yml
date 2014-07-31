@@ -12,7 +12,9 @@ en:
       local record: %{local_record}
     gateway_method_missing: Method %{method} is not implemented for gateway
   messages:
-    result: |
+    result: >
       parent: %{parent},
       records before: %{before}, records after: %{after},
       deleted records: %{deleted}, errors: %{errors}
+    errors: >
+      Errors: %{errors}

@@ -12,7 +12,7 @@ module Synchronisable
 
     # @return [String] summary synchronization info.
     def summary_message
-      I18n.t('messages.result',
+      msg = I18n.t('messages.result',
         :model   => model,
         :parent  => @parent.try(:model) || 'nil',
         :before  => before,
@@ -20,6 +20,13 @@ module Synchronisable
         :deleted => deleted,
         :errors  => errors.count
       )
+
+      msg << I18n.t(
+        'messages.errors',
+        :errors => errors.join('. ')
+      ) if errors.present?
+
+      msg
     end
   end
 end

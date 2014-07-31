@@ -1,3 +1,5 @@
+require 'pry-byebug'
+
 module Synchronisable
   # TODO: Massive refactoring needed
 
@@ -33,12 +35,12 @@ module Synchronisable
 
       @remote_id    = @synchronizer.extract_remote_id(@remote_attrs)
       @local_attrs  = @synchronizer.map_attributes(@remote_attrs)
+      @unique_id    = @synchronizer.uid(@local_attrs)
       @associations = @synchronizer.associations_for(@local_attrs)
 
       @parent_associations = filter_associations(PARENT_ASSOCIATION_KEYS)
       @child_associations  = filter_associations(CHILD_ASSOCIATION_KEYS)
 
-      @unique_id = @local_attrs[@synchronizer.unique_id]
       @import_record = find_import
 
       remove_association_keys_from_local_attrs

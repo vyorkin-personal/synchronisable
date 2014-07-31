@@ -19,7 +19,7 @@ module Synchronisable
     attribute :remote_id, default: :id
 
     # The unique id to prevent sync of duplicate records.
-    attribute :unique_id
+    method :unique_id, default: -> (attrs) { nil }
 
     # Mapping configuration between local model attributes and
     # its remote counterpart (including id attribute).
@@ -121,6 +121,10 @@ module Synchronisable
       def find(params)
         data = finder.(params)
         data.present? ? data : gateway_instance.try(:find, params)
+      end
+
+      def uid(attrs)
+        unique_id.is_a?(Proc) ? unique_id.(attrs) : attrs[unique_id]
       end
 
       # Extracts remote id from given attribute hash.

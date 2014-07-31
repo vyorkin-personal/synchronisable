@@ -44,7 +44,6 @@ module Synchronisable
       @import_record = find_import
 
       remove_association_keys_from_local_attrs
-      set_belongs_to_parent_foreign_key
     end
 
     def find_import
@@ -89,26 +88,6 @@ module Synchronisable
     def remove_association_keys_from_local_attrs
       @local_attrs.delete_if do |key, _|
         @associations.keys.any? { |a| a.key == key }
-      end
-    end
-
-    def set_belongs_to_parent_foreign_key
-      return unless @parent && parent_has_current_model_as_reflection?
-      @local_attrs[parent_foreign_key_name] = @parent.local_record.id
-    end
-
-    def parent_foreign_key_name
-      "#{parent_name}_id"
-    end
-
-    def parent_name
-      @parent.model.table_name.singularize
-    end
-
-    def parent_has_current_model_as_reflection?
-      @parent.model.reflections.values.any? do |reflection|
-        reflection.plural_name == @model.table_name &&
-        %i(has_one has_many).include?(reflection.macro)
       end
     end
 

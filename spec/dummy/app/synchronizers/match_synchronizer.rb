@@ -1,4 +1,6 @@
 class MatchSynchronizer < Synchronisable::Synchronizer
+  gateway MatchGateway
+
   has_one :team, key: 'home_team_id'
   has_one :team, key: 'away_team_id'
 
@@ -20,8 +22,6 @@ class MatchSynchronizer < Synchronisable::Synchronizer
          :substitutes_home, :substitutes_away
 
   destroy_missed true
-
-  gateway MatchGateway
 
   after_sync do |source|
     MatchPlayer::REF_TYPES.each do |ref_type|

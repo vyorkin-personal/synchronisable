@@ -41,6 +41,16 @@ module Synchronisable
       #   Match.sync(:includes => {
       #     :match_players => :player
       #   })
+      #
+      # @example Here is all possible ways to call #sync:
+      #   Model.sync
+      #   Model.sync({ :a1 => 1, :a2 => 2 })
+      #   Model.sync({ :includes => {...}, :parent => xxx })
+      #   Model.sync(123)
+      #   Model.sync('asdf')
+      #   Model.sync([{ :a1 => 1, :a2 => 2 }, { :a1 => 3, :a2 => 4 }, ...])
+      #   Model.sync([123, 345, 456])
+      #   Model.sync(['123', '345', '456'])
       def sync(*args)
         Controller.call(self, *args)
       end

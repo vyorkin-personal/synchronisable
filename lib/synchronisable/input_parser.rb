@@ -25,7 +25,7 @@ module Synchronisable
                when input.empty?
                  @synchronizer.fetch
                when input.params?
-                 find_or_fetch_by_data(input.data)
+                 find_or_fetch_by_params(input.data)
                when input.remote_id?
                  @synchronizer.find(data)
                when input.local_id?
@@ -41,9 +41,9 @@ module Synchronisable
 
     private
 
-    def find_or_fetch_by_data(data)
-      sync_method = data.key?(:id) ? :find : :fetch
-      @synchronizer.send(sync_method, data)
+    def find_or_fetch_by_params(params)
+      sync_method = params.key?(:id) ? :find : :fetch
+      @synchronizer.send(sync_method, params)
     end
 
     def find_by_array_of_ids(input)

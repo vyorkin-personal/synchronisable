@@ -19,6 +19,8 @@ module Synchronisable
     attr_reader :logger
 
     class << self
+      VALID_OPTIONS = %i(includes parent)
+
       # Creates a new instance of controller and initiates model synchronization.
       #
       # @overload call(model, data, options)
@@ -32,10 +34,36 @@ module Synchronisable
       #
       # @return [Synchronisable::Context] synchronization context
       def call(model, *args)
-        options = args.extract_options!
-        data = args.first
-
+        data, options = *extract_args(args)
         new(model, options).call(data)
+      end
+
+      private
+
+      # Model.sync({ tournament_id: '1014' }, {})
+      #                 ^^^^ <- data          ^^ <- options
+
+      # Figures out what is meant to be data,
+      # and what is options.
+      def extract_args(args)
+        last_hash = args.extract_options!
+
+        data = args.first
+        opts = {}
+
+        if last_hash.present?
+          if options?(last_hash)
+            opts = last_hash
+          elsif data.blank?
+            data = last_hash
+          end
+        end
+
+        [data, opts]
+      end
+
+      def options?(hash)
+        hash.any? { |k, _| VALID_OPTIONS.include? k }
       end
     end
 
@@ -58,6 +86,7 @@ module Synchronisable
         context.before = @model.imports_count
 
         hashes = @input.parse(data)
+
         hashes.each do |attrs|
           error_handler.handle(source) do
             source.prepare(data, attrs)

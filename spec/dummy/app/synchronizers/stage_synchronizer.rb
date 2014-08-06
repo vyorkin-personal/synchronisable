@@ -14,4 +14,8 @@ class StageSynchronizer < Synchronisable::Synchronizer
   except :ignored_1, :ignored_2
 
   gateway StageGateway
+
+  before_sync do |source|
+    source.local_attrs[:name] != 'ignored'
+  end
 end

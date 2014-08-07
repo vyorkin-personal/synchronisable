@@ -11,31 +11,38 @@ module Synchronisable
       @logger, @context = logger, context
     end
 
-    # Wraps the given block in transaction.
-    # Rescued exceptions are written to log and saved to errors array.
+    # Wraps the given block in transaction if it's source for a model
+    # on which #sync method was called and not a parent/child association.
+    # Rescued exceptions are written to log and saved to the errors array.
     #
     # @param source [Synchronisable::Source] synchronization source
     #
     # @return [Boolean] `true` if syncronization was completed
     #   without errors, `false` otherwise
     def handle(source)
-      block = ->() {
+      invoke(source) do
         yield
         return true
-      }
-
-      source.parent ? block.() : ActiveRecord::Base.transaction(&block)
+      end
     rescue Exception => e
-      @context.errors << e
-      log(e, source)
+      err_msg = error_message(e, source)
+
+      @context.errors << err_msg
+      @logger.error err_msg
+
       return false
     end
 
     private
 
-    def log(e, source)
-      msg = error_message(e, source)
-      @logger.error msg
+    # Invokes a given block.
+    # Won't start a new transation if its not a "sync root".
+    def invoke(source, &block)
+      if source.parent
+        block.()
+      else
+        ActiveRecord::Base.transaction(&block)
+      end
     end
 
     def error_message(e, source)

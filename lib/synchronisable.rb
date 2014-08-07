@@ -45,7 +45,7 @@ module Synchronisable
     }
   end
 
-  # Syncs models that is defined in {Synchronisable#models}
+  # Syncs models that are defined in {Synchronisable#models}
   #
   # @param models [Array] array of models that should be synchronized.
   #   This take a precedence over models defined in {Synchronisable#models}.

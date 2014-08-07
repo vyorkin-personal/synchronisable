@@ -42,7 +42,7 @@ module Synchronisable
       #     :match_players => :player
       #   })
       #
-      # @example Here is all possible ways to call #sync:
+      # @example Here is all possible ways to call #sync
       #   Model.sync
       #   Model.sync({ :a1 => 1, :a2 => 2 })
       #   Model.sync({ :includes => {...}, :parent => xxx })

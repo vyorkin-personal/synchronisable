@@ -5,12 +5,12 @@ module Synchronisable
                   :before, :after, :deleted
 
     def initialize(model, parent)
-      @model, @parent  = model, parent
+      @model, @parent = model, parent
       @errors = []
       @before, @after, @deleted = 0, 0, 0
     end
 
-    # @return [String] summary synchronization info.
+    # @return [String] summary synchronization info
     def summary_message
       msg = I18n.t('messages.result',
         :model   => model,
@@ -21,12 +21,7 @@ module Synchronisable
         :errors  => errors.count
       )
 
-      msg << I18n.t(
-        'messages.errors',
-        :errors => errors.join('. ')
-      ) if errors.present?
-
-      msg
+      msg << I18n.t('messages.errors', errors: errors.join('. '))
     end
   end
 end

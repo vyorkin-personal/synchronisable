@@ -22,9 +22,6 @@ module Synchronisable
     # Prepares synchronization source:
     # `remote_id`, `local_attributes`, `import_record` and `associations`.
     #
-    # Sets foreign key if current model is specified as `has_one` or `has_many`
-    # association of parent model.
-    #
     # @api private
     def prepare(data, remote_attrs)
       @data = @parent

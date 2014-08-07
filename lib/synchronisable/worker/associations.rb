@@ -34,12 +34,13 @@ module Synchronisable
 
           if import_record.nil? || association.force_sync
             data = @source.data.try(:merge, { id: id }) || id
-            Controller.call(association.model, data, {})
+            Controller.call(association.model, data, { :parent => @source })
 
             import_record = find_import(id, association)
           end
 
-          @source.local_attrs[association.key] = import_record.synchronisable.id
+          @source.local_attrs[association.key] = import_record
+            .try(:synchronisable).try(:id) # yep, it can happen
         end
       end
 

@@ -17,6 +17,7 @@ Primary objectives
   - [x] sync with ids array
   - [ ] handle case when association type is a :hash
   - [ ] sync method for collection proxy (Model.where(condition).sync)
+- [ ] better specs for cases when we should fetch/find using complex params
 
 Think about
 ======================================
@@ -27,7 +28,7 @@ Secondary objectives
 ======================================
 - [x] option for verbose logging
 - [x] colorized STDOUT
-- [ ] actualize docs
+- [x] actualize docs
 
 
 The desired interface:
@@ -38,7 +39,7 @@ The desired interface:
 ```
 
 ```
-Match.sync(:include => {
++ Match.sync(:include => {
   :match_players => :player
 })
 + Model.sync([id1, ..., idn])

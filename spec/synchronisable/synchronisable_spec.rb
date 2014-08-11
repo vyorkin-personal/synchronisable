@@ -23,13 +23,16 @@ describe Synchronisable do
       context 'all' do
         before :all do
           Synchronisable.models = %w(
-            Stage Tournament Team
+            Tournament Team
             Match MatchPlayer Player
           )
         end
 
         it { is_expected.to change { Tournament.count }.by(1) }
+
+        # Stage is a child associations of Tournament
         it { is_expected.to change { Stage.count }.by(2) }
+
         it { is_expected.to change { Match.count }.by(1) }
         it { is_expected.to change { Team.count }.by(2) }
         it { is_expected.to change { MatchPlayer.count }.by(4) }

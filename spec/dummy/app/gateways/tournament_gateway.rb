@@ -8,7 +8,16 @@ class TournamentGateway < GatewayBase
       FactoryGirl.build(:remote_tournament,
         :tour_id => 'tournament_0',
         :is_current => true,
-        :stages_ids => %w(stage_0 stage_1)
+        :stages_ids => [
+          {
+            id: 'stage_0',
+            tournament_id: 'tournament_0'
+          },
+          {
+            id: 'stage_1',
+            tournament_id: 'tournament_0'
+          }
+        ]
       )
     ]
   end

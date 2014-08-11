@@ -121,7 +121,7 @@ describe Team do
     end
 
     context 'when remote id is not specified in attributes hash' do
-      it "return synchronization result that contains 1 error" do
+      it 'return synchronization result that contains 1 error' do
         result = Team.sync([remote_attrs.last])
         expect(result.errors.count).to eq(1)
       end

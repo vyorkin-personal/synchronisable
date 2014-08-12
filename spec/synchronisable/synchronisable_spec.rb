@@ -29,10 +29,7 @@ describe Synchronisable do
         end
 
         it { is_expected.to change { Tournament.count }.by(1) }
-
-        # Stage is a child associations of Tournament
         it { is_expected.to change { Stage.count }.by(2) }
-
         it { is_expected.to change { Match.count }.by(1) }
         it { is_expected.to change { Team.count }.by(2) }
         it { is_expected.to change { MatchPlayer.count }.by(4) }
@@ -41,21 +38,25 @@ describe Synchronisable do
         it { is_expected.to change { Synchronisable::Import.count }.by(14) }
       end
 
-      # context 'when models setting is overriden in method call' do
-      #   before :all do
-      #     Synchronisable.models = %w(Team Match)
-      #   end
+      context 'when models setting is overriden in method call' do
+        before :all do
+          Synchronisable.models = %w(Team Match)
+        end
 
-      #   subject do
-      #     -> { Synchronisable.sync(Match, Player) }
-      #   end
+        subject do
+          -> { Synchronisable.sync(Match, Player) }
+        end
 
-      #   it { is_expected.to change { Match.count }.by(1) }
-      #   it { is_expected.to change { Player.count }.by(22) }
-      #   it { is_expected.not_to change { Team.count }.by(2) }
+        it { is_expected.to change { Match.count }.by(1) }
+        it { is_expected.to change { Team.count }.by(2) }
+        it { is_expected.to change { Player.count }.by(4) }
+        it { is_expected.to change { MatchPlayer.count }.by(4) }
 
-      #   it { is_expected.to change { Synchronisable::Import.count }.by(5) }
-      # end
+        it { is_expected.not_to change { Stage.count } }
+        it { is_expected.not_to change { Tournament.count } }
+
+        it { is_expected.to change { Synchronisable::Import.count }.by(11) }
+      end
     end
   end
 end

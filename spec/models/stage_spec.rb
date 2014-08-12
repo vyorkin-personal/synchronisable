@@ -11,10 +11,12 @@ describe Stage do
     end
 
     describe 'skipping with before_sync hook' do
-      subject { -> { Stage.sync(remote_attrs, :includes => {}) } }
+      let!(:context) { Stage.sync(remote_attrs, :includes => {}) }
 
-      it { is_expected.to change { Stage.count }.by(2) }
-      it { is_expected.to change { Synchronisable::Import.count }.by(2) }
+      it 'skips hashes where name is "ignored"' do
+        expect(Stage.count).to eq(2)
+        expect(Synchronisable::Import.count).to eq(2)
+      end
     end
   end
 end

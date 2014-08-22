@@ -8,6 +8,8 @@ FactoryGirl.define do
     games_lost { generate :integer }
     games_draw { generate :integer }
 
+    ignored { generate :string }
+
     initialize_with { attributes }
   end
 end

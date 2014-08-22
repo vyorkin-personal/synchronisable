@@ -13,7 +13,7 @@ module Synchronisable
     include Synchronisable::DSL::Macro
     include Synchronisable::DSL::Associations
 
-    SYMBOL_ARRAY_CONVERTER = ->(source) { (source || []).map(&:to_s) }
+    SYMBOL_ARRAY_CONVERTER = ->(source) { ([*source] || []).map(&:to_s) }
 
     # The name of remote `id` attribute.
     attribute :remote_id, default: :id

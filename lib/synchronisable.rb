@@ -8,7 +8,7 @@ require 'active_support/core_ext/string/inflections'
 require 'active_support/configurable'
 require 'active_support/concern'
 
-require 'i18n'
+require 'synchronisable/bootstrap/i18n'
 
 require 'synchronisable/version'
 require 'synchronisable/models/import'
@@ -16,15 +16,6 @@ require 'synchronisable/synchronizer'
 require 'synchronisable/model'
 require 'synchronisable/gateway'
 
-locale_paths = File.join(File.dirname(__FILE__),
-  'synchronisable', 'locale', '*.yml')
-
-Dir[locale_paths].each { |path| I18n.load_path << path }
-I18n.backend.load_translations unless defined?(Rails)
-
-I18n.config.enforce_available_locales = true
-I18n.default_locale = :en
-I18n.available_locales = [:en, :ru]
 
 module Synchronisable
   include ActiveSupport::Configurable

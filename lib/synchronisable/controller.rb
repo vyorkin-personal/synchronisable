@@ -2,7 +2,7 @@ require 'colorize'
 
 require 'synchronisable/error_handler'
 require 'synchronisable/context'
-require 'synchronisable/input_parser'
+require 'synchronisable/input/parser'
 require 'synchronisable/source'
 require 'synchronisable/models/import'
 require 'synchronisable/helper/logging'
@@ -77,7 +77,7 @@ module Synchronisable
     #
     # @return [Synchronisable::Context] synchronization context
     #
-    # @see Synchronisable::InputParser
+    # @see Synchronisable::Input::Parser
     def call(data)
       sync do |context|
         error_handler = ErrorHandler.new(logger, context)
@@ -116,7 +116,7 @@ module Synchronisable
       @includes = options[:includes]
       @parent = options[:parent]
 
-      @input = InputParser.new(@model, @synchronizer)
+      @input = Input::Parser.new(@model, @synchronizer)
     end
 
     def sync

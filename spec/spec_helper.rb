@@ -6,7 +6,6 @@ ENV['RAILS_ENV'] ||= 'test'
 require 'database_cleaner'
 require 'factory_girl'
 require 'factory_girl_sequences'
-require 'spork'
 
 if ENV['COVERAGE']
   require 'simplecov'
@@ -34,41 +33,36 @@ Dir[support_pattern].each   { |file| require file }
 
 ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 
-Spork.prefork do
-  RSpec.configure do |config|
-    config.run_all_when_everything_filtered = true
-    config.filter_run focus: true
-    config.order = 'random'
-    config.include FactoryGirl::Syntax::Methods
+RSpec.configure do |config|
+  config.run_all_when_everything_filtered = true
+  config.filter_run focus: true
+  config.order = 'random'
+  config.include FactoryGirl::Syntax::Methods
 
-    config.before(:suite) do
-      begin
-        FactoryGirl.lint
-      ensure
-        DatabaseCleaner.clean_with(:truncation)
-      end
-    end
-
-    config.before(:each) { DatabaseCleaner.strategy = :transaction }
-
-    config.before(:each, js: true) do
-      DatabaseCleaner.strategy = :truncation
-    end
-
-    config.before(:each) { DatabaseCleaner.start }
-    config.after(:each)  { DatabaseCleaner.clean }
-
-    if ENV['RUN_SLOW_TESTS'] != 'true'
-      config.filter_run_excluding slow: true
+  config.before(:suite) do
+    begin
+      FactoryGirl.lint
+    ensure
+      DatabaseCleaner.clean_with(:truncation)
     end
   end
 
-  FactoryGirl.define do
-    %w(remote match team player match_player stage tournament).each do |prefix|
-      sequence(:"#{prefix}_id") { |n| "#{prefix}_#{n}" }
-    end
+  config.before(:each) { DatabaseCleaner.strategy = :transaction }
+
+  config.before(:each, js: true) do
+    DatabaseCleaner.strategy = :truncation
+  end
+
+  config.before(:each) { DatabaseCleaner.start }
+  config.after(:each)  { DatabaseCleaner.clean }
+
+  if ENV['RUN_SLOW_TESTS'] != 'true'
+    config.filter_run_excluding slow: true
   end
 end
 
-Spork.each_run do
+FactoryGirl.define do
+  %w(remote match team player match_player stage tournament).each do |prefix|
+    sequence(:"#{prefix}_id") { |n| "#{prefix}_#{n}" }
+  end
 end

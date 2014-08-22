@@ -1,7 +1,5 @@
 module Synchronisable
   class Gateway
-    attr_reader :synchronizer
-
     def fetch(params = {})
       not_implemented :fetch
     end

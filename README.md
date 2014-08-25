@@ -7,10 +7,11 @@
 
 # Synchronisable
 
-Provides base fuctionality (models, DSL) for AR synchronization
-with external resources (apis, services etc).
-
 ## Overview
+
+Provides base fuctionality for active record models synchronization
+with external resources. The remote source could be anything you like:
+apis, services, site that you gonna parse and steal some data from it.
 
 ## Installation
 
@@ -26,9 +27,15 @@ Or install it yourself as:
 
     $ gem install synchronisable
 
+Then to run a generator:
+
+    $ rails g synchronisable:install
+
 ## Usage
 
-For examples we'll be using a well-known domain with posts & comments
+The first step is to declare that your active record model is synchronisable:
+You can do so by using corresponding dsl instruction,
+that optionally takes a synchonizer class to be used:
 
 ```ruby
 class Post < ActiveRecord::Base
@@ -44,40 +51,47 @@ class Comment < ActiveRecord::Base
 end
 ```
 
-As you can see above the first step is to declare your models to be
-synchronisable. You can do so by using corresponding dsl instruction,
-that optionally takes a synchonizer class to be used. Actually,
-the only reason to specify it its when it has a name, that can't be figured out
+Actually, the only reason to specify it its when it has a name, that can't be figured out
 by the following convention: `ModelSynchronizer`.
 
-After that you should define your model synchronizers
+After that you should define your model synchronizers:
 
 ```ruby
 class PostSynchronizer < Synchronisable::Synchronizer
-  remote_id :p_id
-
+  # Here is how you can define mappings from remote attributes to your local
   mappings(
     :t => :title,
     :c => :content
   )
 
+  # The remote id (won't be mapped)
+  remote_id :p_id
+
+  # Local attributes to ignore.
+  # These will not be set on your model.
   except :ignored_attr1, :ignored_attr42
 
+  # Declares that we want to sync comments after syncing this model.
+  # The resulting hash with remote attributes should contain `comment_ids`
   has_many :comments
 
+  # Method that will be used to fetch all of the remote entities
   fetch do
-    # return array of hashes with
-    # remote entity attributes
+    # Somehow get and return an array of hashes with remote entity attibutes
+    [
+      { t: 'first', c: 'i am the first post' },
+      { t: 'second', c: 'content of the second post'  }
+    ]
   end
 
+  # This method should return only one hash for the given id
   find do |id|
-    # return a hash with
-    # with remote entity attributes
+    # return a hash with with remote entity attributes
+    # ...
   end
-
-  # Hooks/callbacks
 
   before_record_sync do |source|
+    # return false if you want to skip syncing of this particular record
     # ...
   end
 
@@ -95,12 +109,15 @@ class PostSynchronizer < Synchronisable::Synchronizer
 
   before_sync do |source|
     # ...
+    # return false if you want to skip syncing of this particular record
   end
 
   after_sync do |source|
     # ...
   end
 end
+
+
 
 class MyCommentSynchronizer < Synchronisable::Synchronizer
   remote_id :c_id

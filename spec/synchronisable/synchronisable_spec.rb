@@ -9,7 +9,7 @@ describe Synchronisable do
     describe 'models specified in configuration' do
       context 'only Team and Match' do
         before :all do
-          Synchronisable.models = %w(Match Team)
+          Synchronisable.config.models = %w(Match Team)
         end
 
         it { is_expected.to change { Match.count }.by(1) }
@@ -22,7 +22,7 @@ describe Synchronisable do
 
       context 'all' do
         before :all do
-          Synchronisable.models = %w(
+          Synchronisable.config.models = %w(
             Tournament Team
             Match MatchPlayer Player
           )
@@ -40,7 +40,7 @@ describe Synchronisable do
 
       context 'when models setting is overriden in method call' do
         before :all do
-          Synchronisable.models = %w(Team Match)
+          Synchronisable.config.models = %w(Team Match)
         end
 
         subject do

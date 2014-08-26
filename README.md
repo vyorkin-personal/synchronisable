@@ -31,34 +31,89 @@ Then to run a generator:
 
     $ rails g synchronisable:install
 
+## Rationale
+
+Sometimes we need to sync our domain models (or some part of them)
+with some kind of remote source. Its great if you can consume a well-done RESTful api
+that is pretty close to you local domain models.
+But unfortunately the remote data source could be just anything.
+
+Actually this gem was made to consume data coming from a site parser :crying_cat_face:
+
 ## Usage
 
+Imagine a situation when you have to periodically get data from
+some remote source and store it locally. Basically the task is to create
+local records if they don't exist and update their attributes otherwise.
+
+
 The first step is to declare that your active record model is synchronisable:
-You can do so by using corresponding dsl instruction,
-that optionally takes a synchonizer class to be used:
+You can do so by using corresponding `synchronisable` dsl instruction,
+that optionally takes a synchonizer class to be used.
+You should only specify it when the name can't be figured out
+by the following convention: `ModelSynchronizer`.
+So for example here we have a Tournament that has many Stages:
 
 ```ruby
-class Post < ActiveRecord::Base
-  has_many :comments
+class Tournament < ActiveRecord::Base
+  has_many :stages
 
   synchronisable
 end
 
-class Comment < ActiveRecord::Base
-  belongs_to :post
+class Stage < ActiveRecord::Base
+  belongs_to :tournament
 
-  synchronisable MyCommentSynchronizer
+  synchronisable
 end
 ```
 
-Actually, the only reason to specify it its when it has a name, that can't be figured out
-by the following convention: `ModelSynchronizer`.
-
-After that you should define your model synchronizers:
+Lets define synchronizers:
 
 ```ruby
-class PostSynchronizer < Synchronisable::Synchronizer
-  # Here is how you can define mappings from remote attributes to your local
+class TournamentSynchronizer < Synchronisable::Synchronizer
+  has_many :stages
+
+  remote_id :tour_id
+  unique_id { |attrs| attrs[:name] }
+
+  mappings(
+    :eman       => :name,
+    :eman_trohs => :short_name,
+    :gninnigeb  => :beginning,
+    :gnidge     => :ending,
+    :tnerruc_si => :is_current
+  )
+
+  only :name, :beginning, :ending
+
+  gateway TournamentGateway
+end
+
+class StageSynchronizer < Synchronisable::Synchronizer
+  has_many :matches
+
+  remote_id :stage_id
+
+  mappings(
+    :tour_id   => :tournament_id,
+    :gninnigeb => :beginning,
+    :gnidge    => :ending,
+    :eman      => :name,
+    :rebmun    => :number
+  )
+
+  except :ignored_1, :ignored_2
+
+  gateway StageGateway
+
+  before_sync do |source|
+    source.local_attrs[:name] != 'ignored'
+  end
+end
+```
+
+class TournamentSynchronizer < Synchronisable::Synchronizer
   mappings(
     :t => :title,
     :c => :content
@@ -90,6 +145,7 @@ class PostSynchronizer < Synchronisable::Synchronizer
     # ...
   end
 
+  #
   before_record_sync do |source|
     # return false if you want to skip syncing of this particular record
     # ...

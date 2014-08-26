@@ -11,44 +11,39 @@ require 'active_support/concern'
 require 'synchronisable/bootstrap/i18n'
 
 require 'synchronisable/version'
+require 'synchronisable/configuration'
 require 'synchronisable/models/import'
 require 'synchronisable/synchronizer'
 require 'synchronisable/model'
 require 'synchronisable/gateway'
 
-
 module Synchronisable
-  include ActiveSupport::Configurable
-
-  config_accessor :models do
-    {}
+  def self.config
+    @configuration ||= Configuration.new
   end
-  config_accessor :logging do
-    default_logger = -> { Logger.new(STDOUT) }
-    rails_logger   = -> { Rails.logger || default_logger.() }
 
-    logger = defined?(Rails) ? rails_logger.() : default_logger.()
-
-    {
-      :logger   => logger,
-      :verbose  => true,
-      :colorize => true
-    }
+  def self.configure
+    yield config
   end
 
   # Syncs models that are defined in {Synchronisable#models}
   #
-  # @param models [Array] array of models that should be synchronized.
-  #   This take a precedence over models defined in {Synchronisable#models}.
-  #   If this parameter is not specified and {Synchronisable#models} is empty,
-  #   than it will try to sync only those models which have a corresponding synchronizers
+  # @overload sync(models, options)
+  #   @param models [Array] array of models that should be synchronized.
+  #     This take a precedence over models defined in {Synchronisable#models}.
+  #     If this parameter is not specified and {Synchronisable#models} is empty,
+  #     than it will try to sync only those models which have a corresponding synchronizers
+  #   @param options [Hash] options that will be passed to controller
+  # @overload sync(models)
+  # @overlaod sync(options)
   #
   # @return [Array<[Synchronisable::Context]>] array of synchronization contexts
   #
   # @see Synchronisable::Context
-  def self.sync(*models)
-    source = source_models(models)
-    source.map(&:sync)
+  def self.sync(*args)
+    options = args.extract_options!
+    source = source_models(args)
+    source.map { |model| model.sync(options) }
   end
 
   private
@@ -59,7 +54,7 @@ module Synchronisable
   end
 
   def self.default_models
-    models.map(&:safe_constantize).compact
+    config.models.map(&:safe_constantize).compact
   end
 
   def self.find_models

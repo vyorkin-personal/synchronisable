@@ -27,7 +27,7 @@ module Synchronisable
       source.try(:with_indifferent_access)
     }
 
-    # Attributes that will be ignored.
+    # Attributes to ignored.
     attribute :except, converter: SYMBOL_ARRAY_CONVERTER
 
     # The only attributes that will be used.
@@ -39,7 +39,7 @@ module Synchronisable
 
     # Logger that will be used during synchronization
     # of this particular model.
-    attribute :logger, default: -> { Synchronisable.logging[:logger] }
+    attribute :logger, default: -> { Synchronisable.config.logging[:logger] }
 
     # Gateway to be used to get the remote data
     #

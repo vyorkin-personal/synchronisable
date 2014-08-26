@@ -10,7 +10,7 @@ module Synchronisable
 
       %i(verbose colorize).each do |name|
         define_method("#{name}_logging?".to_sym) do
-          Synchronisable.logging[name]
+          Synchronisable.config.logging[name]
         end
       end
 

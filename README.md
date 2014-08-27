@@ -67,7 +67,7 @@ You can find more by looking at the [dummy app](https://github.com/vyorkin/synch
 For rails users there is a well-documented initializer.
 Just run `rails g synchronisable:install` and you'll be fine.
 
-None-rails users can do so by using provided
+Non-rails users can do so by using provided
 `ActiveSupport::Configurable` interface. So here is the default settings:
 
 ```ruby
@@ -93,10 +93,13 @@ end
 
 ## Usage
 
-### Gateways
-
 Imagine a situation when you have to periodically get data from
 some remote source and store it locally.
+Basically the task is to create local records if they don't exist
+and update their attributes otherwise.
+
+### Gateways
+
 Thing that provides an access to an external system or resource
 is called [gateway](http://martinfowler.com/eaaCatalog/gateway.html).
 You can take a look at the base [gateway](https://github.com/vyorkin/synchronisable/blob/master/lib/synchronisable/gateway.rb)
@@ -110,13 +113,6 @@ The main idea is that gateway implementation class has only 2 methods:
 * `find(params)` – returns a single hash with remote attributes.
   `params` here is only to have a choice between representing a single
    or a composite identity.
-
-### The process
-
-Basically the task is to create local records if they don't exist
-and update their attributes otherwise.
-
-(to be continued)
 
 ### Models and synchronizers
 

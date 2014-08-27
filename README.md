@@ -7,6 +7,8 @@
 
 # Synchronisable
 
+### :construction: this README & docs are work in progress :construction:
+
 ## Overview
 
 Provides base fuctionality for active record models synchronization
@@ -52,6 +54,14 @@ You can find more by looking at the [dummy app](https://github.com/vyorkin/synch
 [models](https://github.com/vyorkin/synchronisable/tree/master/spec/dummy/app/models) and
 [synchronizers](https://github.com/vyorkin/synchronisable/tree/master/spec/dummy/app/synchronizers).
 
+## Features
+
+* Attribute mapping, `unique_id`
+* Associations sync + `:includes` option to specify (restrict)
+  an association tree to be synchronized
+* `before` and `after` callbacks to hook into sync process
+* ???
+
 ## Configuration
 
 For rails users there is a well-documented initializer.
@@ -89,19 +99,24 @@ Imagine a situation when you have to periodically get data from
 some remote source and store it locally.
 Thing that provides an access to an external system or resource
 is called [gateway](http://martinfowler.com/eaaCatalog/gateway.html).
-You can take a look at the base [gateway]((https://github.com/vyorkin/synchronisable/blob/master/lib/synchronisable/gateway.rb)
-class to get a clue what does in mean it terms of this gem
+You can take a look at the base [gateway](https://github.com/vyorkin/synchronisable/blob/master/lib/synchronisable/gateway.rb)
+class to get a clue what does it mean in terms of this gem
 (btw fetching data from a remote source is not a purpose of this gem).
 
-The main idea is that gateway implementation should have only 2 methods:
+The main idea is that gateway implementation class has only 2 methods:
 
 * `fetch(params = {})` – returns an array of hashes, each hash contains
    an attributes that should be (somehow) mapped over your target model.
-* `find(params)` – returns a single hash with remote attributes
-  (so `params` here is to only represent a composite identity).
+* `find(params)` – returns a single hash with remote attributes.
+  `params` here is only to have a choice between representing a single
+   or a composite identity.
+
+### The process
 
 Basically the task is to create local records if they don't exist
 and update their attributes otherwise.
+
+(to be continued)
 
 ### Models and synchronizers
 
@@ -172,6 +187,12 @@ end
 ```
 
 ### Gateways vs `fetch` & `find` in synchronizers
+
+TDOO: Blah blah blah... Need to describe the difference & use cases.
+
+### Blah blah
+
+### Blah blah
 
 ```ruby
 class TournamentSynchronizer < Synchronisable::Synchronizer

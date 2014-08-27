@@ -4,7 +4,7 @@ module Synchronisable
       not_implemented :fetch
     end
 
-    def find(id)
+    def find(params)
       not_implemented :find
     end
 

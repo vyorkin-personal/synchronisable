@@ -13,6 +13,13 @@ Provides base fuctionality for active record models synchronization
 with external resources. The remote source could be anything you like:
 apis, services, site that you gonna parse and steal some data from it.
 
+## Resources
+
+* [Rubygems](https://rubygems.org/gems/synchronisable)
+* [API](http://rdoc.info/github/vyorkin/synchronisable/master/frames)
+* [Bugs](https://github.com/vyorkin/synchronisable/issues)
+* [Development](https://travis-ci.org/vyorkin/synchronisable)
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -27,7 +34,7 @@ Or install it yourself as:
 
     $ gem install synchronisable
 
-Then to run a generator:
+Optionally, if you are using rails to run an initializer generator:
 
     $ rails g synchronisable:install
 
@@ -40,14 +47,65 @@ But unfortunately the remote data source could be just anything.
 
 Actually this gem was made to consume data coming from a site parser :crying_cat_face:
 
+Examples of the usage patterns are shown below.
+You can find more by looking at the [dummy app](https://github.com/vyorkin/synchronisable/tree/master/spec/dummy/app)
+[models](https://github.com/vyorkin/synchronisable/tree/master/spec/dummy/app/models) and
+[synchronizers](https://github.com/vyorkin/synchronisable/tree/master/spec/dummy/app/synchronizers).
+
+## Configuration
+
+For rails users there is a well-documented initializer.
+Just run `rails g synchronisable:install` and you'll be fine.
+
+None-rails users can do so by using provided
+`ActiveSupport::Configurable` interface. So here is the default settings:
+
+```ruby
+Synchronisable.configure do |config|
+  # Logging configuration
+  #
+  # Default logger fallbacks to `Rails.logger` if available, otherwise
+  # `STDOUT` will be used for output.
+  #
+  config.logging = {
+    :logger   => defined?(Rails) ? Rails.logger : Logger.new(STDOUT)
+    :verbose  => true,
+    :colorize => true
+  }
+
+  # If you want to restrict synchronized models.
+  # By default it will try to sync all models that have
+  # a `synchronisable` dsl instruction.
+  #
+  config.models = %w(Foo Bar)
+end
+```
+
 ## Usage
 
+### Gateways
+
 Imagine a situation when you have to periodically get data from
-some remote source and store it locally. Basically the task is to create
-local records if they don't exist and update their attributes otherwise.
+some remote source and store it locally.
+Thing that provides an access to an external system or resource
+is called [gateway](http://martinfowler.com/eaaCatalog/gateway.html).
+You can take a look at the base [gateway]((https://github.com/vyorkin/synchronisable/blob/master/lib/synchronisable/gateway.rb)
+class to get a clue what does in mean it terms of this gem
+(btw fetching data from a remote source is not a purpose of this gem).
 
+The main idea is that gateway implementation should have only 2 methods:
 
-The first step is to declare that your active record model is synchronisable:
+* `fetch(params = {})` – returns an array of hashes, each hash contains
+   an attributes that should be (somehow) mapped over your target model.
+* `find(params)` – returns a single hash with remote attributes
+  (so `params` here is to only represent a composite identity).
+
+Basically the task is to create local records if they don't exist
+and update their attributes otherwise.
+
+### Models and synchronizers
+
+The first step is to declare that your active record model is synchronizable.
 You can do so by using corresponding `synchronisable` dsl instruction,
 that optionally takes a synchonizer class to be used.
 You should only specify it when the name can't be figured out
@@ -113,17 +171,19 @@ class StageSynchronizer < Synchronisable::Synchronizer
 end
 ```
 
+### Gateways vs `fetch` & `find` in synchronizers
+
+```ruby
 class TournamentSynchronizer < Synchronisable::Synchronizer
   mappings(
     :t => :title,
     :c => :content
   )
 
-  # The remote id (won't be mapped)
   remote_id :p_id
 
   # Local attributes to ignore.
-  # These will not be set on your model.
+  # These will not be set on your local record.
   except :ignored_attr1, :ignored_attr42
 
   # Declares that we want to sync comments after syncing this model.

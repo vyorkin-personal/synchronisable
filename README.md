@@ -32,10 +32,6 @@ And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install synchronisable
-
 Optionally, if you are using rails to run an initializer generator:
 
     $ rails g synchronisable:install

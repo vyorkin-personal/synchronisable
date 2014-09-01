@@ -1,4 +1,5 @@
 require 'synchronisable/model/methods'
+require 'synchronisable/model/scopes'
 require 'synchronisable/synchronizers/synchronizer_default'
 
 module Synchronisable
@@ -29,24 +30,28 @@ module Synchronisable
       #   end
       def synchronisable(*args)
         extend Synchronisable::Model::Methods
+        extend Synchronisable::Model::Scopes
 
         class_attribute :synchronizer
-        has_one :import, as: :synchronisable, class_name: 'Synchronisable::Import'
 
-        scope :without_import, -> {
-          includes(:import)
-            .where(imports: { synchronisable_id: nil })
-            .references(:imports)
-        }
+        options = args.extract_options!
 
-        set_defaults(args)
+        set_defaults(options)
+        set_synchronizer(args, options)
+
+        has_one :import,
+          as: :synchronisable,
+          class_name: 'Synchronisable::Import',
+          dependent: options[:dependent]
       end
 
       private
 
-      def set_defaults(args)
-        options = args.extract_options!
+      def set_defaults(options)
+        options[:dependent] ||= Synchronisable.config.dependent_import
+      end
 
+      def set_synchronizer(args, options)
         self.synchronizer = args.first || options[:synchronizer] ||
           find_synchronizer || SynchronizerDefault
       end

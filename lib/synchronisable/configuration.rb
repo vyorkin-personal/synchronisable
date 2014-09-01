@@ -2,9 +2,14 @@ module Synchronisable
   class Configuration
     include ActiveSupport::Configurable
 
-    config_accessor :models do
-      {}
+    config_accessor :dependent_import do
+      :destroy
     end
+
+    config_accessor :models do
+      []
+    end
+
     config_accessor :logging do
       default_logger = -> { Logger.new(STDOUT) }
       rails_logger   = -> { Rails.logger || default_logger.() }

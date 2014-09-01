@@ -15,4 +15,8 @@ Synchronisable.configure do |config|
   # a `synchronisable` dsl instruction.
   #
   # config.models = %w(Foo Bar)
+
+  # What to do with an associated import record
+  # when its synchronisable is destroyed. Default is `:destroy`.
+  # config.dependent_import = :destroy
 end

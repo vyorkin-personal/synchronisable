@@ -33,6 +33,12 @@ module Synchronisable
         class_attribute :synchronizer
         has_one :import, as: :synchronisable, class_name: 'Synchronisable::Import'
 
+        scope :without_import, -> {
+          includes(:import)
+            .where(imports: { synchronisable_id: nil })
+            .references(:imports)
+        }
+
         set_defaults(args)
       end
 

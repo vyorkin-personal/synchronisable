@@ -12,7 +12,7 @@ module Synchronisable
       def imported
         includes(:import)
           .where.not(imports: { synchronisable_id: nil })
-          .refences(:imports)
+          .references(:imports)
       end
 
       alias_method :without_import, :not_imported

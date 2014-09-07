@@ -40,9 +40,6 @@ module Synchronisable
 
       private
 
-      # Model.sync({ tournament_id: '1014' }, {})
-      #                 ^^^^ <- data          ^^ <- options
-
       # Figures out what is meant to be data,
       # and what is options.
       def extract_args(args)

@@ -24,6 +24,8 @@ module Synchronisable
         yield
         return true
       end
+    rescue SystemExit, Interrupt
+      raise
     rescue Exception => e
       err_msg = error_message(e, source)
 

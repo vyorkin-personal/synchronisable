@@ -5,7 +5,7 @@ Synchronisable.configure do |config|
   # `STDOUT` will be used for output.
   #
   # config.logging = {
-  #   :logger   => defined?(Rails) ? Rails.logger : Logger.new(STDOUT)
+  #   :logger   => defined?(Rails) ? Rails.logger : Logger.new(STDOUT),
   #   :verbose  => true,
   #   :colorize => true
   # }

@@ -86,8 +86,8 @@ module Synchronisable
       end
     end
 
-    def filter_associations(macroses)
-      @associations.select { |a| macroses.include? a.macro }
+    def filter_associations(kinds)
+      @associations.select { |a| kinds.include? a.kind }
     end
   end
 end

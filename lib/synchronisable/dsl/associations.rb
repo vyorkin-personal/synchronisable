@@ -1,6 +1,4 @@
-require 'synchronisable/dsl/associations/has_one'
-require 'synchronisable/dsl/associations/has_many'
-require 'synchronisable/dsl/associations/belongs_to'
+require 'synchronisable/dsl/association'
 
 module Synchronisable
   module DSL
@@ -18,10 +16,9 @@ module Synchronisable
           subclass.associations = {}
         end
 
-        [HasOne, HasMany, BelongsTo].each do |klass|
-          macro = klass.to_s.demodulize.underscore.to_sym
-          define_method(macro) do |name, options = {}|
-            klass.create(self, name, options)
+        %i(has_one has_many belongs_to).each do |kind|
+          define_method(kind) do |name, options = {}|
+            Association.create(self, kind, name, options)
           end
         end
 

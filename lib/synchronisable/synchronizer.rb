@@ -98,7 +98,7 @@ module Synchronisable
     #
     # @param source [Synchronisable::Source] synchronization source
     # @param id association remote id
-    # @param association [Synchronisable::DSL::Associations::Association]
+    # @param association [Synchronisable::DSL::Association]
     #   association builder
     #
     # @return [Boolean] `true` to continue sync, `false` to cancel
@@ -108,7 +108,7 @@ module Synchronisable
     #
     # @param source [Synchronisable::Source] synchronization source
     # @param id association remote id
-    # @param association [Synchronisable::DSL::Associations::Association]
+    # @param association [Synchronisable::DSL::Association]
     #   association builder
     method :after_association_sync
 

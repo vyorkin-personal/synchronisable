@@ -10,7 +10,7 @@ module Synchronisable
       #
       # @see Synchronisable::Source
       # @see Synchronisable::DSL::Associations
-      # @see Synchronisable::DSL::Associations::Association
+      # @see Synchronisable::DSL::Association
       %w(child parent).each do |type|
         define_method(:"sync_#{type}_associations") do
           associations = @source.send(:"#{type}_associations")

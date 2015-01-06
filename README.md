@@ -7,7 +7,7 @@
 
 # Synchronisable
 
-### :construction: this README & docs are work in progress :construction:
+### :construction: work in progress :construction:
 
 ## Overview
 

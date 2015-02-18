@@ -66,7 +66,7 @@ describe Team do
         end
       end
 
-      context 'when there is 2 imports with corresponding local records' do
+      context 'when there are 2 imports with corresponding local records' do
         include_context 'team imports'
 
         context 'when local id is specified' do

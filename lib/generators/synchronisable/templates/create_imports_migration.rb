@@ -7,7 +7,7 @@ class CreateImports < ActiveRecord::Migration
       t.string  :remote_id, null: false
       t.string  :unique_id
 
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :imports, :remote_id

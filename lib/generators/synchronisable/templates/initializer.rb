@@ -10,7 +10,7 @@ Synchronisable.configure do |config|
   #   :colorize => true
   # }
 
-  # If you want to restrict synchronized models.
+  # You can restrict synchronized models by specifying their class names.
   # By default it will try to sync all models that have
   # a `synchronisable` dsl instruction.
   #
@@ -18,5 +18,8 @@ Synchronisable.configure do |config|
 
   # What to do with an associated import record
   # when its synchronisable is destroyed. Default is `:destroy`.
+  # For other available options see:
+  # http://api.rubyonrails.org/classes/ActiveRecord/Associations/ClassMethods.html
+  #
   # config.dependent_import = :destroy
 end

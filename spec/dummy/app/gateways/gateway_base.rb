@@ -2,11 +2,11 @@ require 'synchronisable/gateway'
 
 class GatewayBase < Synchronisable::Gateway
   def id_key
-    not_implemented :id_key
+    not_implemented! :id_key
   end
 
   def source
-    not_implemented :source
+    not_implemented! :source
   end
 
   def fetch(params)

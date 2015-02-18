@@ -49,14 +49,14 @@ module Synchronisable
     def find_import_by_unique_id
       Import.find_by(
         unique_id: @unique_id.to_s,
-        synchronisable_type: @model
+        synchronisable_type: @model.to_s
       )
     end
 
     def find_import_by_remote_id
       Import.find_by(
         remote_id: @remote_id.to_s,
-        synchronisable_type: @model
+        synchronisable_type: @model.to_s
       )
     end
 

@@ -57,7 +57,7 @@ module Synchronisable
         @required ||= false
         @force_sync ||= false
 
-        @model ||= @name.to_s.classify.constantize
+        @model ||= @name.to_s.singularize.classify.constantize
         @key = "#{@name}_#{@key_suffix}" unless @key.present?
       end
 

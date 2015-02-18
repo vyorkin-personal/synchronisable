@@ -21,7 +21,8 @@ module Synchronisable
         :errors  => errors.count
       )
 
-      msg << I18n.t('messages.errors', errors: errors.join('. '))
+      msg << I18n.t('messages.errors', errors: errors.join('. ')) if errors.any?
+      msg
     end
   end
 end

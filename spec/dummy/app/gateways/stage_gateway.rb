@@ -3,11 +3,11 @@ class StageGateway < GatewayBase
     @source ||= [
       FactoryGirl.build(:remote_stage,
         :stage_id    => 'stage_0',
-        :matches_ids => %w(match_0)
+        :match_ids => %w(match_0)
       ),
       FactoryGirl.build( :remote_stage,
         :stage_id    => 'stage_1',
-        :matches_ids => %w(match_0)
+        :match_ids => %w(match_0)
       )
     ]
   end

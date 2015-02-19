@@ -7,11 +7,11 @@ class TeamGateway < GatewayBase
     @source ||= [
       FactoryGirl.build(:remote_team,
         :maet_id     => 'team_0',
-        :players_ids => %w(player_0 player_2)
+        :player_ids => %w(player_0 player_2)
       ),
       FactoryGirl.build(:remote_team,
         :maet_id     => 'team_1',
-        :players_ids => %w(player_1 player_3)
+        :player_ids => %w(player_1 player_3)
       )
     ]
   end

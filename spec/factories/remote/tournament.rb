@@ -11,7 +11,7 @@ FactoryGirl.define do
     trait :with_stages do
       after(:build) do |object, evaluator|
         stages = build_list(:remote_stage, 2, tour_id: object[:tour_id])
-        object[:stages_ids] = stages.map { |h| h[:stage_id] }
+        object[:stage_ids] = stages.map { |h| h[:stage_id] }
       end
     end
   end

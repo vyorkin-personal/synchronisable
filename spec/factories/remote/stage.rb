@@ -19,7 +19,7 @@ FactoryGirl.define do
           :home_team => 'team_0',
           :away_team => 'team_1'
         )
-        object[:matches_ids] = [match[:match_id]]
+        object[:match_ids] = [match[:match_id]]
       end
     end
   end

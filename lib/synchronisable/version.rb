@@ -2,7 +2,7 @@ module Synchronisable
   module VERSION
     MAJOR = 1
     MINOR = 2
-    PATCH = 5
+    PATCH = 6
     SUFFIX = nil
 
     STRING = [MAJOR, MINOR, PATCH, SUFFIX].compact.join('.')

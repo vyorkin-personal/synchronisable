@@ -45,6 +45,10 @@ module Synchronisable
           dependent: options[:dependent]
       end
 
+      def synchronisable?
+        false
+      end
+
       private
 
       def set_defaults(options)

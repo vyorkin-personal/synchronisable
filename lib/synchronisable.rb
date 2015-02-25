@@ -59,8 +59,12 @@ module Synchronisable
   end
 
   def self.find_models
+    # Need to preload models first
+    Rails.application.eager_load!
+
     ActiveRecord::Base.descendants.select do |model|
-      model.included_modules.include?(Synchronisable::Model)
+      model.included_modules.include?(Synchronisable::Model) &&
+      model.synchronisable?
     end
   end
 end

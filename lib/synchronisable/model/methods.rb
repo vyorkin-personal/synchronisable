@@ -5,6 +5,10 @@ module Synchronisable
   module Model
     # Methods that will be attached to synchronisable model class.
     module Methods
+      def synchronisable?
+        true
+      end
+
       # Creates a new controller, that initiates synchronization
       # for this particular model and its associations.
       # If you have implemented `fetch` & `find` methods

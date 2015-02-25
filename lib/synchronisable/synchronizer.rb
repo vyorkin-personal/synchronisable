@@ -27,6 +27,8 @@ module Synchronisable
       source.try(:with_indifferent_access)
     }
 
+    attribute :order, default: 0
+
     # Attributes to ignored.
     attribute :except, converter: SYMBOL_ARRAY_CONVERTER
 

@@ -42,7 +42,7 @@ module Synchronisable
   # @see Synchronisable::Context
   def self.sync(*args)
     options = args.extract_options!
-    source = source_models(args)
+    source = source_models(args) 
     source.map { |model| model.sync(options) }
   end
 
@@ -51,6 +51,7 @@ module Synchronisable
   def self.source_models(models)
     source = models.present? ? models : default_models
     source = source.present? ? source : find_models
+    source.sort { |lhs, rhs| lhs.synchronizer.order <=> rhs.synchronizer.order }
   end
 
   def self.default_models

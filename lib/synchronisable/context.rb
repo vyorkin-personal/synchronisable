@@ -10,6 +10,10 @@ module Synchronisable
       @before, @after, @deleted = 0, 0, 0
     end
 
+    def success?
+      errors.empty?
+    end
+
     # @return [String] summary synchronization info
     def summary_message
       msg = I18n.t('messages.result',

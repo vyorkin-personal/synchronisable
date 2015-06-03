@@ -3,11 +3,8 @@
 [![Inline docs](http://inch-ci.org/github/vyorkin/synchronisable.png)](http://inch-ci.org/github/vyorkin/synchronisable)
 [![Coverage Status](https://coveralls.io/repos/vyorkin/synchronisable/badge.png)](https://coveralls.io/r/vyorkin/synchronisable)
 [![Gem Version](http://stillmaintained.com/vyorkin/synchronisable.png)](http://stillmaintained.com/vyorkin/synchronisable)
-[![Dependency Status](https://gemnasium.com/vyorkin/synchronisable.svg)](https://gemnasium.com/vyorkin/synchronisable)
 
 # Synchronisable
-
-### :construction: work in progress :construction:
 
 ## Overview
 
@@ -178,13 +175,7 @@ class StageSynchronizer < Synchronisable::Synchronizer
 end
 ```
 
-### Gateways vs `fetch` & `find` in synchronizers
-
-TDOO: Blah blah blah... Need to describe the difference & use cases.
-
-### Blah blah
-
-### Blah blah
+TODO: Provide more info on gateways vs `fetch` & `find` in synchronizers
 
 ```ruby
 class TournamentSynchronizer < Synchronisable::Synchronizer

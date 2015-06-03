@@ -2,9 +2,10 @@ module Synchronisable
   module VERSION
     MAJOR = 1
     MINOR = 2
-    PATCH = 7
-    SUFFIX = nil
+    PATCH = 8
+    SUFFIX = ''
 
-    STRING = [MAJOR, MINOR, PATCH, SUFFIX].compact.join('.')
+    NUMBER = [MAJOR, MINOR, PATCH].compact.join('.')
+    STRING =  "#{NUMBER}#{SUFFIX}"
   end
 end

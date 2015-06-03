@@ -37,7 +37,7 @@ module Synchronisable
 
     # If set to `true` than all local records that
     # don't have corresponding remote counterpart will be destroyed.
-    attribute :destroy_missed, default: false
+    attribute :destroy_missing, default: false
 
     # Logger that will be used during synchronization
     # of this particular model.

@@ -21,7 +21,7 @@ class MatchSynchronizer < Synchronisable::Synchronizer
          :line_up_home, :line_up_away,
          :substitutes_home, :substitutes_away
 
-  destroy_missed true
+  destroy_missing true
 
   after_sync do |source|
     MatchPlayer::REF_TYPES.each do |ref_type|

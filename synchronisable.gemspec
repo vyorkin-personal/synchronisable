@@ -18,8 +18,8 @@ Gem::Specification.new do |spec|
   spec.require_path  = 'lib'
   spec.license       = 'MIT'
 
-  spec.add_runtime_dependency 'activerecord',  '>= 3.0.0'
-  spec.add_runtime_dependency 'activesupport', '>= 3.0.0'
+  spec.add_runtime_dependency 'activerecord', '~> 3.0', '>= 3.0.0'
+  spec.add_runtime_dependency 'activesupport', '~> 3.0', '>= 3.0.0'
   spec.add_runtime_dependency 'i18n', '~> 0.6', '>= 0.6.0'
   spec.add_runtime_dependency 'colorize', '~> 0.7', '>= 0.7.7'
 
@@ -27,7 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'yard', '~> 0.8', '>= 0.8.7'
   spec.add_development_dependency 'yard-rspec', '~> 0.1'
-  spec.add_development_dependency 'rails', '~> 4.0.0'
+  spec.add_development_dependency 'rails', '~> 4.0', '>= 4.0.0'
   spec.add_development_dependency 'rspec', '~> 3.2', '>= 3.2.0'
   spec.add_development_dependency 'rspec-rails', '~> 3.2', '>= 3.2.2'
   spec.add_development_dependency 'rspec-its', '~> 1.2', '>= 1.2.0'

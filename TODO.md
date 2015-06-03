@@ -2,7 +2,7 @@ Primary objectives
 ======================================
 - [ ] fix a mess with Context: return an array of sync contexts,
       or aggregate all syncronization contexts into just one
-- [ ] destroy_missed
+- [ ] destroy_missing
 - [ ] write a good README
 - [ ] extended interface
   - [ ] handle case when association type is a :hash

@@ -2,11 +2,16 @@ require 'active_record'
 
 require 'active_support/core_ext/hash'
 require 'active_support/core_ext/class/attribute'
-require 'active_support/core_ext/object/try'
-require 'active_support/core_ext/object/deep_dup'
 require 'active_support/core_ext/string/inflections'
 require 'active_support/configurable'
 require 'active_support/concern'
+
+# HACK: monkeypatches / fallbacks for activesupport ~> 3.0
+if Gem.loaded_specs['activesupport'].version < Gem::Version.create(4)
+  require 'active_support/core_ext/hash/deep_dup'
+  require 'core_ext/object/try'
+  require 'core_ext/hash/keys'
+end
 
 require 'synchronisable/bootstrap/i18n'
 

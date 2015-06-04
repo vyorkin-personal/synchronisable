@@ -31,7 +31,8 @@ factories_pattern = File.join(File.dirname(__FILE__), 'factories', '**', '*.rb')
 Dir[factories_pattern].each { |file| require file }
 Dir[support_pattern].each   { |file| require file }
 
-ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
+# TODO: Check ActiveRecord version and call #check_pending only if its greater or equal to 3.x
+# ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 
 RSpec.configure do |config|
   config.run_all_when_everything_filtered = true

@@ -53,16 +53,16 @@ module Synchronisable
       end
 
       def find_by_local_id(id)
-        import = @model.find_by(id: id).try(:import)
+        import = @model.where(id: id).first.try(:import)
         import ? @synchronizer.find(import.remote_id) : nil
       end
 
       def find_imports(class_name, ids)
         case class_name
         when 'Fixnum'
-          ids.map { |id| @model.find_by(id: id).try(&:import) }
+          ids.map { |id| @model.where(id: id).first.try(&:import) }
         when 'String'
-          ids.map { |id| Import.find_by(id: id) }
+          ids.map { |id| Import.where(id: id).first }
         end
       end
     end

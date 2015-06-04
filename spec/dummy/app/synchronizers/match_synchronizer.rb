@@ -57,7 +57,7 @@ class MatchSynchronizer < Synchronisable::Synchronizer
     end
 
     def sync_match_player(attrs)
-      match_player = MatchPlayer.find_by(attrs)
+      match_player = MatchPlayer.where(attrs).first
       unless match_player
         remote_id = "#{attrs[:match_id]}_#{attrs[:player_id]}"
         Synchronisable::Import.create!(

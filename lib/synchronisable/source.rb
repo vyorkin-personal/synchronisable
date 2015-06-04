@@ -47,17 +47,17 @@ module Synchronisable
     end
 
     def find_import_by_unique_id
-      Import.find_by(
+      Import.where(
         unique_id: @unique_id.to_s,
         synchronisable_type: @model.to_s
-      )
+      ).first
     end
 
     def find_import_by_remote_id
-      Import.find_by(
+      Import.where(
         remote_id: @remote_id.to_s,
         synchronisable_type: @model.to_s
-      )
+      ).first
     end
 
     def updatable?

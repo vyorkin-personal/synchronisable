@@ -75,10 +75,10 @@ module Synchronisable
       end
 
       def find_import(id, association)
-        Import.find_by(
+        Import.where(
           :remote_id => id.to_s,
           :synchronisable_type => association.model.to_s
-        )
+        ).first
       end
     end
   end

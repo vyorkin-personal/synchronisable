@@ -49,7 +49,7 @@ module Synchronisable
       module ClassMethods
         def inherited(subclass)
           super
-          class_attributes[subclass] = class_attributes[self].deep_dup
+          class_attributes[subclass] = Hash[class_attributes[self].map { |k, v| [k, v.clone] }]
         end
 
         # Defines a new attribute.

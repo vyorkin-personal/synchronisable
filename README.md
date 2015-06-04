@@ -177,6 +177,8 @@ end
 
 TODO: Provide more info on gateways vs `fetch` & `find` in synchronizers
 
+For now its better to learn from a [dummy app](https://github.com/vyorkin/synchronisable/tree/master/spec/dummy)
+
 ```ruby
 class TournamentSynchronizer < Synchronisable::Synchronizer
   mappings(

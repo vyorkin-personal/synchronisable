@@ -1,4 +1,5 @@
 module Synchronisable
+  # Gem version builder module
   module VERSION
     MAJOR = 1
     MINOR = 3

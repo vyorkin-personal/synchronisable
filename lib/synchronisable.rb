@@ -31,6 +31,15 @@ module Synchronisable
     yield config
   end
 
+  # Calls the given block using temporary configuration
+  def self.using(logger: config.logger, models: config.models)
+    snapshot = config.clone
+    config.logger = logger
+    config.models = models
+    yield
+    @configuration = snapshot
+  end
+
   # Syncs models that are defined in {Synchronisable#models}
   #
   # @overload sync(models, options)

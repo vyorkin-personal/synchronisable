@@ -2,6 +2,10 @@ module Synchronisable
   class Import < ActiveRecord::Base
     belongs_to :synchronisable, polymorphic: true
 
+    if Gem.loaded_specs['activerecord'].version < Gem::Version.create(4)
+      attr_accessible :synchronisable_id, :synchronisable_type, :remote_id, :unique_id, :attrs
+    end
+
     serialize :attrs, Hash
 
     scope :with_synchronisable_type, ->(type) { where(synchronisable_type: type) }

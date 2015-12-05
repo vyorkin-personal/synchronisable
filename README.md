@@ -2,7 +2,6 @@
 [![Code Climate](https://codeclimate.com/github/vyorkin/synchronisable.png)](https://codeclimate.com/github/vyorkin/synchronisable)
 [![Inline docs](http://inch-ci.org/github/vyorkin/synchronisable.png)](http://inch-ci.org/github/vyorkin/synchronisable)
 [![Coverage Status](https://coveralls.io/repos/vyorkin/synchronisable/badge.png)](https://coveralls.io/r/vyorkin/synchronisable)
-[![Gem Version](http://stillmaintained.com/vyorkin/synchronisable.png)](http://stillmaintained.com/vyorkin/synchronisable)
 
 # Synchronisable
 

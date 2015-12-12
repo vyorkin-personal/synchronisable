@@ -1,5 +1,8 @@
+[![Gem](https://img.shields.io/gem/v/synchronisable.svg)]()
+[![Gem](https://img.shields.io/gem/dtv/synchronisable.svg)]()
 [![Build Status](https://travis-ci.org/vyorkin-personal/synchronisable.png?branch=master)](https://travis-ci.org/vyorkin-personal/synchronisable)
 [![Code Climate](https://codeclimate.com/github/vyorkin/synchronisable.png)](https://codeclimate.com/github/vyorkin/synchronisable)
+[![Dependency Status](https://gemnasium.com/vyorkin/synchronisable.svg)](https://gemnasium.com/vyorkin/synchronisable)
 [![Inline docs](http://inch-ci.org/github/vyorkin/synchronisable.png)](http://inch-ci.org/github/vyorkin/synchronisable)
 [![Coverage Status](https://coveralls.io/repos/vyorkin/synchronisable/badge.png)](https://coveralls.io/r/vyorkin/synchronisable)
 

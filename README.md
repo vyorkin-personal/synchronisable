@@ -278,7 +278,3 @@ How to run tests:
 cd spec/dummy
 RAILS_ENV=test rake db:create db:migrate
 ```
-
-## Support
-
-<a href='https://www.codersclan.net/task/yorkinv' target='_blank'><img src='https://www.codersclan.net/button/yorkinv' alt='expert-button' width='205' height='64' style='width: 205px; height: 64px;'></a>
